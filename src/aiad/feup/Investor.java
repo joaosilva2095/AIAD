@@ -1,4 +1,4 @@
-package ldso.feup;
+package aiad.feup;
 
 /**
  * Created by joaos on 06/10/2016.

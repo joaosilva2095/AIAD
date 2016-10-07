@@ -8,26 +8,22 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 
-// classe do agente
 public class PingPong extends Agent {
 
-   // classe do behaviour
    class PingPongBehaviour extends SimpleBehaviour {
       private int n = 0;
 
-      // construtor do behaviour
       public PingPongBehaviour(Agent a) {
          super(a);
       }
 
-      // m�todo action
       public void action() {
          ACLMessage msg = blockingReceive();
          if(msg.getPerformative() == ACLMessage.INFORM) {
             System.out.println(++n + " " + getLocalName() + ": recebi " + msg.getContent());
             // cria resposta
             ACLMessage reply = msg.createReply();
-            // preenche conte�do da mensagem
+            // preenche conteudo da mensagem
             if(msg.getContent().equals("ping"))
                reply.setContent("pong");
             else reply.setContent("ping");
@@ -36,18 +32,14 @@ public class PingPong extends Agent {
          }
       }
 
-      // m�todo done
       public boolean done() {
          return n==10;
       }
 
-   }   // fim da classe PingPongBehaviour
+   }
 
-
-   // m�todo setup
    protected void setup() {
       String tipo = "";
-      // obt�m argumentos
       Object[] args = getArguments();
       if(args != null && args.length > 0) {
          tipo = (String) args[0];
@@ -68,7 +60,6 @@ public class PingPong extends Agent {
          e.printStackTrace();
       }
 
-      // cria behaviour
       PingPongBehaviour b = new PingPongBehaviour(this);
       addBehaviour(b);
 	  
@@ -90,11 +81,9 @@ public class PingPong extends Agent {
          } catch(FIPAException e) { e.printStackTrace(); }
       }
 
-   }   // fim do metodo setup
+   }
 
-   // m�todo takeDown
    protected void takeDown() {
-      // retira registo no DF
       try {
          DFService.deregister(this);  
       } catch(FIPAException e) {
@@ -102,5 +91,5 @@ public class PingPong extends Agent {
       }
    }
 
-}   // fim da classe PingPong
+}
 

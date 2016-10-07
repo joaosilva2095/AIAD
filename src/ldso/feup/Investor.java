@@ -1,7 +1,17 @@
 package ldso.feup;
 
 /**
- * Created by joaos on 06/10/2016.
+ * The Investor class
+ * Represents an investor player
  */
-public class Investor {
+public class Investor extends Player {
+
+    private int numberTokens;
+
+    public Investor (String name, int money) {
+        super(name, money);
+        this.numberTokens = 3;
+    }
+
+
 }

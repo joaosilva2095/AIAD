@@ -6,19 +6,9 @@ package ldso.feup;
 public class Company {
 
     /**
-     * Manager owner of the company
+     * Current stock prive
      */
-    private Manager manager;
-
-    /**
-     * Investor of the company, might not exist
-     */
-    private Investor shareholder;
-
-    /**
-     * Current investment value
-     */
-    private int value;
+    private int price;
 
     /**
      * True if no new negotiation is allowed

@@ -1,4 +1,4 @@
-package ldso.feup;
+package aiad.feup;
 
 import jade.core.*;
 import jade.core.behaviours.*;

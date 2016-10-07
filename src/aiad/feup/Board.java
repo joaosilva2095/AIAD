@@ -1,4 +1,4 @@
-package ldso.feup;
+package aiad.feup;
 
 /**
  * The Board singleton class.

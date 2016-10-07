@@ -1,4 +1,4 @@
-package net.revtut;
+package ldso.feup;
 
 /**
  * The Board class.

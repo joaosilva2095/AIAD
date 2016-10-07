@@ -1,6 +1,4 @@
-package net.revtut;
-
-import java.util.Random;
+package ldso.feup;
 
 /**
  * A company.

@@ -1,4 +1,4 @@
-package net.revtut;
+package ldso.feup;
 
 import jade.core.*;
 import jade.core.behaviours.*;

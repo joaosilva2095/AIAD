@@ -1,7 +1,6 @@
 package aiad.feup;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * The Board singleton class.

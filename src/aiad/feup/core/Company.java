@@ -24,9 +24,15 @@ public class Company {
     private int price;
 
     /**
-     * Fluctuation of the stock price of the company
+     * Fluctuation average of the stock price of the company
+     * Represents maximum % fluctuation of the company stock value
      */
     private double fluctuation;
+
+    /**
+     * True if company is double revenue type
+     */
+    private boolean isDoubleRevenue;
 
     /**
      * True if no new negotiation is allowed
@@ -39,10 +45,11 @@ public class Company {
      * @param price stock price of the company
      * @param fluctuation fluctuation of the company
      */
-    public Company(String name, int price, double fluctuation) {
+    public Company(String name, int price, boolean isDoubleRevenue, double fluctuation) {
         this.name = name;
 
         this.price = price;
+        this.isDoubleRevenue = isDoubleRevenue;
         this.fluctuation = fluctuation;
         this.closed = false;
     }
@@ -88,5 +95,21 @@ public class Company {
         double offset = fluctuation * price;
 
         price += multiplier * offset;
+    }
+
+    /**
+     * Gets the fluctuation of the company
+     * @return the fluctuation of the company
+     */
+    public double getFluctuation() {
+        return fluctuation;
+    }
+
+    /**
+     * Returns whether the company is double revenue
+     * @return whether the company is double revenue
+     */
+    public boolean isDoubleRevenue() {
+        return isDoubleRevenue;
     }
 }

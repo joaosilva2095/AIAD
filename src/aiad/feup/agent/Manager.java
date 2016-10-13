@@ -38,4 +38,16 @@ public class Manager extends Player {
 
         ownedCompanies.add(company);
     }
+
+    /**
+     * Removes a company to from the owned companies of a Manager
+     * @param company the company to be removed
+     * @throws InvestmentException throws exception if Manager tries to remove a company he doesn't own
+     */
+    public void removeCompany(Company company) throws InvestmentException {
+        if(!ownedCompanies.contains(company))
+            throw new InvestmentException(this, "is not owner of the company: " + company.getName());
+
+        ownedCompanies.remove(company);
+    }
 }

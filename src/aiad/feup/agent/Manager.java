@@ -1,5 +1,6 @@
 package aiad.feup.agent;
 
+import aiad.feup.agent.exceptions.InvestmentException;
 import aiad.feup.core.Company;
 
 import java.util.ArrayList;
@@ -31,9 +32,9 @@ public class Manager extends Player {
      * @param company the company to be added
      * @throws InvestmentException throws exception if Manager tries to buy a company he already owns
      */
-    public void addCompany(Company company) throws InvestmentException{
+    public void addCompany(Company company) throws InvestmentException {
         if(ownedCompanies.contains(company))
-            throw new InvestmentException("is already owner of the company: " + company.getName());
+            throw new InvestmentException(this, "is already owner of the company: " + company.getName());
 
         ownedCompanies.add(company);
     }

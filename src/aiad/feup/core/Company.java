@@ -14,6 +14,11 @@ public class Company {
     private static final Random random = new Random();
 
     /**
+     * The name of the company
+     */
+    private String name;
+
+    /**
      * Current stock price of the company
      */
     private int price;
@@ -28,12 +33,15 @@ public class Company {
      */
     private boolean closed;
 
+
     /**
      * Constructor of Company
      * @param price stock price of the company
      * @param fluctuation fluctuation of the company
      */
-    public Company(int price, double fluctuation) {
+    public Company(String name, int price, double fluctuation) {
+        this.name = name;
+
         this.price = price;
         this.fluctuation = fluctuation;
         this.closed = false;
@@ -47,17 +55,15 @@ public class Company {
         return price;
     }
 
-    /**
-     * Buy the company for a given price
-     * @param price price of the transaction
-     * @throws IllegalStateException if the company is already closed for sale
-     */
-    public void buy(int price) {
-        if(isClosed())
-            throw new IllegalStateException("Company is closed for sale.");
 
-        this.price = price;
+    /**
+     * Returns the name of the company
+     * @return the name of the company
+     */
+    public String getName() {
+        return name;
     }
+
 
     /**
      * Check if the company is closed for auction

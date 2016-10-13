@@ -1,5 +1,7 @@
 package aiad.feup.core;
 
+import aiad.feup.core.exceptions.MalformedObjectException;
+
 import java.util.Random;
 
 /**
@@ -27,7 +29,7 @@ public class Company {
      * Fluctuation average of the stock price of the company
      * Represents maximum % fluctuation of the company stock value
      */
-    private double fluctuation;
+    private int fluctuation;
 
     /**
      * True if company is double revenue type
@@ -45,7 +47,9 @@ public class Company {
      * @param price stock price of the company
      * @param fluctuation fluctuation of the company
      */
-    public Company(String name, int price, boolean isDoubleRevenue, double fluctuation) {
+    public Company(String name, int price, boolean isDoubleRevenue, int fluctuation) throws MalformedObjectException {
+        if(fluctuation > 101)
+            throw new MalformedObjectException("Company " + name + " is being created with fluctuation over 100. Aborting.");
         this.name = name;
 
         this.price = price;
@@ -87,15 +91,6 @@ public class Company {
         this.closed = true;
     }
 
-    /**
-     * Apply a fluctuation to the stock price of the company
-     */
-    public void applyFluctuation() {
-        int multiplier = random.nextBoolean() ? 1 : -1;
-        double offset = fluctuation * price;
-
-        price += multiplier * offset;
-    }
 
     /**
      * Gets the fluctuation of the company
@@ -111,5 +106,30 @@ public class Company {
      */
     public boolean isDoubleRevenue() {
         return isDoubleRevenue;
+    }
+
+    /**
+     * Apply a fluctuation to the stock price of the company based on its risk
+     */
+    public void applyFluctuation() {
+        //TODO debate whether it should be removed from the board
+        if(price == 0)
+            return;
+
+        double currentRoundFluctuation = (double) random.nextInt(fluctuation) / 100;
+        if(isDoubleRevenue())
+            currentRoundFluctuation *= 2;
+
+        if(random.nextBoolean())
+            price *= (1-currentRoundFluctuation);
+        else
+            price *= (1+currentRoundFluctuation);
+
+        if(price < 0) {
+            price = 0;
+            System.out.println("Company " + name + " went bankrupt.");
+        }
+
+
     }
 }

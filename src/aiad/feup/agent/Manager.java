@@ -39,6 +39,10 @@ public class Manager extends Player {
         ownedCompanies.add(company);
     }
 
+    public List<Company> getOwnedCompanies() {
+        return ownedCompanies;
+    }
+
     /**
      * Removes a company to from the owned companies of a Manager
      * @param company the company to be removed

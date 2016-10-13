@@ -43,6 +43,9 @@ public class Investor extends Player {
         if(this.investedCompanies.contains(company))
             throw new InvestmentException(this, "already invested in the company.");
 
+        if(company.isClosed())
+            throw new InvestmentException(this, "tried to invest on a closed company.");
+
         this.investedCompanies.add(company);
     }
 
@@ -53,6 +56,9 @@ public class Investor extends Player {
     public void removeInvestment(final Company company) throws InvestmentException {
         if(!this.investedCompanies.contains(company))
             throw new InvestmentException(this, "not invested in the company");
+
+        if(company.isClosed())
+            throw new InvestmentException(this, "tried to remove a investment on a closed company.");
 
         this.investedCompanies.remove(company);
     }

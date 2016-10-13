@@ -60,27 +60,3 @@ public abstract class Player {
         this.money += money;
     }
 
-    /**
-     * List all companies owned by the player
-     * @return companies owned by the player
-     */
-    public List<Company> getCompanies() {
-        return Collections.unmodifiableList(companies);
-    }
-
-    /**
-     * Add a company to the player
-     * @param company company to be added
-     */
-    public void addCompany(final Company company) {
-        this.companies.add(company);
-    }
-
-    /**
-     * Remove a company from the player
-     * @param company company to be removed
-     */
-    public void removeCompany(final Company company) {
-        this.companies.remove(company);
-    }
-}

@@ -79,7 +79,7 @@ public class Board {
      */
     public Player getCompanyOwner(final Company company) {
         for(final Player player : players) {
-            if(!(player instanceof  Manager))
+            if(!(player instanceof Manager))
                 continue;
             if(player.getCompanies().contains(company))
                 return player;

@@ -41,7 +41,7 @@ public class Investor extends Player {
      * @throws InvestmentException when the player has already invested in the company
      * or when he tries to invest on a closed company
      */
-    public void addInvestment(final Company company) throws InvestmentException {
+    public void addInvestment(final Company company) {
         if(this.investedCompanies.contains(company))
             throw new InvestmentException(this, "already invested in the company.");
 
@@ -57,7 +57,7 @@ public class Investor extends Player {
      * @throws InvestmentException when the player has not invested in the company or
      * is trying to remove the investment of a closed company
      */
-    public void removeInvestment(final Company company) throws InvestmentException {
+    public void removeInvestment(final Company company) {
         if(!this.investedCompanies.contains(company))
             throw new InvestmentException(this, "not invested in the company");
 

@@ -5,7 +5,7 @@ import aiad.feup.agent.Player;
 /**
  * Balance exception
  */
-public class BalanceException extends Exception {
+public class BalanceException extends RuntimeException {
 
     /**
      * Constructor of {@link BalanceException}

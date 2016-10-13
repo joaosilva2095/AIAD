@@ -5,7 +5,7 @@ import aiad.feup.agent.Player;
 /**
  * Investment exception
  */
-public class InvestmentException extends Exception {
+public class InvestmentException extends RuntimeException {
 
     /**
      * Constructor of {@link InvestmentException}

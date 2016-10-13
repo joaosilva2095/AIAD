@@ -1,4 +1,4 @@
-package org.assis.api;
+package aiad.feup;
 
 import org.junit.Test;
 

@@ -4,57 +4,83 @@ import aiad.feup.Agents.Investor;
 import aiad.feup.Agents.Manager;
 import aiad.feup.Agents.Player;
 
+import java.util.Arrays;
+
 /**
  * The Board singleton class.
  * Represents the board state and holds all information common throughout the elements of the board
  * Only 1 instance of Board may exist at any given time
  */
 public class Board {
-    private static Board instance;
 
-    private int numberPlayers;
-
+    /**
+     * Players of the game
+     */
     private Player[] players;
-    private Manager[] managers;
-    private Investor[] investors;
 
+    /**
+     * Companies of the game
+     */
     private Company[] companies;
 
-    public static Board getInstance(){
-        if (instance == null)
-            instance = new Board();
-
-        return instance;
+    /**
+     * Constructor of Board
+     * @param numberPlayers number of players that will play
+     */
+    public Board(final int numberPlayers) {
+        this.players = new Player[numberPlayers];
     }
 
+    /**
+     * Get the number of players in the game
+     * @return number of players in the game
+     */
     public int getNumberPlayers() {
-        return numberPlayers;
+        return players.length;
     }
-    public void setNumberPlayers(int numberPlayers) {
-        this.numberPlayers = numberPlayers;
-    }
+
+    /**
+     * Get all the players in the game
+     * @return all players in the game
+     */
     public Player[] getPlayers() {
-        return players;
+        return Arrays.copyOf(players, players.length);
     }
-    public void setPlayers(Player[] players) {
-        this.players = players;
-    }
+
+    /**
+     * Get all managers in the game
+     * @return all managers in the game
+     */
     public Manager[] getManagers() {
-        return managers;
+        return Arrays.stream(players).filter(player -> player instanceof Manager).toArray(Manager[]::new);
     }
-    public void setManagers(Manager[] managers) {
-        this.managers = managers;
-    }
+
+    /**
+     * Get all investors in the game
+     * @return all investors in the game
+     */
     public Investor[] getInvestors() {
-        return investors;
+        return Arrays.stream(players).filter(player -> player instanceof Investor).toArray(Investor[]::new);
     }
-    public void setInvestors(Investor[] investors) {
-        this.investors = investors;
-    }
+
+    /**
+     * Get all the companies in the game
+     * @return all companies in the game
+     */
     public Company[] getCompanies() {
-        return companies;
+        return Arrays.copyOf(companies, companies.length);
     }
-    public void setCompanies(Company[] companies) {
-        this.companies = companies;
+
+    /**
+     * Get the owner of a given company
+     * @param company company to get the owner
+     * @return owner of the company
+     */
+    public Player getCompanyOwner(final Company company) {
+        for(final Player player : players) {
+            if(player.getCompanies().contains(company))
+                return player;
+        }
+        return null;
     }
 }

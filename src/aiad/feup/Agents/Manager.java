@@ -1,11 +1,17 @@
 package aiad.feup.Agents;
 
 /**
- * Created by joaos on 06/10/2016.
+ * The manager player.
+ * Hes goal is to get as money as he can for each company share sold.
  */
 public class Manager extends Player {
 
-    public Manager (String name, int money) {
+    /**
+     * Constructor of Manager
+     * @param name name of the manager
+     * @param money money of the manager
+     */
+    public Manager(final String name, final int money) {
         super(name, money);
     }
 }

@@ -2,56 +2,85 @@ package aiad.feup.Agents;
 
 import aiad.feup.Core.Company;
 
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * The player super class.
  * Holds information common to all players
  */
-public class Player {
+public abstract class Player {
 
-    private String name;
+    /**
+     * Name of the player
+     */
+    private final String name;
 
+    /**
+     * Money of the player
+     */
     private int money;
 
-    private ArrayList<Company> companies;
+    /**
+     * Companies owned by the player
+     */
+    private final List<Company> companies;
 
-
-
-    public Player(String name, int money) {
+    /**
+     * Constructor of Player
+     * @param name name of the player
+     * @param money money of the player
+     */
+    public Player(final String name, final int money) {
         this.name = name;
         this.money = money;
-        this.companies = new ArrayList<Company>();
+        this.companies = new ArrayList<>();
     }
 
-
+    /**
+     * Get the name of the player
+     * @return name of the player
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * Get the current money of the player
+     * @return current money of the player
+     */
     public int getMoney() {
         return money;
     }
 
-    public void setMoney(int money) {
-        this.money = money;
+    /**
+     * Add money to the player
+     * @param money quantity to be added
+     */
+    public void addMoney(final int money) {
+        this.money += money;
     }
 
-    public ArrayList<Company> getCompanies() {
-        return companies;
+    /**
+     * List all companies owned by the player
+     * @return companies owned by the player
+     */
+    public List<Company> getCompanies() {
+        return Collections.unmodifiableList(companies);
     }
 
-    public void addCompany(Company company) {
+    /**
+     * Add a company to the player
+     * @param company company to be added
+     */
+    public void addCompany(final Company company) {
         this.companies.add(company);
     }
 
-    public void removeCompany(Company company) {
+    /**
+     * Remove a company from the player
+     * @param company company to be removed
+     */
+    public void removeCompany(final Company company) {
         this.companies.remove(company);
     }
-
-
 }

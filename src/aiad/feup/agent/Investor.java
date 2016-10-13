@@ -1,5 +1,6 @@
 package aiad.feup.agent;
 
+import aiad.feup.agent.exceptions.AlreadyInvestedCompany;
 import aiad.feup.core.Company;
 import aiad.feup.agent.exceptions.NotInvestedCompany;
 
@@ -38,7 +39,10 @@ public class Investor extends Player {
      * Add a player investment
      * @param company company where the player has invested
      */
-    public void addInvestment(final Company company) {
+    public void addInvestment(final Company company) throws AlreadyInvestedCompany {
+        if(this.investedCompanies.contains(company))
+            throw new AlreadyInvestedCompany(this);
+
         this.investedCompanies.add(company);
     }
 

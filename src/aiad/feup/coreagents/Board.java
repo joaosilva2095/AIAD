@@ -1,8 +1,8 @@
-package aiad.feup.Core;
+package aiad.feup.coreagents;
 
-import aiad.feup.Agents.Investor;
-import aiad.feup.Agents.Manager;
-import aiad.feup.Agents.Player;
+import aiad.feup.agentstemp.Investor;
+import aiad.feup.agentstemp.Manager;
+import aiad.feup.agentstemp.Player;
 
 import java.util.Arrays;
 

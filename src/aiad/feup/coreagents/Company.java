@@ -1,4 +1,4 @@
-package aiad.feup.Core;
+package aiad.feup.coreagents;
 
 import java.util.Random;
 

@@ -1,16 +1,8 @@
-<<<<<<< HEAD:src/aiad/feup/Core/Board.java
 package aiad.feup.core;
 
-import aiad.feup.agents.Investor;
-import aiad.feup.agents.Manager;
-import aiad.feup.agents.Player;
-=======
-package aiad.feup.coreagents;
-
-import aiad.feup.agentstemp.Investor;
-import aiad.feup.agentstemp.Manager;
-import aiad.feup.agentstemp.Player;
->>>>>>> bbd2ae9ac49b0534f40319592a116478bb9402b1:src/aiad/feup/coreagents/Board.java
+import aiad.feup.agent.Investor;
+import aiad.feup.agent.Manager;
+import aiad.feup.agent.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;

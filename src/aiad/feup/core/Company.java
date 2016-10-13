@@ -1,8 +1,4 @@
-<<<<<<< HEAD:src/aiad/feup/Core/Company.java
 package aiad.feup.core;
-=======
-package aiad.feup.coreagents;
->>>>>>> bbd2ae9ac49b0534f40319592a116478bb9402b1:src/aiad/feup/coreagents/Company.java
 
 import java.util.Random;
 

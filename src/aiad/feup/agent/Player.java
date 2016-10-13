@@ -1,12 +1,6 @@
-<<<<<<< HEAD:src/aiad/feup/Agents/Player.java
-package aiad.feup.agents;
+package aiad.feup.agent;
 
 import aiad.feup.core.Company;
-=======
-package aiad.feup.agentstemp;
-
-import aiad.feup.coreagents.Company;
->>>>>>> bbd2ae9ac49b0534f40319592a116478bb9402b1:src/aiad/feup/agentstemp/Player.java
 
 import java.util.*;
 

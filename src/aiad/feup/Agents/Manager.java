@@ -1,4 +1,4 @@
-package aiad.feup;
+package aiad.feup.Agents;
 
 /**
  * Created by joaos on 06/10/2016.

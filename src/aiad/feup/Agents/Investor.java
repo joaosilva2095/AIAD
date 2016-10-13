@@ -1,4 +1,4 @@
-package aiad.feup;
+package aiad.feup.Agents;
 
 /**
  * The Investor class

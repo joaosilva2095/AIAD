@@ -1,4 +1,8 @@
-package aiad.feup;
+package aiad.feup.Core;
+
+import aiad.feup.Agents.Investor;
+import aiad.feup.Agents.Manager;
+import aiad.feup.Agents.Player;
 
 /**
  * The Board singleton class.

@@ -1,4 +1,6 @@
-package aiad.feup;
+package aiad.feup.Agents;
+
+import aiad.feup.Core.Company;
 
 import java.util.ArrayList;
 

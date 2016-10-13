@@ -16,9 +16,9 @@ public abstract class Player {
     private final String name;
 
     /**
-     * Money of the player
+     * Balance of the player
      */
-    private int money;
+    private int balance;
 
     /**
      * Companies owned by the player
@@ -28,11 +28,11 @@ public abstract class Player {
     /**
      * Constructor of Player
      * @param name name of the player
-     * @param money money of the player
+     * @param balance balance of the player
      */
-    public Player(final String name, final int money) {
+    public Player(final String name, final int balance) {
         this.name = name;
-        this.money = money;
+        this.balance = balance;
         this.companies = new ArrayList<>();
     }
 
@@ -45,11 +45,11 @@ public abstract class Player {
     }
 
     /**
-     * Get the current money of the player
-     * @return current money of the player
+     * Get the current balance of the player
+     * @return current balance of the player
      */
-    public int getMoney() {
-        return money;
+    public int getBalance() {
+        return balance;
     }
 
     /**
@@ -57,6 +57,6 @@ public abstract class Player {
      * @param money quantity to be added
      */
     public void addMoney(final int money) {
-        this.money += money;
+        this.balance += money;
     }
 

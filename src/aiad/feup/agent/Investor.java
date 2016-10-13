@@ -1,8 +1,8 @@
 package aiad.feup.agent;
 
-import aiad.feup.agent.exceptions.AlreadyInvestedCompany;
+import aiad.feup.agent.exceptions.BalanceException;
+import aiad.feup.agent.exceptions.InvestmentException;
 import aiad.feup.core.Company;
-import aiad.feup.agent.exceptions.NotInvestedCompany;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +39,12 @@ public class Investor extends Player {
      * Add a player investment
      * @param company company where the player has invested
      */
-    public void addInvestment(final Company company) throws AlreadyInvestedCompany {
+    public void addInvestment(final Company company) throws InvestmentException, BalanceException {
         if(this.investedCompanies.contains(company))
-            throw new AlreadyInvestedCompany(this);
+            throw new InvestmentException(this, "already invested in the company.");
+
+        if(company.isClosed())
+            throw new InvestmentException(this, "tried to invest on a closed company.");
 
         this.investedCompanies.add(company);
     }
@@ -50,9 +53,12 @@ public class Investor extends Player {
      * Remove a player investment
      * @param company company to be removed
      */
-    public void removeInvestment(final Company company) throws NotInvestedCompany {
+    public void removeInvestment(final Company company) throws InvestmentException {
         if(!this.investedCompanies.contains(company))
-            throw new NotInvestedCompany(this);
+            throw new InvestmentException(this, "not invested in the company");
+
+        if(company.isClosed())
+            throw new InvestmentException(this, "tried to remove a investment on a closed company.");
 
         this.investedCompanies.remove(company);
     }

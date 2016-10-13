@@ -1,4 +1,4 @@
-package aiad.feup.agentstemp;
+package aiad.feup.agent;
 
 /**
  * The investor player.

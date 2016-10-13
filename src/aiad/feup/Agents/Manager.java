@@ -1,4 +1,4 @@
-package aiad.feup.Agents;
+package aiad.feup.agents;
 
 /**
  * The manager player.

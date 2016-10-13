@@ -1,9 +1,10 @@
-package aiad.feup.Core;
+package aiad.feup.core;
 
-import aiad.feup.Agents.Investor;
-import aiad.feup.Agents.Manager;
-import aiad.feup.Agents.Player;
+import aiad.feup.agents.Investor;
+import aiad.feup.agents.Manager;
+import aiad.feup.agents.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -78,9 +79,19 @@ public class Board {
      */
     public Player getCompanyOwner(final Company company) {
         for(final Player player : players) {
+            if(!(player instanceof  Manager))
+                continue;
             if(player.getCompanies().contains(company))
                 return player;
         }
         return null;
+    }
+
+    /**
+     * Returns companies that haven't been purchased
+     * @return
+     */
+    public Company[] getOpenCompanies() {
+        return Arrays.stream(companies).filter(company -> getCompanyOwner(company) == null).toArray(Company[]::new);
     }
 }

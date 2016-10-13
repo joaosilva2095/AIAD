@@ -1,6 +1,6 @@
-package aiad.feup.Agents;
+package aiad.feup.agents;
 
-import aiad.feup.Core.Company;
+import aiad.feup.core.Company;
 
 import java.util.*;
 

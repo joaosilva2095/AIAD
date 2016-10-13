@@ -1,4 +1,8 @@
+<<<<<<< HEAD:src/aiad/feup/Agents/Investor.java
 package aiad.feup.agents;
+=======
+package aiad.feup.agentstemp;
+>>>>>>> bbd2ae9ac49b0534f40319592a116478bb9402b1:src/aiad/feup/agentstemp/Investor.java
 
 /**
  * The investor player.

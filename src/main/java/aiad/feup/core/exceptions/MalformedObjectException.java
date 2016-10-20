@@ -3,7 +3,7 @@ package aiad.feup.core.exceptions;
 /**
  * Balance exception
  */
-public class MalformedObjectException extends Exception {
+public class MalformedObjectException extends RuntimeException {
 
     /**
      * Constructor of {@link MalformedObjectException}

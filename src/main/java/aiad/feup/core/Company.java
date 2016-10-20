@@ -47,9 +47,9 @@ public class Company {
      * @param price stock price of the company
      * @param fluctuation fluctuation of the company
      */
-    public Company(String name, int price, boolean isDoubleRevenue, int fluctuation) throws MalformedObjectException {
-        if(fluctuation > 101)
-            throw new MalformedObjectException("Company " + name + " is being created with fluctuation over 100. Aborting.");
+    public Company(String name, int price, boolean isDoubleRevenue, int fluctuation) {
+        if(fluctuation > 100 && fluctuation < 0)
+            throw new MalformedObjectException("Company " + name + " fluctuation must be a value between 0 and 100.");
         this.name = name;
 
         this.price = price;
@@ -116,7 +116,7 @@ public class Company {
         if(price == 0)
             return;
 
-        double currentRoundFluctuation = (double) random.nextInt(fluctuation) / 100;
+        double currentRoundFluctuation = (double) random.nextInt(fluctuation + 1) / 100;
         if(isDoubleRevenue())
             currentRoundFluctuation *= 2;
 

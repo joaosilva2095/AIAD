@@ -63,7 +63,7 @@ public class Board {
      *
      * @param company company to be added
      */
-    private void addCompany(Company company) throws DuplicatedItemException {
+    private void addCompany(Company company) {
         if (companies.contains(company))
             throw new DuplicatedItemException("Company " + company.getName() + " is already registered on the board.");
         companies.add(company);

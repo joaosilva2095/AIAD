@@ -3,7 +3,7 @@ package aiad.feup.core.exceptions;
 /**
  * Balance exception
  */
-public class DuplicatedItemException extends Exception {
+public class DuplicatedItemException extends RuntimeException {
 
     /**
      * Constructor of {@link DuplicatedItemException}

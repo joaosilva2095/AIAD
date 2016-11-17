@@ -1,4 +1,4 @@
-package aiad.feup.ontologies;
+package aiad.feup.messages;
 
 import org.junit.Test;
 

@@ -1,15 +1,13 @@
-package aiad.feup.ontologies;
+package aiad.feup.models;
 
-import aiad.feup.ontologies.exceptions.MalformedObjectException;
+import aiad.feup.messages.exceptions.MalformedObjectException;
 import jade.content.Concept;
-
-import java.util.Random;
 
 /**
  * A company.
  * Holds information about the share.
  */
-public class Company implements Concept {
+public class Company {
 
 
     /**

@@ -1,9 +1,10 @@
-package aiad.feup.ontologies;
+package aiad.feup.messages;
 
 import aiad.feup.agent.Investor;
 import aiad.feup.agent.Manager;
 import aiad.feup.agent.Player;
-import aiad.feup.ontologies.exceptions.DuplicatedItemException;
+import aiad.feup.messages.exceptions.DuplicatedItemException;
+import aiad.feup.models.Company;
 
 import java.util.ArrayList;
 import java.util.Arrays;

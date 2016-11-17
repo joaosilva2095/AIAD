@@ -1,4 +1,4 @@
-package aiad.feup.ontologies.exceptions;
+package aiad.feup.messages.exceptions;
 
 /**
  * Balance exception

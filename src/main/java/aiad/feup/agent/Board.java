@@ -1,7 +1,12 @@
 package aiad.feup.agent;
 
+import jade.core.Agent;
+
 /**
- * Created by Luís on 15/11/2016.
+ * The Board Agent
+ * Responsible for maintaining the board state
  */
-public class Board {
+public class Board extends Agent {
+
+
 }

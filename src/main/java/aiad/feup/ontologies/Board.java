@@ -1,10 +1,9 @@
-package aiad.feup.core;
+package aiad.feup.ontologies;
 
 import aiad.feup.agent.Investor;
 import aiad.feup.agent.Manager;
 import aiad.feup.agent.Player;
-import aiad.feup.core.exceptions.DuplicatedItemException;
-import aiad.feup.core.exceptions.MalformedObjectException;
+import aiad.feup.ontologies.exceptions.DuplicatedItemException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

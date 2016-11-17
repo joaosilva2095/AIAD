@@ -1,7 +1,7 @@
 package aiad.feup.agent;
 
-import aiad.feup.core.Company;
-import aiad.feup.core.exceptions.MalformedObjectException;
+import aiad.feup.ontologies.Company;
+import aiad.feup.ontologies.exceptions.MalformedObjectException;
 import org.junit.Before;
 import org.junit.Test;
 

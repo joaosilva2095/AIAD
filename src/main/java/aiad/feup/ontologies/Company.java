@@ -1,6 +1,7 @@
-package aiad.feup.core;
+package aiad.feup.ontologies;
 
-import aiad.feup.core.exceptions.MalformedObjectException;
+import aiad.feup.ontologies.exceptions.MalformedObjectException;
+import jade.content.Concept;
 
 import java.util.Random;
 
@@ -8,12 +9,13 @@ import java.util.Random;
  * A company.
  * Holds information about the share.
  */
-public class Company {
+public class Company implements Concept {
+
 
     /**
-     * Random utility class
+     * Serial Version UID
      */
-    private static final Random random = new Random();
+    private static final long serialVersionUID = -484968079362726486L;
 
     /**
      * The name of the company
@@ -21,15 +23,15 @@ public class Company {
     private String name;
 
     /**
-     * Current stock price of the company
+     * Current stock value of the company
      */
-    private int price;
+    private double value;
 
     /**
      * Fluctuation average of the stock price of the company
      * Represents maximum % fluctuation of the company stock value
      */
-    private int fluctuation;
+    private double fluctuation;
 
     /**
      * True if company is double revenue type
@@ -39,31 +41,31 @@ public class Company {
     /**
      * True if no new negotiation is allowed
      */
-    private boolean closed;
+    private boolean isClosed;
 
 
     /**
      * Constructor of Company
-     * @param price stock price of the company
+     * @param value stock price of the company
      * @param fluctuation fluctuation of the company
      */
-    public Company(String name, int price, boolean isDoubleRevenue, int fluctuation) {
-        if(fluctuation > 100 && fluctuation < 0)
+    public Company(String name, double value, boolean isDoubleRevenue, double fluctuation) {
+        if(fluctuation > 100 || fluctuation < 0)
             throw new MalformedObjectException("Company " + name + " fluctuation must be a value between 0 and 100.");
-        this.name = name;
 
-        this.price = price;
+        this.name = name;
+        this.value = value;
         this.isDoubleRevenue = isDoubleRevenue;
         this.fluctuation = fluctuation;
-        this.closed = false;
+        this.isClosed = false;
     }
 
     /**
      * Get the price of the company
      * @return price of the company
      */
-    public int getPrice() {
-        return price;
+    public double getValue() {
+        return value;
     }
 
 
@@ -81,14 +83,14 @@ public class Company {
      * @return true if closed for auction
      */
     public boolean isClosed() {
-        return closed;
+        return isClosed;
     }
 
     /**
      * Close the company for auction
      */
     public void close() {
-        this.closed = true;
+        this.isClosed = true;
     }
 
 
@@ -113,23 +115,15 @@ public class Company {
      */
     public void applyFluctuation() {
         //TODO debate whether it should be removed from the board
-        if(price == 0)
+        if(value == 0)
             return;
 
-        double currentRoundFluctuation = (double) random.nextInt(fluctuation + 1) / 100;
-        if(isDoubleRevenue())
-            currentRoundFluctuation *= 2;
+        double currentRoundFluctuation = Math.random() * fluctuation / 100;
 
-        if(random.nextBoolean())
-            price *= (1-currentRoundFluctuation);
+        if(Math.random() > 0.5)
+            value *= (1-currentRoundFluctuation);
         else
-            price *= (1+currentRoundFluctuation);
-
-        if(price < 0) {
-            price = 0;
-            System.out.println("Company " + name + " went bankrupt.");
-        }
-
+            value *= (1+currentRoundFluctuation);
 
     }
 }

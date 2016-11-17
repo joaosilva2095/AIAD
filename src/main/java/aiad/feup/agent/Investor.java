@@ -1,8 +1,7 @@
 package aiad.feup.agent;
 
-import aiad.feup.agent.exceptions.BalanceException;
 import aiad.feup.agent.exceptions.InvestmentException;
-import aiad.feup.core.Company;
+import aiad.feup.ontologies.Company;
 
 import java.util.ArrayList;
 import java.util.List;

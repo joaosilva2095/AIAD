@@ -50,6 +50,8 @@ public class Main {
             } catch (final Exception e) {
                 throw new IllegalArgumentException("The number of players must be a natural number");
             }
+
+            agent = new Board();
         }
     }
 }

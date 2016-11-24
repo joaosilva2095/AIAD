@@ -5,6 +5,7 @@ import aiad.feup.models.Company;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Board Agent
@@ -15,7 +16,17 @@ public class Board extends GameAgent {
     /**
      * Players of the game
      */
-    private List<Player> players;
+    private List<RemoteAgent> players;
+
+    /**
+     * Balances of the remote agents
+     */
+    private Map<RemoteAgent, Integer> balances;
+
+    /**
+     * Tokens of the remote agents
+     */
+    private Map<RemoteAgent, Integer> tokens;
 
     /**
      * Companies of the game
@@ -55,7 +66,7 @@ public class Board extends GameAgent {
      */
     private void applyEndOfRoundFluctuation() {
         for (Company company : companies) {
-            if(company.getValue() <= 0){
+            if (company.getValue() <= 0) {
                 continue;
             }
 
@@ -76,14 +87,29 @@ public class Board extends GameAgent {
 
     /**
      * Get all the players in the game
+     *
      * @return all players in the game
      */
-    public List<Player> getPlayers() {
+    public List<RemoteAgent> getPlayers() {
         return players;
     }
 
     /**
+     * Get a player by its name
+     * @param name name of the player to get
+     * @return player with that name
+     */
+    public RemoteAgent getPlayer(final String name) {
+        for (RemoteAgent player : players) {
+            if (player.getName().equalsIgnoreCase(name))
+                return player;
+        }
+        return null;
+    }
+
+    /**
      * Get all the companies in the game
+     *
      * @return all companies in the game
      */
     public List<Company> getCompanies() {

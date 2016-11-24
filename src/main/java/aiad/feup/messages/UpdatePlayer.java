@@ -16,6 +16,11 @@ public class UpdatePlayer extends Message {
     private double balance;
 
     /**
+     * Number of tokens of the player
+     */
+    private int tokens;
+
+    /**
      * the list of companies for the player to work with
      */
     private List<Company> companyList;
@@ -33,16 +38,18 @@ public class UpdatePlayer extends Message {
     /**
      * The UpdatePlayer constructor
      * @param balance the balance for the player
+     * @param tokens tokens for the player
      * @param companyList the list of companies for the player
      * @param numberInvestors the number of investors still in game
      * @param numberManagers the number of Managers still in game
      */
-    public UpdatePlayer(double balance, List<Company> companyList, int numberInvestors, int numberManagers) {
+    public UpdatePlayer(double balance, int tokens, List<Company> companyList, int numberInvestors, int numberManagers) {
 
         if(numberInvestors < 0 || numberManagers < 0)
             throw new MalformedObjectException("There can be no negative investors or managers.");
 
         this.balance = balance;
+        this.tokens = tokens;
         this.companyList = companyList;
         this.numberInvestors = numberInvestors;
         this.numberManagers = numberInvestors;
@@ -54,6 +61,14 @@ public class UpdatePlayer extends Message {
      */
     public double getBalance() {
         return balance;
+    }
+
+    /**
+     * Get the tokens of the player
+     * @return tokens of the player
+     */
+    public int getTokens() {
+        return tokens;
     }
 
     /**

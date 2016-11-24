@@ -1,5 +1,6 @@
 package aiad.feup.models;
 
+import aiad.feup.agents.RemoteAgent;
 import aiad.feup.exceptions.MalformedObjectException;
 
 /**
@@ -16,7 +17,7 @@ public class Company {
     /**
      * Owner of the company
      */
-    private String owner;
+    private RemoteAgent owner;
 
     /**
      * The name of the company
@@ -67,7 +68,7 @@ public class Company {
      * Get the owner of the company
      * @return owner of the company
      */
-    public String getOwner() {
+    public RemoteAgent getOwner() {
         return owner;
     }
 
@@ -99,7 +100,7 @@ public class Company {
      * Set the owner of the company
      * @param owner owner of the company
      */
-    public void setOwner(final String owner) {
+    public void setOwner(final RemoteAgent owner) {
         this.owner = owner;
     }
 

@@ -1,5 +1,6 @@
 package aiad.feup.messages;
 
+import aiad.feup.agents.RemoteAgent;
 import aiad.feup.models.Company;
 
 /**
@@ -21,7 +22,7 @@ public class Purchase extends Message {
     /**
      * Name of the investor
      */
-    private String investor;
+    private RemoteAgent investor;
 
     /**
      * Constructor of Purchase
@@ -29,7 +30,7 @@ public class Purchase extends Message {
      * @param value value of the purchase
      * @param investor investor that purchased
      */
-    public Purchase(Company company, double value, String investor) {
+    public Purchase(final Company company, final double value, final RemoteAgent investor) {
         this.company = company;
         this.value = value;
         this.investor = investor;
@@ -55,7 +56,7 @@ public class Purchase extends Message {
      * Get the investor that purchased the company
      * @return investor that purchased the company
      */
-    public String getInvestor() {
+    public RemoteAgent getInvestor() {
         return investor;
     }
 }

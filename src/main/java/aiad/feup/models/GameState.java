@@ -3,7 +3,7 @@ package aiad.feup.models;
 /**
  * Player possible states
  */
-public enum PlayerState {
+public enum GameState {
 
     /**
      * Waiting for new instructions

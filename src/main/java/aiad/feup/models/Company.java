@@ -40,7 +40,6 @@ public class Company {
      */
     private boolean isClosed;
 
-
     /**
      * Constructor of Company
      * @param value stock price of the company

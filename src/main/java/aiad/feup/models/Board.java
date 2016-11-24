@@ -1,7 +1,5 @@
 package aiad.feup.models;
 
-import aiad.feup.agents.Investor;
-import aiad.feup.agents.Manager;
 import aiad.feup.agents.Player;
 import aiad.feup.exceptions.DuplicatedItemException;
 

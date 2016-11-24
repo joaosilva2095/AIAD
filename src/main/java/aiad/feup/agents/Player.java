@@ -83,7 +83,7 @@ public class Player extends GameAgent {
      * Set the type of the player
      * @param type type of the player
      */
-    public void setType(PlayerType type) {
+    public void setType(final PlayerType type) {
         this.type = type;
     }
 
@@ -91,7 +91,7 @@ public class Player extends GameAgent {
      * Set the companies of the player
      * @param companies companies of the player
      */
-    public void setCompanies(List<Company> companies) {
+    public void setCompanies(final List<Company> companies) {
         this.companies = companies;
     }
 

@@ -16,7 +16,7 @@ public class Board extends GameAgent {
     /**
      * Players of the game
      */
-    private Player[] players;
+    private List<Player> players;
 
     /**
      * Companies of the game
@@ -25,17 +25,10 @@ public class Board extends GameAgent {
 
     /**
      * Constructor of Board
-     *
-     * @param numberPlayers number of players that will play
      */
-    public Board(final int numberPlayers) {
-        this.players = new Player[numberPlayers];
+    public Board() {
+        this.players = new ArrayList<>();
         this.companies = new ArrayList<>();
-    }
-
-
-    public static void main(String[] args) {
-
     }
 
     /**
@@ -79,15 +72,15 @@ public class Board extends GameAgent {
      * @return number of players in the game
      */
     public int getNumberPlayers() {
-        return players.length;
+        return players.size();
     }
 
     /**
      * Get all the players in the game
      * @return all players in the game
      */
-    public Player[] getPlayers() {
-        return Arrays.copyOf(players, players.length);
+    public List<Player> getPlayers() {
+        return players;
     }
 
     /**

@@ -13,11 +13,6 @@ import java.util.List;
 public class Player extends GameAgent {
 
     /**
-     * Name of the player
-     */
-    private final String playerName;
-
-    /**
      * Balance of the player
      */
     private int balance;
@@ -39,22 +34,11 @@ public class Player extends GameAgent {
 
     /**
      * Constructor of Player
-     * @param playerName    name of the player
-     * @param balance balance of the player
      */
-    public Player(final String playerName, final int balance) {
-        this.playerName = playerName;
-        this.balance = balance;
+    public Player() {
+        this.balance = 0;
         this.companies = new ArrayList<>();
         this.numberTokens = 0;
-    }
-
-    /**
-     * Get the name of the player
-     * @return name of the player
-     */
-    public String getPlayerName() {
-        return playerName;
     }
 
     /**

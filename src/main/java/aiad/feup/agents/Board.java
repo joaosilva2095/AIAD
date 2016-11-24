@@ -4,7 +4,6 @@ import aiad.feup.exceptions.DuplicatedItemException;
 import aiad.feup.models.Company;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

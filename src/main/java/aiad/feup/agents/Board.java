@@ -1,4 +1,4 @@
-package aiad.feup.agent;
+package aiad.feup.agents;
 
 import jade.core.Agent;
 

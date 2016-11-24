@@ -1,6 +1,6 @@
 package aiad.feup.exceptions;
 
-import aiad.feup.agent.Player;
+import aiad.feup.agents.Player;
 
 /**
  * Balance exception

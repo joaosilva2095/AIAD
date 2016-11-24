@@ -1,4 +1,4 @@
-package aiad.feup.agent;
+package aiad.feup.agents;
 
 /**
  * The player super class.
@@ -44,6 +44,12 @@ public abstract class Player {
     public int getBalance() {
         return balance;
     }
+
+    /**
+     * Set the balance of the player
+     * @param balance balance of the player
+     */
+    public void setBalance(final int balance) { this.balance = balance; }
 
     /**
      * Add money to the player

@@ -1,8 +1,8 @@
 package aiad.feup.models;
 
-import aiad.feup.agent.Investor;
-import aiad.feup.agent.Manager;
-import aiad.feup.agent.Player;
+import aiad.feup.agents.Investor;
+import aiad.feup.agents.Manager;
+import aiad.feup.agents.Player;
 import aiad.feup.exceptions.DuplicatedItemException;
 
 import java.util.ArrayList;

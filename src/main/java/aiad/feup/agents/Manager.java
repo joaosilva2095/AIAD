@@ -1,4 +1,4 @@
-package aiad.feup.agent;
+package aiad.feup.agents;
 
 import aiad.feup.exceptions.InvestmentException;
 import aiad.feup.models.Company;

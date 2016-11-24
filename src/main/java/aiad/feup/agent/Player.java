@@ -62,8 +62,5 @@ public abstract class Player {
     public void removeMoney(final int money) {
         this.balance -= money;
     }
-
-
-
 }
 

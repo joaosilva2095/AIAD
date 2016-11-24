@@ -1,6 +1,6 @@
 package aiad.feup.messages;
 
-import jade.util.leap.Serializable;
+import aiad.feup.models.PlayerType;
 
 /**
  * SetupPlayer Message
@@ -25,5 +25,11 @@ public class SetupPlayer extends Message {
         this.playerType = playerType;
     }
 
-
+    /**
+     * Get the player type
+     * @return player type
+     */
+    public PlayerType getPlayerType() {
+        return playerType;
+    }
 }

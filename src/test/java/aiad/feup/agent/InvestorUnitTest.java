@@ -1,7 +1,7 @@
 package aiad.feup.agent;
 
 import aiad.feup.models.Company;
-import aiad.feup.messages.exceptions.MalformedObjectException;
+import aiad.feup.exceptions.MalformedObjectException;
 import org.junit.Before;
 import org.junit.Test;
 

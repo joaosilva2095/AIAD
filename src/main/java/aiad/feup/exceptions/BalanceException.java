@@ -1,4 +1,4 @@
-package aiad.feup.agent.exceptions;
+package aiad.feup.exceptions;
 
 import aiad.feup.agent.Player;
 

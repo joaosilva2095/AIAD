@@ -1,4 +1,4 @@
-package aiad.feup.messages.exceptions;
+package aiad.feup.exceptions;
 
 /**
  * Balance exception

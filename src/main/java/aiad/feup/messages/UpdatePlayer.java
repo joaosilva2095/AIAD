@@ -1,8 +1,7 @@
 package aiad.feup.messages;
 
-import aiad.feup.messages.exceptions.MalformedObjectException;
+import aiad.feup.exceptions.MalformedObjectException;
 import aiad.feup.models.Company;
-import com.oracle.deploy.update.Updater;
 
 import java.util.List;
 
@@ -49,7 +48,35 @@ public class UpdatePlayer extends Message {
         this.numberManagers = numberInvestors;
     }
 
+    /**
+     * Get the balance of the player
+     * @return balance of the player
+     */
+    public double getBalance() {
+        return balance;
+    }
 
+    /**
+     * Get the companies
+     * @return companies
+     */
+    public List<Company> getCompanyList() {
+        return companyList;
+    }
 
+    /**
+     * Get the number of investors
+     * @return number of investors
+     */
+    public int getNumberInvestors() {
+        return numberInvestors;
+    }
 
+    /**
+     * Get the number of managers
+     * @return number of managers
+     */
+    public int getNumberManagers() {
+        return numberManagers;
+    }
 }

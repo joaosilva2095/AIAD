@@ -1,7 +1,6 @@
 package aiad.feup.models;
 
-import aiad.feup.messages.exceptions.MalformedObjectException;
-import jade.content.Concept;
+import aiad.feup.exceptions.MalformedObjectException;
 
 /**
  * A company.

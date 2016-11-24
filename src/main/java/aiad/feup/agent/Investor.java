@@ -1,6 +1,6 @@
 package aiad.feup.agent;
 
-import aiad.feup.agent.exceptions.InvestmentException;
+import aiad.feup.exceptions.InvestmentException;
 import aiad.feup.models.Company;
 
 import java.util.ArrayList;

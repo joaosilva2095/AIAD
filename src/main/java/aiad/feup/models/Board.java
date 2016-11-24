@@ -1,10 +1,9 @@
-package aiad.feup.messages;
+package aiad.feup.models;
 
 import aiad.feup.agent.Investor;
 import aiad.feup.agent.Manager;
 import aiad.feup.agent.Player;
-import aiad.feup.messages.exceptions.DuplicatedItemException;
-import aiad.feup.models.Company;
+import aiad.feup.exceptions.DuplicatedItemException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,13 +82,13 @@ public class Board {
      */
     private void applyEndOfRoundFluctuation() {
         for (Company company : companies) {
-            if(company.getPrice() <= 0){
+            if(company.getValue() <= 0){
                 continue;
             }
             
-            System.out.println("Company " + company.getName() + " value before fluctuation: " + company.getPrice());
+            System.out.println("Company " + company.getName() + " value before fluctuation: " + company.getValue());
             company.applyFluctuation();
-            System.out.println("Company " + company.getName() + " value after fluctuation: " + company.getPrice());
+            System.out.println("Company " + company.getName() + " value after fluctuation: " + company.getValue());
         }
     }
 

@@ -10,12 +10,12 @@ import java.util.List;
  * The player super class.
  * Holds information common to all players
  */
-public abstract class Player {
+public class Player extends GameAgent {
 
     /**
      * Name of the player
      */
-    private final String name;
+    private final String playerName;
 
     /**
      * Balance of the player
@@ -39,11 +39,11 @@ public abstract class Player {
 
     /**
      * Constructor of Player
-     * @param name    name of the player
+     * @param playerName    name of the player
      * @param balance balance of the player
      */
-    public Player(final String name, final int balance) {
-        this.name = name;
+    public Player(final String playerName, final int balance) {
+        this.playerName = playerName;
         this.balance = balance;
         this.companies = new ArrayList<>();
         this.numberTokens = 0;
@@ -53,8 +53,8 @@ public abstract class Player {
      * Get the name of the player
      * @return name of the player
      */
-    public String getName() {
-        return name;
+    public String getPlayerName() {
+        return playerName;
     }
 
     /**

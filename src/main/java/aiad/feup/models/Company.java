@@ -8,11 +8,15 @@ import aiad.feup.exceptions.MalformedObjectException;
  */
 public class Company {
 
-
     /**
      * Serial Version UID
      */
     private static final long serialVersionUID = -484968079362726486L;
+
+    /**
+     * Owner of the company
+     */
+    private String owner;
 
     /**
      * The name of the company
@@ -42,18 +46,37 @@ public class Company {
 
     /**
      * Constructor of Company
+     * @param name name of the company
      * @param value stock price of the company
+     * @param isDoubleRevenue true if is double revenue
      * @param fluctuation fluctuation of the company
      */
-    public Company(String name, double value, boolean isDoubleRevenue, double fluctuation) {
+    public Company(final String name, final double value, final boolean isDoubleRevenue, final double fluctuation) {
         if(fluctuation > 100 || fluctuation < 0)
             throw new MalformedObjectException("Company " + name + " fluctuation must be a value between 0 and 100.");
 
+        this.owner = null;
         this.name = name;
         this.value = value;
         this.isDoubleRevenue = isDoubleRevenue;
         this.fluctuation = fluctuation;
         this.isClosed = false;
+    }
+
+    /**
+     * Get the owner of the company
+     * @return owner of the company
+     */
+    public String getOwner() {
+        return owner;
+    }
+
+    /**
+     * Returns the name of the company
+     * @return the name of the company
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -64,15 +87,29 @@ public class Company {
         return value;
     }
 
-
     /**
-     * Returns the name of the company
-     * @return the name of the company
+     * Gets the fluctuation of the company
+     * @return the fluctuation of the company
      */
-    public String getName() {
-        return name;
+    public double getFluctuation() {
+        return fluctuation;
     }
 
+    /**
+     * Set the owner of the company
+     * @param owner owner of the company
+     */
+    public void setOwner(final String owner) {
+        this.owner = owner;
+    }
+
+    /**
+     * Returns whether the company is double revenue
+     * @return whether the company is double revenue
+     */
+    public boolean isDoubleRevenue() {
+        return isDoubleRevenue;
+    }
 
     /**
      * Check if the company is closed for auction
@@ -87,23 +124,6 @@ public class Company {
      */
     public void close() {
         this.isClosed = true;
-    }
-
-
-    /**
-     * Gets the fluctuation of the company
-     * @return the fluctuation of the company
-     */
-    public double getFluctuation() {
-        return fluctuation;
-    }
-
-    /**
-     * Returns whether the company is double revenue
-     * @return whether the company is double revenue
-     */
-    public boolean isDoubleRevenue() {
-        return isDoubleRevenue;
     }
 
     /**

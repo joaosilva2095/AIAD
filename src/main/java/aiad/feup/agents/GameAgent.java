@@ -2,7 +2,11 @@ package aiad.feup.agents;
 
 import aiad.feup.messages.Message;
 import aiad.feup.models.GameState;
+import jade.core.AID;
 import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
+
+import java.io.IOException;
 
 /**
  * Game agent
@@ -39,9 +43,17 @@ public abstract class GameAgent extends Agent{
 
     /**
      * Send a message
+     * @param targetAgent target recipient for the message
      * @param message message to be sent
      */
-    public void sendMessage(final Message message, final RemoteAgent targetAgent) {
+    public void sendMessage(final RemoteAgent targetAgent, Message message) {
 
+        try {
+            message.setContentObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        message.addReceiver(new AID(targetAgent.getName(), AID.ISLOCALNAME));
+        send(message);
     }
 }

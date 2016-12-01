@@ -2,13 +2,14 @@ package aiad.feup.messages;
 
 import aiad.feup.exceptions.MalformedObjectException;
 import aiad.feup.models.Company;
+import jade.lang.acl.ACLMessage;
 
 import java.util.List;
 
 /**
  * UpdatePlayer object. Requests player agents to update their behaviour
  */
-public class UpdatePlayer extends Message {
+public class UpdatePlayer extends ACLMessage {
 
     /**
      * The new balance of the player
@@ -43,7 +44,8 @@ public class UpdatePlayer extends Message {
      * @param numberInvestors the number of investors still in game
      * @param numberManagers the number of Managers still in game
      */
-    public UpdatePlayer(double balance, int tokens, List<Company> companyList, int numberInvestors, int numberManagers) {
+    public UpdatePlayer(int performative, double balance, int tokens, List<Company> companyList, int numberInvestors, int numberManagers) {
+        super(performative);
 
         if(numberInvestors < 0 || numberManagers < 0)
             throw new MalformedObjectException("There can be no negative investors or managers.");

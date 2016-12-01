@@ -1,11 +1,12 @@
 package aiad.feup.messages;
 
 import aiad.feup.models.PlayerType;
+import jade.lang.acl.ACLMessage;
 
 /**
  * SetupPlayer Message
  */
-public class SetupPlayer extends Message {
+public class SetupPlayer extends ACLMessage {
 
     /**
      * Serial Version UID
@@ -21,7 +22,8 @@ public class SetupPlayer extends Message {
      * Constructor for the SetupPlayer ontology
      * @param playerType the requested player type
      */
-    public SetupPlayer(PlayerType playerType){
+    public SetupPlayer(int performative, PlayerType playerType) {
+        super(performative);
         this.playerType = playerType;
     }
 

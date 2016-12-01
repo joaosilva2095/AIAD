@@ -1,9 +1,11 @@
 package aiad.feup.messages;
 
+import jade.lang.acl.ACLMessage;
+
 /**
  * Kick the player
  */
-public class KickPlayer extends Message {
+public class KickPlayer extends ACLMessage {
 
     /**
      * Message of the kick
@@ -14,7 +16,8 @@ public class KickPlayer extends Message {
      * Constructor of KickPlayer
      * @param message message of the kick player
      */
-    public KickPlayer(String message) {
+    public KickPlayer(int performative, String message) {
+        super(performative);
         this.message = message;
     }
 

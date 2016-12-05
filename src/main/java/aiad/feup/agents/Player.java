@@ -5,6 +5,9 @@ import aiad.feup.models.PlayerType;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAException;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
@@ -60,6 +63,22 @@ public class Player extends GameAgent {
         if(instance == null)
             instance = new Player();
         return instance;
+    }
+
+    /**
+     * Setup the player
+     */
+    @Override
+    protected void setup() {
+        super.setup();
+
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName(getAID());
+        try {
+            DFService.register(this, dfd);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

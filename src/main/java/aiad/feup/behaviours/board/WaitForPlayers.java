@@ -2,9 +2,7 @@ package aiad.feup.behaviours.board;
 
 import aiad.feup.agents.Board;
 import aiad.feup.agents.RemoteAgent;
-import aiad.feup.models.GameState;
 import jade.core.AID;
-import jade.core.behaviours.SimpleBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
@@ -34,6 +32,7 @@ public class WaitForPlayers extends SubscriptionInitiator {
      */
     @Override
     protected void handleInform(ACLMessage inform) {
+        System.out.println("Waiting for players");
         try {
             final DFAgentDescription[] results = DFService.decodeNotification(inform.getContent());
             if(results.length < 0)
@@ -45,7 +44,7 @@ public class WaitForPlayers extends SubscriptionInitiator {
                 final RemoteAgent player = new RemoteAgent(playerAID.getName());
                 board.addPlayer(player);
 
-                board.sendMessage(player, new ACLMessage(ACLMessage.CONFIRM));
+                board.sendMessage(player, new ACLMessage(ACLMessage.CONFIRM), null);
                 System.out.println("Player " + playerAID.getLocalName() + " joined the game (" + board.getNumberPlayers() + ")");
             }
         } catch (FIPAException e) {

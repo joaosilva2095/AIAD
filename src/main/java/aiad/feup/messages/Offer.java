@@ -1,12 +1,13 @@
 package aiad.feup.messages;
 
 import aiad.feup.models.Company;
-import jade.lang.acl.ACLMessage;
+
+import java.io.Serializable;
 
 /**
  * Offer message
  */
-public class Offer extends ACLMessage {
+public class Offer implements Serializable {
 
     /**
      * Company that this offer corresponds to
@@ -29,8 +30,7 @@ public class Offer extends ACLMessage {
      * @param offeredValue value offered for the company
      * @param isClosed true if it is a closed deal
      */
-    public Offer(int performative, Company company, double offeredValue, boolean isClosed) {
-        super(performative);
+    public Offer(Company company, double offeredValue, boolean isClosed) {
         this.company = company;
         this.offeredValue = offeredValue;
         this.isClosed = isClosed;

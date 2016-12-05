@@ -3,26 +3,26 @@ package aiad.feup.messages;
 import java.io.Serializable;
 
 /**
- * Kick the player
+ * End game
  */
-public class KickPlayer implements Serializable {
+public class EndGame implements Serializable {
 
     /**
-     * Message of the kick
+     * Message of the end game
      */
     final String message;
 
     /**
      * Constructor of KickPlayer
-     * @param message message of the kick player
+     * @param message message of the end game
      */
-    public KickPlayer(String message) {
+    public EndGame(String message) {
         this.message = message;
     }
 
     /**
      * Get the message
-     * @return message of the kick
+     * @return message of the end game
      */
     public String getMessage() {
         return message;

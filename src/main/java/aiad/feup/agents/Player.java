@@ -1,11 +1,12 @@
 package aiad.feup.agents;
 
-import aiad.feup.behaviours.player.WaitJoinConfirmation;
+import aiad.feup.behaviours.player.ReceiveMessage;
 import aiad.feup.models.Company;
 import aiad.feup.models.PlayerType;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAException;
@@ -73,9 +74,10 @@ public class Player extends GameAgent {
     protected void setup() {
         super.setup();
 
+        final ThreadedBehaviourFactory factory = new ThreadedBehaviourFactory();
+
         // Create the behaviour to wait for a join game confirmation
-        WaitJoinConfirmation behaviour = new WaitJoinConfirmation(this);
-        addBehaviour(behaviour);
+        addBehaviour(factory.wrap(new ReceiveMessage(this)));
 
         // Register in the DF
         DFAgentDescription dfd = new DFAgentDescription();
@@ -84,7 +86,6 @@ public class Player extends GameAgent {
             DFService.register(this, dfd);
         } catch (FIPAException e) {
             System.out.println("Could not register in the DF! " + e.getMessage());
-            removeBehaviour(behaviour);
             System.exit(1);
         }
     }

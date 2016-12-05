@@ -28,5 +28,10 @@ public enum GameState {
     /**
      * Ended auctioning
      */
-    END_AUCTION
+    END_AUCTION,
+
+    /**
+     * End the game
+     */
+    END_GAME
 }

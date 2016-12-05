@@ -4,9 +4,9 @@ import aiad.feup.models.GameState;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
-import jade.wrapper.StaleProxyException;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Game agent
@@ -62,7 +62,13 @@ public abstract class GameAgent extends Agent{
      * @param targetAgent target recipient for the message
      * @param message message to be sent
      */
-    public void sendMessage(final RemoteAgent targetAgent, ACLMessage message) {
+    public void sendMessage(final RemoteAgent targetAgent, ACLMessage message, Serializable content) {
+        try {
+            message.setContentObject(content);
+        } catch (IOException e) {
+            System.out.println("Could not set the message object! " + e.getMessage());
+            return;
+        }
         message.addReceiver(new AID(targetAgent.getName(), AID.ISGUID));
         send(message);
     }

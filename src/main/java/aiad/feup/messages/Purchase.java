@@ -2,13 +2,14 @@ package aiad.feup.messages;
 
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.models.Company;
-import jade.lang.acl.ACLMessage;
+
+import java.io.Serializable;
 
 /**
  * Purchase message.
  * Updates the board telling that a company was bought by an investor
  */
-public class Purchase extends ACLMessage {
+public class Purchase implements Serializable {
 
     /**
      * Company that was purchased
@@ -31,8 +32,7 @@ public class Purchase extends ACLMessage {
      * @param value value of the purchase
      * @param investor investor that purchased
      */
-    public Purchase(int performative, final Company company, final double value, final RemoteAgent investor) {
-        super(performative);
+    public Purchase(final Company company, final double value, final RemoteAgent investor) {
         this.company = company;
         this.value = value;
         this.investor = investor;

@@ -1,11 +1,13 @@
 package aiad.feup.agents;
 
+import aiad.feup.behaviours.board.ReadCommand;
 import aiad.feup.behaviours.board.WaitForPlayers;
 import aiad.feup.exceptions.DuplicatedItemException;
 import aiad.feup.models.Company;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.wrapper.AgentContainer;
@@ -74,10 +76,13 @@ public class Board extends GameAgent {
     protected void setup() {
         super.setup();
 
+        final ThreadedBehaviourFactory factory = new ThreadedBehaviourFactory();
+
         SearchConstraints sc = new SearchConstraints();
         sc.setMaxResults(10L);
         DFAgentDescription dfd = new DFAgentDescription();
-        addBehaviour(new WaitForPlayers(this, dfd, sc));
+        addBehaviour(factory.wrap(new ReadCommand(this)));
+        addBehaviour(factory.wrap(new WaitForPlayers(this, dfd, sc)));
     }
 
     /**

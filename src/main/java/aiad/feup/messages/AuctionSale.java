@@ -1,12 +1,13 @@
 package aiad.feup.messages;
 
 import aiad.feup.models.Company;
-import jade.lang.acl.ACLMessage;
+
+import java.io.Serializable;
 
 /**
  * Auction sale
  */
-public class AuctionSale extends ACLMessage {
+public class AuctionSale implements Serializable {
 
     /**
      * Company that will the auctioned
@@ -23,8 +24,7 @@ public class AuctionSale extends ACLMessage {
      * @param company company that will be auctioned
      * @param remainingCompanies number of remaining companies to be auctioned
      */
-    public AuctionSale(int performative, Company company, int remainingCompanies) {
-        super(performative);
+    public AuctionSale(Company company, int remainingCompanies) {
         this.company = company;
         this.remainingCompanies = remainingCompanies;
     }

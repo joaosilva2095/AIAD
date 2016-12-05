@@ -1,5 +1,6 @@
 package aiad.feup.agents;
 
+import aiad.feup.behaviours.player.WaitJoinConfirmation;
 import aiad.feup.models.Company;
 import aiad.feup.models.PlayerType;
 import jade.core.Profile;
@@ -72,12 +73,19 @@ public class Player extends GameAgent {
     protected void setup() {
         super.setup();
 
+        // Create the behaviour to wait for a join game confirmation
+        WaitJoinConfirmation behaviour = new WaitJoinConfirmation(this);
+        addBehaviour(behaviour);
+
+        // Register in the DF
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         try {
             DFService.register(this, dfd);
         } catch (FIPAException e) {
-            e.printStackTrace();
+            System.out.println("Could not register in the DF! " + e.getMessage());
+            removeBehaviour(behaviour);
+            System.exit(1);
         }
     }
 

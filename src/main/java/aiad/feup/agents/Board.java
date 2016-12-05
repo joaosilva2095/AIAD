@@ -1,10 +1,13 @@
 package aiad.feup.agents;
 
+import aiad.feup.behaviours.board.WaitForPlayers;
 import aiad.feup.exceptions.DuplicatedItemException;
 import aiad.feup.models.Company;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
@@ -48,8 +51,10 @@ public class Board extends GameAgent {
      * Constructor of Board
      */
     private Board() {
+        super();
         this.players = new ArrayList<>();
         this.companies = new ArrayList<>();
+
     }
 
     /**
@@ -60,6 +65,19 @@ public class Board extends GameAgent {
         if(instance == null)
             instance = new Board();
         return instance;
+    }
+
+    /**
+     * Setup the board
+     */
+    @Override
+    protected void setup() {
+        super.setup();
+
+        SearchConstraints sc = new SearchConstraints();
+        sc.setMaxResults(10L);
+        DFAgentDescription dfd = new DFAgentDescription();
+        addBehaviour(new WaitForPlayers(this, dfd, sc));
     }
 
     /**
@@ -84,6 +102,8 @@ public class Board extends GameAgent {
         AgentController boardController = mainContainer.acceptNewAgent("board", instance);
         boardController.start();
     }
+
+
 
     /**
      * Add a company to the board
@@ -149,6 +169,14 @@ public class Board extends GameAgent {
                 return player;
         }
         return null;
+    }
+
+    /**
+     * Add a player to the game
+     * @param player player to be added
+     */
+    public void addPlayer(RemoteAgent player) {
+        this.players.add(player);
     }
 
     /**

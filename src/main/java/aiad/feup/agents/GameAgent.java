@@ -22,7 +22,7 @@ public abstract class GameAgent extends Agent{
      * Constructor of a game agent
      */
     public GameAgent() {
-        this.state = GameState.IDDLE;
+        this.state = GameState.IDLE;
     }
 
     /**
@@ -63,11 +63,7 @@ public abstract class GameAgent extends Agent{
      * @param message message to be sent
      */
     public void sendMessage(final RemoteAgent targetAgent, ACLMessage message) {
-        try {
-            message.setContentObject(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         message.addReceiver(new AID(targetAgent.getName(), AID.ISLOCALNAME));
         send(message);
     }

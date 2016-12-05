@@ -8,7 +8,7 @@ public enum GameState {
     /**
      * Waiting for new instructions
      */
-    IDDLE,
+    IDLE,
 
     /**
      * Started negotiating

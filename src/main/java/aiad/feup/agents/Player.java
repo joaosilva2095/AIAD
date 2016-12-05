@@ -64,20 +64,25 @@ public class Player extends GameAgent {
 
     /**
      * Initialize the player agent
-     * @param host host of the remote container
-     * @param port port of the remote container
+     * @param nickname nickname of the player
+     * @param mainHost host of the remote container
+     * @param mainPort port of the remote container
+     * @param localHost local host
+     * @param localPort local port
      */
-    public void init(final String host, final int port) throws StaleProxyException {
+    public void init(final String nickname, final String mainHost, final int mainPort, final String localHost, final int localPort) throws StaleProxyException {
         Runtime rt = Runtime.instance();
 
         // Create a default profile
         Profile profile = new ProfileImpl();
-        profile.setParameter(ProfileImpl.MAIN_HOST, host);
-        profile.setParameter(ProfileImpl.MAIN_PORT, "" + port);
+        profile.setParameter(ProfileImpl.MAIN_HOST, mainHost);
+        profile.setParameter(ProfileImpl.MAIN_PORT, "" + mainPort);
+        profile.setParameter(ProfileImpl.LOCAL_HOST, localHost);
+        profile.setParameter(ProfileImpl.LOCAL_PORT, "" + localPort);
         profile.setParameter(ProfileImpl.MAIN, "false");
 
         AgentContainer agentContainer = rt.createAgentContainer(profile);
-        AgentController playerController = agentContainer.acceptNewAgent("player", this);
+        AgentController playerController = agentContainer.acceptNewAgent(nickname, this);
         playerController.start();
     }
 

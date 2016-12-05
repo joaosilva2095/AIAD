@@ -3,17 +3,7 @@ package aiad.feup;
 import aiad.feup.agents.Board;
 import aiad.feup.agents.GameAgent;
 import aiad.feup.agents.Player;
-import jade.core.PlatformManager;
-import jade.core.Profile;
-import jade.core.ProfileImpl;
-import jade.core.Runtime;
-import jade.wrapper.AgentContainer;
-import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-
-import java.awt.EventQueue;
-import java.io.File;
 
 /**
  * Main class
@@ -32,29 +22,42 @@ public class Main {
      */
     public static void main(String[] args) throws StaleProxyException {
         if (args.length < 3) {
-            throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> [numberPlayers]");
+            throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate>");
         }
 
         // Get variables
-        final String host = args[0],
+        final String mainHost = args[0],
                 type = args[2];
-        final int port;
+        final int mainPort;
         try {
-            port = Integer.parseInt(args[1]);
+            mainPort = Integer.parseInt(args[1]);
         } catch (final Exception e) {
-            throw new IllegalArgumentException("The number of players must be a natural number");
+            throw new IllegalArgumentException("The port must be a natural number");
         }
 
         switch(type) {
             case "board":
-                setupBoard(host, port);
+                setupBoard(mainHost, mainPort);
                 break;
             case "player":
-                setupPlayer(host, port);
+                if (args.length < 6) {
+                    throw new IllegalArgumentException("Please use java -jar game.jar <mainHost> <mainPort> <board|player|simulate> <nickname> <localHost> <localPort>");
+                }
+
+                final String nickname = args[3],
+                        localHost = args[4];
+                final int localPort;
+                try {
+                    localPort = Integer.parseInt(args[5]);
+                } catch (final Exception e) {
+                    throw new IllegalArgumentException("The port must be a natural number");
+                }
+
+                setupPlayer(nickname, mainHost, mainPort, localHost, localPort);
                 break;
             case "simulate":
                 if (args.length < 4) {
-                    throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> [numberPlayers]");
+                    throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> <numberPlayers>");
                 }
 
                 int numberPlayers;
@@ -65,7 +68,7 @@ public class Main {
                 } catch (final Exception e) {
                     throw new IllegalArgumentException("The number of players must be a natural number");
                 }
-                simulate(host, port, numberPlayers);
+                simulate(mainHost, mainPort, numberPlayers);
                 break;
             default:
                 throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> [numberPlayers]");
@@ -75,19 +78,19 @@ public class Main {
     private static void setupBoard(final String host, final int port) {
         agent = Board.getInstance();
         try {
-            agent.init(host, port);
+            ((Board) agent).init(host, port);
         } catch (StaleProxyException e) {
             System.out.println("Error! " + e.getMessage());
             return;
         }
     }
 
-    private static void setupPlayer(final String host, final int port) {
+    private static void setupPlayer(final String nickname, final String mainHost, final int mainPort, final String localHost, final int localPort) {
         agent = Player.getInstance();
         try {
-            agent.init(host, port);
+            ((Player) agent).init(nickname, mainHost, mainPort, localHost, localPort);
         } catch (StaleProxyException e) {
-            System.out.println("Error! " + e.getMessage());
+            System.out.println("That nickname is already in use. Please choose another one.");
             return;
         }
     }

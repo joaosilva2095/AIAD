@@ -42,13 +42,6 @@ public abstract class GameAgent extends Agent{
     }
 
     /**
-     * Initialize the board
-     * @param host hostname of the DFS
-     * @param port port of the DFS
-     */
-    public abstract void init(final String host, final int port) throws StaleProxyException;
-
-    /**
      * Get the state of the game
      * @return state of the game
      */

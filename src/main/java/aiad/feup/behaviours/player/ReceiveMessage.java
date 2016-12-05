@@ -8,6 +8,7 @@ import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+import jade.util.leap.Serializable;
 
 /**
  * Receive Message Behaviour. Responsible for receiving all messages
@@ -33,23 +34,32 @@ public class ReceiveMessage extends SimpleBehaviour {
         ACLMessage message = getAgent().blockingReceive(timeout);
         Player player = (Player)getAgent();
 
-        // Get the content
+        //Extract content
         Object content = null;
         try {
             content = message.getContentObject();
         } catch (UnreadableException e) {
-        }
-        if(content == null)
-            return;
-
-        // Confirmation
-        if(message.getPerformative() == ACLMessage.CONFIRM && player.getGameState() == GameState.IDLE) {
-            System.out.println("Confirmation Received. Successfully joined the game.");
-            timeout = 0L;
-            return;
+            System.out.println("Could not retrieve message content object even if it is null.");
+            e.printStackTrace();
         }
 
-        // Setup the player
+        // Content-less messages
+        if(content == null) {
+            // Confirmation
+            if(message.getPerformative() == ACLMessage.CONFIRM && player.getGameState() == GameState.IDLE) {
+                System.out.println("Confirmation Received. Successfully joined the game.");
+                timeout = 0L;
+                return;
+            }
+
+            //Refused Example
+            if(message.getPerformative() == ACLMessage.REFUSE){
+                //DO SOMETHING
+                return;
+            }
+        }
+
+        // Content rich messages
         if(content instanceof SetupPlayer) {
             final SetupPlayer setupPlayer = (SetupPlayer) content;
             player.setType(setupPlayer.getPlayerType());
@@ -72,6 +82,11 @@ public class ReceiveMessage extends SimpleBehaviour {
             player.setGameState(GameState.END_GAME);
             return;
         }
+
+
+        //Unknown message
+        System.out.println("Received unknown message. Continuing.");
+        return;
     }
 
     @Override

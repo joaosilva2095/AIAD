@@ -29,16 +29,17 @@ public class ReadCommand extends SimpleBehaviour {
     public void action() {
         final Scanner in = new Scanner(System.in);
         String command = in.nextLine();
+        Board board = (Board)getAgent();
         switch(command.toLowerCase()) {
             case "start":
                 System.out.println("Starting the game!");
                 break;
             case "end":
-                System.out.println("Ended the game!");
+                System.out.println("Ending the game!");
                 ACLMessage message = new ACLMessage(ACLMessage.INFORM);
-                EndGame endGame = new EndGame("Ended the game by console.");
-                for(RemoteAgent agent : ((Board)getAgent()).getPlayers()) {
-                    ((Board)getAgent()).sendMessage(agent, message, endGame);
+                EndGame endGame = new EndGame(" -- Game forcefully ended by console.");
+                for(RemoteAgent agent : board.getPlayers()) {
+                    board.sendMessage(agent, message, endGame);
                 }
                 break;
             default:

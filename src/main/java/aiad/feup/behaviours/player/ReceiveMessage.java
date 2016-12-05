@@ -2,6 +2,8 @@ package aiad.feup.behaviours.player;
 
 import aiad.feup.agents.Player;
 import aiad.feup.messages.EndGame;
+import aiad.feup.messages.SetupPlayer;
+import aiad.feup.messages.UpdatePlayer;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -31,13 +33,7 @@ public class ReceiveMessage extends SimpleBehaviour {
         ACLMessage message = getAgent().blockingReceive(timeout);
         Player player = (Player)getAgent();
 
-        // Confirmation
-        if(message.getPerformative() == ACLMessage.CONFIRM && player.getGameState() == GameState.IDLE) {
-            System.out.println("Confirmation Received. Successfully joined the game.");
-            timeout = 0L;
-            return;
-        }
-
+        // Get the content
         Object content = null;
         try {
             content = message.getContentObject();
@@ -45,6 +41,29 @@ public class ReceiveMessage extends SimpleBehaviour {
         }
         if(content == null)
             return;
+
+        // Confirmation
+        if(message.getPerformative() == ACLMessage.CONFIRM && player.getGameState() == GameState.IDLE) {
+            System.out.println("Confirmation Received. Successfully joined the game.");
+            timeout = 0L;
+            return;
+        }
+
+        // Setup the player
+        if(content instanceof SetupPlayer) {
+            final SetupPlayer setupPlayer = (SetupPlayer) content;
+            player.setType(setupPlayer.getPlayerType());
+            return;
+        }
+
+        // Update the player
+        if(content instanceof UpdatePlayer) {
+            final UpdatePlayer updatePlayer = (UpdatePlayer) content;
+            player.setCompanies(updatePlayer.getCompanyList());
+            player.setBalance(updatePlayer.getBalance());
+            player.setTokens(updatePlayer.getTokens());
+            return;
+        }
 
         // End game
         if(content instanceof EndGame){

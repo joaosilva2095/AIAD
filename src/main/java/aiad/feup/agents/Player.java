@@ -31,7 +31,7 @@ public class Player extends GameAgent {
     /**
      * Balance of the player
      */
-    private int balance;
+    private double balance;
 
     /**
      * Type of the player
@@ -76,7 +76,7 @@ public class Player extends GameAgent {
 
         final ThreadedBehaviourFactory factory = new ThreadedBehaviourFactory();
 
-        // Create the behaviour to wait for a join game confirmation
+        // Create the behaviour for receiving messages
         addBehaviour(factory.wrap(new ReceiveMessage(this)));
 
         // Register in the DF
@@ -118,7 +118,7 @@ public class Player extends GameAgent {
      * Get the current balance of the player
      * @return current balance of the player
      */
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
@@ -134,7 +134,7 @@ public class Player extends GameAgent {
      * Set the balance of the player
      * @param balance balance of the player
      */
-    public void setBalance(final int balance) { this.balance = balance; }
+    public void setBalance(final double balance) { this.balance = balance; }
 
     /**
      * Set the type of the player
@@ -156,10 +156,8 @@ public class Player extends GameAgent {
      * Add tokens to the player
      * @param numberTokens number of tokens to be added
      */
-    public void addTokens(int numberTokens) {
-        if(numberTokens < 0)
-            throw new IllegalArgumentException("Number of tokens to be added must be positive");
-        this.numberTokens += numberTokens;
+    public void setTokens(int numberTokens) {
+        this.numberTokens = numberTokens;
     }
 
     /**

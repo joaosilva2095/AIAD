@@ -7,7 +7,6 @@ import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 /**

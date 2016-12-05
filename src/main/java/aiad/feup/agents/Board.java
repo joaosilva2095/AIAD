@@ -2,6 +2,12 @@ package aiad.feup.agents;
 
 import aiad.feup.exceptions.DuplicatedItemException;
 import aiad.feup.models.Company;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +18,11 @@ import java.util.Map;
  * Responsible for maintaining the board state
  */
 public class Board extends GameAgent {
+
+    /**
+     * Instance of the board
+     */
+    private static Board instance;
 
     /**
      * Players of the game
@@ -36,9 +47,42 @@ public class Board extends GameAgent {
     /**
      * Constructor of Board
      */
-    public Board() {
+    private Board() {
         this.players = new ArrayList<>();
         this.companies = new ArrayList<>();
+    }
+
+    /**
+     * Get the instance of the board
+     * @return instance of the board
+     */
+    public static Board getInstance() {
+        if(instance == null)
+            instance = new Board();
+        return instance;
+    }
+
+    /**
+     * Initialize the board
+     * @param host hostname of the DFS
+     * @param port port of the DFS
+     */
+    public void init(final String host, final int port) throws StaleProxyException {
+        Runtime rt = Runtime.instance();
+
+        // Exit the JVM when there are no more containers around
+        rt.setCloseVM(true);
+
+        // Create a default profile
+        Profile profile = new ProfileImpl(host, port, null);
+
+        AgentContainer mainContainer = rt.createMainContainer(profile);
+        AgentController rma = mainContainer.createNewAgent("rma","jade.tools.rma.rma", new Object[0]);
+        rma.start();
+
+        // Add board agent
+        AgentController boardController = mainContainer.acceptNewAgent("board", instance);
+        boardController.start();
     }
 
     /**

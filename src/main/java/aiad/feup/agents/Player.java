@@ -2,6 +2,12 @@ package aiad.feup.agents;
 
 import aiad.feup.models.Company;
 import aiad.feup.models.PlayerType;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +17,11 @@ import java.util.List;
  * Holds information common to all players
  */
 public class Player extends GameAgent {
+
+    /**
+     * Instance of the player
+     */
+    private static Player instance;
 
     /**
      * Balance of the player
@@ -35,10 +46,39 @@ public class Player extends GameAgent {
     /**
      * Constructor of Player
      */
-    public Player() {
+    private Player() {
         this.balance = 0;
         this.companies = new ArrayList<>();
         this.numberTokens = 0;
+    }
+
+    /**
+     * Get the instance of the player
+     * @return instance of the player
+     */
+    public static Player getInstance() {
+        if(instance == null)
+            instance = new Player();
+        return instance;
+    }
+
+    /**
+     * Initialize the player agent
+     * @param host host of the remote container
+     * @param port port of the remote container
+     */
+    public void init(final String host, final int port) throws StaleProxyException {
+        Runtime rt = Runtime.instance();
+
+        // Create a default profile
+        Profile profile = new ProfileImpl();
+        profile.setParameter(ProfileImpl.MAIN_HOST, host);
+        profile.setParameter(ProfileImpl.MAIN_PORT, "" + port);
+        profile.setParameter(ProfileImpl.MAIN, "false");
+
+        AgentContainer agentContainer = rt.createAgentContainer(profile);
+        AgentController playerController = agentContainer.acceptNewAgent("player", this);
+        playerController.start();
     }
 
     /**

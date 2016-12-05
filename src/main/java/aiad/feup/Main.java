@@ -3,6 +3,17 @@ package aiad.feup;
 import aiad.feup.agents.Board;
 import aiad.feup.agents.GameAgent;
 import aiad.feup.agents.Player;
+import jade.core.PlatformManager;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
+
+import java.awt.EventQueue;
+import java.io.File;
 
 /**
  * Main class
@@ -19,39 +30,69 @@ public class Main {
      *
      * @param args arguments of the game
      */
-    public static void main(String[] args) {
-        if (args.length < 1) {
-            throw new IllegalArgumentException("Please use java -jar game.jar <BOARD|PLAYER|SIMULATE> [numberPlayers]");
+    public static void main(String[] args) throws StaleProxyException {
+        if (args.length < 3) {
+            throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> [numberPlayers]");
         }
 
-        if (args[0].equalsIgnoreCase("BOARD")) {
-            if (args.length != 1) {
-                throw new IllegalArgumentException("Please use java -jar game.jar <BOARD|PLAYER|SIMULATE> [numberPlayers]");
-            }
+        // Get variables
+        final String host = args[0],
+                type = args[2];
+        final int port;
+        try {
+            port = Integer.parseInt(args[1]);
+        } catch (final Exception e) {
+            throw new IllegalArgumentException("The number of players must be a natural number");
+        }
 
-            agent = new Board();
-        } else if (args[0].equalsIgnoreCase("PLAYER")) {
-            if (args.length != 1) {
-                throw new IllegalArgumentException("Please use java -jar game.jar <BOARD|PLAYER|SIMULATE> [numberPlayers]");
-            }
+        switch(type) {
+            case "board":
+                setupBoard(host, port);
+                break;
+            case "player":
+                setupPlayer(host, port);
+                break;
+            case "simulate":
+                if (args.length < 4) {
+                    throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> [numberPlayers]");
+                }
 
-            agent = new Player();
-        } else if (args[0].equalsIgnoreCase("SIMULATE")) {
-            if (args.length != 2) {
-                throw new IllegalArgumentException("Please use java -jar game.jar <BOARD|PLAYER|SIMULATE> [numberPlayers]");
-            }
-
-            // Number of players
-            int numberPlayers;
-            try {
-                numberPlayers = Integer.parseInt(args[1]);
-                if(numberPlayers < 0)
+                int numberPlayers;
+                try {
+                    numberPlayers = Integer.parseInt(args[3]);
+                    if(numberPlayers < 0)
+                        throw new IllegalArgumentException("The number of players must be a natural number");
+                } catch (final Exception e) {
                     throw new IllegalArgumentException("The number of players must be a natural number");
-            } catch (final Exception e) {
-                throw new IllegalArgumentException("The number of players must be a natural number");
-            }
-
-            agent = new Board();
+                }
+                simulate(host, port, numberPlayers);
+                break;
+            default:
+                throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> [numberPlayers]");
         }
+    }
+
+    private static void setupBoard(final String host, final int port) {
+        agent = Board.getInstance();
+        try {
+            agent.init(host, port);
+        } catch (StaleProxyException e) {
+            System.out.println("Error! " + e.getMessage());
+            return;
+        }
+    }
+
+    private static void setupPlayer(final String host, final int port) {
+        agent = Player.getInstance();
+        try {
+            agent.init(host, port);
+        } catch (StaleProxyException e) {
+            System.out.println("Error! " + e.getMessage());
+            return;
+        }
+    }
+
+    private static void simulate(final String host, final int port, final int numberPlayers) {
+
     }
 }

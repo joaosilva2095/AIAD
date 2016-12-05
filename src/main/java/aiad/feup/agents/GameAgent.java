@@ -4,6 +4,7 @@ import aiad.feup.models.GameState;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.StaleProxyException;
 
 import java.io.IOException;
 
@@ -23,6 +24,29 @@ public abstract class GameAgent extends Agent{
     public GameAgent() {
         this.state = GameState.IDDLE;
     }
+
+    /**
+     * Setup the game agent
+     */
+    @Override
+    protected void setup() {
+        System.out.println("Agent " + getName() + " started!");
+    }
+
+    /**
+     * On agent take down
+     */
+    @Override
+    protected void takeDown() {
+        System.out.println("Agent " + getName() + " terminated!");
+    }
+
+    /**
+     * Initialize the board
+     * @param host hostname of the DFS
+     * @param port port of the DFS
+     */
+    public abstract void init(final String host, final int port) throws StaleProxyException;
 
     /**
      * Get the state of the game

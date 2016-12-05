@@ -3,11 +3,13 @@ package aiad.feup.models;
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.exceptions.MalformedObjectException;
 
+import java.io.Serializable;
+
 /**
  * A company.
  * Holds information about the share.
  */
-public class Company {
+public class Company implements Serializable {
 
     /**
      * Serial Version UID

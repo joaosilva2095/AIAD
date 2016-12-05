@@ -1,9 +1,16 @@
 package aiad.feup.agents;
 
+import java.io.Serializable;
+
 /**
  * Remote agent
  */
-public class RemoteAgent {
+public class RemoteAgent implements Serializable {
+
+    /**
+     * Serial Version UID
+     */
+    private static final long serialVersionUID = 456599173322220545L;
 
     /**
      * Name of the remote agent

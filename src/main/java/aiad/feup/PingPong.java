@@ -1,6 +1,5 @@
 package aiad.feup;
 
-import aiad.feup.messages.JoinPlayer;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.domain.DFService;

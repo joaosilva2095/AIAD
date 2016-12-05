@@ -1,6 +1,5 @@
 package aiad.feup.agents;
 
-import aiad.feup.messages.Message;
 import aiad.feup.models.GameState;
 import jade.core.AID;
 import jade.core.Agent;
@@ -46,8 +45,7 @@ public abstract class GameAgent extends Agent{
      * @param targetAgent target recipient for the message
      * @param message message to be sent
      */
-    public void sendMessage(final RemoteAgent targetAgent, Message message) {
-
+    public void sendMessage(final RemoteAgent targetAgent, ACLMessage message) {
         try {
             message.setContentObject(message);
         } catch (IOException e) {

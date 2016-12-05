@@ -63,8 +63,7 @@ public abstract class GameAgent extends Agent{
      * @param message message to be sent
      */
     public void sendMessage(final RemoteAgent targetAgent, ACLMessage message) {
-
-        message.addReceiver(new AID(targetAgent.getName(), AID.ISLOCALNAME));
+        message.addReceiver(new AID(targetAgent.getName(), AID.ISGUID));
         send(message);
     }
 }

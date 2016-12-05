@@ -18,13 +18,19 @@ import jade.proto.SubscriptionInitiator;
  */
 public class WaitForPlayers extends SubscriptionInitiator {
 
+    /**
+     * Constructor of WaitForPlayers behaviour
+     * @param board board that will wait for players
+     * @param dfd template for agents to be searched
+     * @param sc search constraints for new players
+     */
     public WaitForPlayers(final Board board, final DFAgentDescription dfd, final SearchConstraints sc){
         super(board, DFService.createSubscriptionMessage(board, board.getDefaultDF(), dfd, sc));
     }
 
     /**
      * Handle informs of new DF registrations
-     * @param inform
+     * @param inform inform message received
      */
     @Override
     protected void handleInform(ACLMessage inform) {
@@ -33,13 +39,17 @@ public class WaitForPlayers extends SubscriptionInitiator {
             if(results.length < 0)
                 return;
 
+            final Board board = (Board)getAgent();
             for (final DFAgentDescription dfd : results) {
-                final AID player = dfd.getName();
-                ((Board) getAgent()).addPlayer(new RemoteAgent(player.getName()));
-                System.out.println("Player " + player.getLocalName() + " joined the game (" + ((Board) getAgent()).getNumberPlayers() + ")");
+                final AID playerAID = dfd.getName();
+                final RemoteAgent player = new RemoteAgent(playerAID.getName());
+                board.addPlayer(player);
+
+                board.sendMessage(player, new ACLMessage(ACLMessage.CONFIRM));
+                System.out.println("Player " + playerAID.getLocalName() + " joined the game (" + board.getNumberPlayers() + ")");
             }
         } catch (FIPAException e) {
-            e.printStackTrace();
+            System.out.println("Error while waiting for players to join the game! " + e.getMessage());
         }
     }
 }

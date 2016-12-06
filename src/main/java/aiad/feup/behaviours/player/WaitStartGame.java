@@ -57,6 +57,7 @@ public class WaitStartGame extends SimpleBehaviour {
         if(content instanceof SetupPlayer) {
             SetupPlayer setupPlayer = (SetupPlayer) content;
             player.setType(setupPlayer.getPlayerType());
+            System.out.println("I have been assigned as " + player.getType());
             return;
         }
 

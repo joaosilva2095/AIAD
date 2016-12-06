@@ -6,6 +6,7 @@ import aiad.feup.messages.EndGame;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.Scanner;
 
@@ -32,7 +33,13 @@ public class ReadCommand extends SimpleBehaviour {
         Board board = (Board)getAgent();
         switch(command.toLowerCase()) {
             case "start":
+                if(board.getNumberPlayers() < 3) {
+                    System.out.println("Cannot start the game with less than 3 players.");
+                    return;
+                }
+
                 System.out.println("Starting the game!");
+                board.assignRoles();
                 break;
             case "end":
                 System.out.println("Ending the game!");

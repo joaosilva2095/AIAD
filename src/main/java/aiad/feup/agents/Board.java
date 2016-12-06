@@ -3,26 +3,38 @@ package aiad.feup.agents;
 import aiad.feup.behaviours.board.ReadCommand;
 import aiad.feup.behaviours.board.WaitForPlayers;
 import aiad.feup.exceptions.DuplicatedItemException;
+import aiad.feup.messages.SetupPlayer;
 import aiad.feup.models.Company;
+import aiad.feup.models.PlayerType;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
+import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
+import sun.plugin.dom.exception.InvalidStateException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The Board Agent
  * Responsible for maintaining the board state
  */
 public class Board extends GameAgent {
+
+    /**
+     * Initial balance for players
+     */
+    private static final double INITIAL_BALANCE = 120000;
+
+    /**
+     * Initial tokens for investors
+     */
+    private static final int INITIAL_TOKENS = 3;
 
     /**
      * Instance of the board
@@ -35,6 +47,11 @@ public class Board extends GameAgent {
     private List<RemoteAgent> players;
 
     /**
+     * Companies of the game
+     */
+    private List<Company> companies;
+
+    /**
      * Balances of the remote agents
      */
     private Map<RemoteAgent, Integer> balances;
@@ -45,9 +62,9 @@ public class Board extends GameAgent {
     private Map<RemoteAgent, Integer> tokens;
 
     /**
-     * Companies of the game
+     * Type of the players
      */
-    private List<Company> companies;
+    private Map<RemoteAgent, PlayerType> types;
 
     /**
      * Constructor of Board
@@ -57,6 +74,9 @@ public class Board extends GameAgent {
         this.players = new ArrayList<>();
         this.companies = new ArrayList<>();
 
+        this.balances = new HashMap<>();
+        this.tokens = new HashMap<>();
+        this.types = new HashMap<>();
     }
 
     /**
@@ -107,8 +127,6 @@ public class Board extends GameAgent {
         AgentController boardController = mainContainer.acceptNewAgent("board", instance);
         boardController.start();
     }
-
-
 
     /**
      * Add a company to the board
@@ -191,5 +209,23 @@ public class Board extends GameAgent {
      */
     public List<Company> getCompanies() {
         return companies;
+    }
+
+    /**
+     * Assign roles and send to the agents
+     */
+    public void assignRoles() {
+        int index = 0;
+        Collections.shuffle(players);
+        for(RemoteAgent agent : players) {
+            if(index % 2 == 0) { // Investor
+                sendMessage(agent, new ACLMessage(ACLMessage.INFORM), new SetupPlayer(PlayerType.INVESTOR));
+                types.put(agent, PlayerType.INVESTOR);
+            } else { // Manager
+                sendMessage(agent, new ACLMessage(ACLMessage.INFORM), new SetupPlayer(PlayerType.MANAGER));
+                types.put(agent, PlayerType.MANAGER);
+            }
+            index++;
+        }
     }
 }

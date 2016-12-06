@@ -1,12 +1,12 @@
 package aiad.feup.agents;
 
-import aiad.feup.behaviours.player.ReceiveMessage;
+import aiad.feup.behaviours.player.WaitJoinConfirmation;
 import aiad.feup.models.Company;
+import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
-import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAException;
@@ -52,6 +52,7 @@ public class Player extends GameAgent {
      * Constructor of Player
      */
     private Player() {
+        super();
         this.balance = 0;
         this.companies = new ArrayList<>();
         this.numberTokens = 0;
@@ -74,16 +75,15 @@ public class Player extends GameAgent {
     protected void setup() {
         super.setup();
 
-        final ThreadedBehaviourFactory factory = new ThreadedBehaviourFactory();
-
         // Create the behaviour for receiving messages
-        addBehaviour(factory.wrap(new ReceiveMessage(this)));
+        addBehaviour(getFactory().wrap(WaitJoinConfirmation.getInstance(this)));
 
         // Register in the DF
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         try {
             DFService.register(this, dfd);
+            setGameState(GameState.WAITING_JOIN_CONFIRMATION);
         } catch (FIPAException e) {
             System.out.println("Could not register in the DF! " + e.getMessage());
             System.exit(1);

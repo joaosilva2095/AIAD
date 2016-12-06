@@ -6,9 +6,19 @@ package aiad.feup.models;
 public enum GameState {
 
     /**
-     * Waiting for new instructions
+     * No game state
      */
-    IDLE,
+    NONE,
+
+    /**
+     * Waiting for a join confirmation
+     */
+    WAITING_JOIN_CONFIRMATION,
+
+    /**
+     * Waiting for the game start
+     */
+    WAITING_GAME_START,
 
     /**
      * Started negotiating
@@ -29,6 +39,11 @@ public enum GameState {
      * Ended auctioning
      */
     END_AUCTION,
+
+    /**
+     * Kicked
+     */
+    KICKED,
 
     /**
      * End the game

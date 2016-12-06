@@ -3,6 +3,7 @@ package aiad.feup.agents;
 import aiad.feup.models.GameState;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.io.Serializable;
  */
 public abstract class GameAgent extends Agent{
 
+    private static final ThreadedBehaviourFactory factory = new ThreadedBehaviourFactory();
+
     /**
      * Sate of the game
      */
@@ -22,7 +25,7 @@ public abstract class GameAgent extends Agent{
      * Constructor of a game agent
      */
     public GameAgent() {
-        this.state = GameState.IDLE;
+        this.state = GameState.NONE;
     }
 
     /**
@@ -39,6 +42,14 @@ public abstract class GameAgent extends Agent{
     @Override
     protected void takeDown() {
         System.out.println("Agent " + getName() + " terminated!");
+    }
+
+    /**
+     * Get a the threaded factory
+     * @return get the factory
+     */
+    public ThreadedBehaviourFactory getFactory() {
+        return factory;
     }
 
     /**

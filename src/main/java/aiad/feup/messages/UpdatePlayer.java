@@ -2,6 +2,7 @@ package aiad.feup.messages;
 
 import aiad.feup.exceptions.MalformedObjectException;
 import aiad.feup.models.Company;
+import aiad.feup.models.GameState;
 
 import java.io.Serializable;
 import java.util.List;
@@ -37,14 +38,20 @@ public class UpdatePlayer implements Serializable {
     private int numberManagers;
 
     /**
+     * New state of the game
+     */
+    private GameState state;
+
+    /**
      * The UpdatePlayer constructor
      * @param balance the balance for the player
      * @param tokens tokens for the player
      * @param companyList the list of companies for the player
      * @param numberInvestors the number of investors still in game
      * @param numberManagers the number of Managers still in game
+     * @param state state of the game
      */
-    public UpdatePlayer(double balance, int tokens, List<Company> companyList, int numberInvestors, int numberManagers) {
+    public UpdatePlayer(double balance, int tokens, List<Company> companyList, int numberInvestors, int numberManagers, GameState state) {
         if(numberInvestors < 0 || numberManagers < 0)
             throw new MalformedObjectException("There can be no negative investors or managers.");
 
@@ -53,45 +60,30 @@ public class UpdatePlayer implements Serializable {
         this.companyList = companyList;
         this.numberInvestors = numberInvestors;
         this.numberManagers = numberInvestors;
+        this.state = state;
     }
 
-    /**
-     * Get the balance of the player
-     * @return balance of the player
-     */
     public double getBalance() {
         return balance;
     }
 
-    /**
-     * Get the tokens of the player
-     * @return tokens of the player
-     */
     public int getTokens() {
         return tokens;
     }
 
-    /**
-     * Get the companies
-     * @return companies
-     */
     public List<Company> getCompanyList() {
         return companyList;
     }
 
-    /**
-     * Get the number of investors
-     * @return number of investors
-     */
     public int getNumberInvestors() {
         return numberInvestors;
     }
 
-    /**
-     * Get the number of managers
-     * @return number of managers
-     */
     public int getNumberManagers() {
         return numberManagers;
+    }
+
+    public GameState getState() {
+        return state;
     }
 }

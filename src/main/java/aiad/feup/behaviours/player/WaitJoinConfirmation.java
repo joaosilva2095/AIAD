@@ -57,6 +57,7 @@ public class WaitJoinConfirmation extends OneShotBehaviour {
         System.out.println(message);
         try {
             player.getContainerController().kill();
+            player.takeDown();
             System.exit(errorStatus);
         } catch (StaleProxyException e) {
             System.out.println("Failed to kill container. Force Aborting. Start praying...");

@@ -1,10 +1,12 @@
 package aiad.feup.agents;
 
+import aiad.feup.behaviours.board.CheckGameIntegrity;
 import aiad.feup.behaviours.board.ReadCommand;
 import aiad.feup.behaviours.board.WaitForPlayers;
 import aiad.feup.exceptions.DuplicatedItemException;
 import aiad.feup.messages.SetupPlayer;
 import aiad.feup.models.Company;
+import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -77,6 +79,8 @@ public class Board extends GameAgent {
         this.balances = new HashMap<>();
         this.tokens = new HashMap<>();
         this.types = new HashMap<>();
+
+        setGameState(GameState.WAITING_GAME_START);
     }
 
     /**
@@ -101,8 +105,11 @@ public class Board extends GameAgent {
         SearchConstraints sc = new SearchConstraints();
         sc.setMaxResults(10L);
         DFAgentDescription dfd = new DFAgentDescription();
+        addBehaviour(factory.wrap(CheckGameIntegrity.getInstance(this, dfd, sc)));
         addBehaviour(factory.wrap(WaitForPlayers.getInstance(this, dfd, sc)));
-        addBehaviour(factory.wrap(new ReadCommand(this)));
+        addBehaviour(factory.wrap(ReadCommand.getInstance(this)));
+
+
     }
 
     /**

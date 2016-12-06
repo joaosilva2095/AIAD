@@ -5,6 +5,8 @@ import aiad.feup.agents.RemoteAgent;
 import aiad.feup.messages.EndGame;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.lang.acl.ACLMessage;
 import sun.plugin.dom.exception.InvalidStateException;
 
@@ -15,12 +17,20 @@ import java.util.Scanner;
  */
 public class ReadCommand extends SimpleBehaviour {
 
+    private static ReadCommand instance;
+
     /**
      * Constructor of ReadCommand
      * @param board board for reading commands
      */
-    public ReadCommand(final Board board){
+    private ReadCommand(final Board board){
         super(board);
+    }
+
+    public static ReadCommand getInstance(final Board board){
+        if(instance == null)
+            instance = new ReadCommand(board);
+        return instance;
     }
 
     /**
@@ -33,6 +43,11 @@ public class ReadCommand extends SimpleBehaviour {
         Board board = (Board)getAgent();
         switch(command.toLowerCase()) {
             case "start":
+                if(board.getGameState() != GameState.WAITING_GAME_START){
+                    System.out.println("Can't start the game when a game already underway.");
+                    return;
+                }
+
                 if(board.getNumberPlayers() < 3) {
                     System.out.println("Cannot start the game with less than 3 players.");
                     return;
@@ -45,6 +60,7 @@ public class ReadCommand extends SimpleBehaviour {
                 board.removeBehaviour(wfpInstance);
                 System.out.println("No longer listening for players.");
 
+                board.setGameState(GameState.START_AUCTION);
                 break;
             case "end":
                 System.out.println("Ending the game!");

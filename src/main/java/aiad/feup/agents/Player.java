@@ -90,6 +90,18 @@ public class Player extends GameAgent {
         }
     }
 
+
+    /**
+     * Take down method, takes down the agent
+     */
+    public void takeDown(){
+        try {
+            DFService.deregister(this);
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Initialize the player agent
      * @param nickname nickname of the player

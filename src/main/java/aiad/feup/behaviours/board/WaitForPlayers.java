@@ -16,14 +16,40 @@ import jade.proto.SubscriptionInitiator;
  */
 public class WaitForPlayers extends SubscriptionInitiator {
 
+
+    private static WaitForPlayers instance;
+
     /**
      * Constructor of WaitForPlayers behaviour
      * @param board board that will wait for players
      * @param dfd template for agents to be searched
      * @param sc search constraints for new players
      */
-    public WaitForPlayers(final Board board, final DFAgentDescription dfd, final SearchConstraints sc){
+    private WaitForPlayers(final Board board, final DFAgentDescription dfd, final SearchConstraints sc){
         super(board, DFService.createSubscriptionMessage(board, board.getDefaultDF(), dfd, sc));
+    }
+
+    /**
+     * Get Instance. Returns the instance of the Behaviour or makes a new one if not yet initialized
+     * @param board the board to add the behaviour to
+     * @param dfd the dfd to scout for players
+     * @param sc the search constraint for the search for players
+     * @return the WaitForPlayers behaviour instance
+     */
+    public static WaitForPlayers getInstance(Board board, DFAgentDescription dfd, SearchConstraints sc){
+        if (instance == null)
+            instance = new WaitForPlayers(board, dfd, sc);
+        return instance;
+    }
+
+    /**
+     * Get Instance. Returns the instance of the board, without guaranteeing it's initialization. Can return null.
+     * Useful for getting the instance without needing to reconstruct it if you believe it has already been initialized.
+     * Check the return value.
+     * @return the instance. Can be null.
+     */
+    public static WaitForPlayers getInstance(){
+        return instance;
     }
 
     /**

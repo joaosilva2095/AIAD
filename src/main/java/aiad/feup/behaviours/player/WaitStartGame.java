@@ -19,9 +19,9 @@ public class WaitStartGame extends SimpleBehaviour {
 
     private static WaitStartGame instance;
 
-    private WaitStartGame(final Player player) { super(player); }
+    private WaitStartGame(Player player) { super(player); }
 
-    public static WaitStartGame getInstance(final Player player) {
+    public static WaitStartGame getInstance(Player player) {
         if(instance == null)
             instance = new WaitStartGame(player);
         return instance;
@@ -29,8 +29,8 @@ public class WaitStartGame extends SimpleBehaviour {
 
     @Override
     public void action() {
-        final ACLMessage message = getAgent().blockingReceive();
-        final Player player = (Player)getAgent();
+        ACLMessage message = getAgent().blockingReceive();
+        Player player = (Player)getAgent();
 
         //Extract content
         Object content;

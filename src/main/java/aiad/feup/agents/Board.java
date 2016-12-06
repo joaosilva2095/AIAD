@@ -101,8 +101,8 @@ public class Board extends GameAgent {
         SearchConstraints sc = new SearchConstraints();
         sc.setMaxResults(10L);
         DFAgentDescription dfd = new DFAgentDescription();
+        addBehaviour(factory.wrap(WaitForPlayers.getInstance(this, dfd, sc)));
         addBehaviour(factory.wrap(new ReadCommand(this)));
-        addBehaviour(factory.wrap(new WaitForPlayers(this, dfd, sc)));
     }
 
     /**

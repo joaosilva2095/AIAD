@@ -40,6 +40,11 @@ public class ReadCommand extends SimpleBehaviour {
 
                 System.out.println("Starting the game!");
                 board.assignRoles();
+                WaitForPlayers wfpInstance = WaitForPlayers.getInstance();
+                System.out.println(wfpInstance);
+                board.removeBehaviour(wfpInstance);
+                System.out.println("No longer listening for players.");
+
                 break;
             case "end":
                 System.out.println("Ending the game!");

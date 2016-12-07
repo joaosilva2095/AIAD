@@ -5,6 +5,7 @@ import aiad.feup.behaviours.board.ReadCommand;
 import aiad.feup.behaviours.board.WaitForPlayers;
 import aiad.feup.exceptions.DuplicatedItemException;
 import aiad.feup.messages.SetupPlayer;
+import aiad.feup.messages.UpdatePlayer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
@@ -278,4 +279,46 @@ public class Board extends GameAgent {
 
         return new Company(companyName, companyValue, doubleRevenue, fluctuation);
     }
+
+    /**
+     * Calculates and creates a Map with the correct UpdatePlayer to send to each RemoteAgent for the initial distribution
+     * @return the map with the RemoteAgent - UpdatePlayer relation
+     */
+    public Map<RemoteAgent, UpdatePlayer> calculatePlayerUpdates(){
+            companies = generateRandomCompanies(getNumberPlayers() * 3); //We multiply by 3 because every manager must have 3 companies at the start. there will be surplus companies
+
+        Queue<Company> undistributedCompanies = new LinkedList<>(companies);
+        Map<RemoteAgent, UpdatePlayer> playerUpdates = new HashMap<>();
+        int nrPlayers = getNumberPlayers();
+        int numberManagers = nrPlayers / 2;
+        int numberInvestors = nrPlayers / 2   + nrPlayers % 2;
+
+        // Assign companies to managers
+        for(RemoteAgent targetPlayer : players){
+            if(types.get(targetPlayer) != PlayerType.MANAGER)
+                continue;
+
+            List<Company> playerCompanies = new ArrayList<>();
+            //Give 3 companies to each manager
+            for(int i = 0; i < 3; i++) {
+                undistributedCompanies.peek().setOwner(targetPlayer);
+                System.out.println("Assigned company " + undistributedCompanies.peek().getName() + " to player " + targetPlayer.getName());
+                playerCompanies.add(undistributedCompanies.remove());
+            }
+            playerUpdates.put(targetPlayer, new UpdatePlayer(INITIAL_BALANCE, INITIAL_TOKENS, playerCompanies, numberInvestors, numberManagers, GameState.START_NEGOTIATION));
+        }
+
+        // Assign companies to investors
+        for(RemoteAgent targetPlayer : players) {
+            if (types.get(targetPlayer) != PlayerType.INVESTOR)
+                continue;
+
+            playerUpdates.put(targetPlayer, new UpdatePlayer(INITIAL_BALANCE, INITIAL_TOKENS, companies, numberInvestors, numberManagers, GameState.START_NEGOTIATION));
+        }
+
+        return playerUpdates;
+    }
+
+
+
 }

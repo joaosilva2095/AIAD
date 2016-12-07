@@ -3,6 +3,7 @@ package aiad.feup.behaviours.board;
 import aiad.feup.agents.Board;
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.messages.EndGame;
+import aiad.feup.messages.UpdatePlayer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
@@ -12,6 +13,7 @@ import jade.lang.acl.ACLMessage;
 import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -43,6 +45,7 @@ public class ReadCommand extends SimpleBehaviour {
         final Scanner in = new Scanner(System.in);
         String command = in.nextLine();
         Board board = (Board)getAgent();
+        ACLMessage message = new ACLMessage(ACLMessage.INFORM);
         switch(command.toLowerCase()) {
             case "start":
                 if(board.getGameState() != GameState.WAITING_GAME_START){
@@ -61,18 +64,20 @@ public class ReadCommand extends SimpleBehaviour {
                 System.out.println("No longer accepting new players.");
 
                 board.assignRoles();
+                Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
 
-                List<Company> companyList = board.generateRandomCompanies(10);
-                for(Company company : companyList){
-                    System.out.println("company: " + company.getName() + " is valued at " + company.getValue() + " and is double revenue " + company.isDoubleRevenue() + " and has fluctuation: " + company.getFluctuation());
+                //Broadcast messages
+                for(RemoteAgent targetAgent : playerUpdates.keySet()){
+                    board.sendMessage(targetAgent, message, playerUpdates.get(targetAgent));
+                    System.out.println("Sent message to: " + targetAgent.getName());
                 }
+
 
 
                 board.setGameState(GameState.START_AUCTION);
                 break;
             case "end":
                 System.out.println("Ending the game!");
-                ACLMessage message = new ACLMessage(ACLMessage.INFORM);
                 EndGame endGame = new EndGame(" -- Game forcefully ended by console.");
                 for(RemoteAgent agent : board.getPlayers()) {
                     board.sendMessage(agent, message, endGame);

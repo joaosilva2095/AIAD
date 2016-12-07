@@ -68,6 +68,7 @@ public class WaitStartGame extends SimpleBehaviour {
             player.setTokens(updatePlayer.getTokens());
             player.setBalance(updatePlayer.getBalance());
             player.setGameState(updatePlayer.getState());
+            System.out.println("My new company list has size: " + updatePlayer.getCompanyList().size());
 
             if(player.getType() == PlayerType.INVESTOR)
                 player.addBehaviour(player.getFactory().wrap(MakeOffer.getInstance(player)));

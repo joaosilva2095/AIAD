@@ -39,6 +39,11 @@ public class Board extends GameAgent {
     private static final int INITIAL_TOKENS = 3;
 
     /**
+     * The base value of a company to use for generating a company
+     */
+    private static final double BASE_VALUE = 30000;
+
+    /**
      * Instance of the board
      */
     private static Board instance;
@@ -234,5 +239,43 @@ public class Board extends GameAgent {
             }
             index++;
         }
+    }
+
+    /**
+     * Generate a number of random companies
+     * @param number the number of companies to be generated
+     * @return list with generated companies
+     */
+    public List<Company> generateRandomCompanies(int number){
+        List<Company> returnList = new ArrayList<>();
+        for(int i = 0; i < number; i++){
+            returnList.add(generateRandomCompany());
+        }
+
+        return returnList;
+    }
+    /**
+     * Generate a company
+     */
+    public Company generateRandomCompany() {
+        Random random = new Random();
+
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < 8; i++) {
+            char c = chars[random.nextInt(chars.length)];
+            sb.append(c);
+        }
+        String companyName = sb.toString();
+        double companyValue = random.nextDouble()*BASE_VALUE + BASE_VALUE/2;
+
+        boolean doubleRevenue = random.nextDouble() > 0.75;
+        int minFluctuation = 10;
+        int maxFluctuation = 80;
+        int fluctuation = random.nextInt(maxFluctuation-minFluctuation) + minFluctuation;
+
+
+        return new Company(companyName, companyValue, doubleRevenue, fluctuation);
     }
 }

@@ -3,6 +3,7 @@ package aiad.feup.behaviours.board;
 import aiad.feup.agents.Board;
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.messages.EndGame;
+import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -10,6 +11,7 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.lang.acl.ACLMessage;
 import sun.plugin.dom.exception.InvalidStateException;
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -44,7 +46,7 @@ public class ReadCommand extends SimpleBehaviour {
         switch(command.toLowerCase()) {
             case "start":
                 if(board.getGameState() != GameState.WAITING_GAME_START){
-                    System.out.println("Can't start the game when a game already underway.");
+                    System.out.println("Can't start the game with a game already underway.");
                     return;
                 }
 
@@ -54,11 +56,17 @@ public class ReadCommand extends SimpleBehaviour {
                 }
 
                 System.out.println("Starting the game!");
-                board.assignRoles();
                 WaitForPlayers wfpInstance = WaitForPlayers.getInstance();
-                System.out.println(wfpInstance);
                 board.removeBehaviour(wfpInstance);
-                System.out.println("No longer listening for players.");
+                System.out.println("No longer accepting new players.");
+
+                board.assignRoles();
+
+                List<Company> companyList = board.generateRandomCompanies(10);
+                for(Company company : companyList){
+                    System.out.println("company: " + company.getName() + " is valued at " + company.getValue() + " and is double revenue " + company.isDoubleRevenue() + " and has fluctuation: " + company.getFluctuation());
+                }
+
 
                 board.setGameState(GameState.START_AUCTION);
                 break;

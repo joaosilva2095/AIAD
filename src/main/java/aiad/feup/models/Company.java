@@ -133,10 +133,6 @@ public class Company implements Serializable {
      * Apply a fluctuation to the stock price of the company based on its risk
      */
     public void applyFluctuation() {
-        //TODO debate whether it should be removed from the board
-        if(value == 0)
-            return;
-
         double currentRoundFluctuation = Math.random() * fluctuation / 100;
 
         if(Math.random() > 0.5)

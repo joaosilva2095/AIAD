@@ -288,10 +288,12 @@ public class Board extends GameAgent {
             companies = generateRandomCompanies(getNumberPlayers() * 3); //We multiply by 3 because every manager must have 3 companies at the start. there will be surplus companies
 
         Queue<Company> undistributedCompanies = new LinkedList<>(companies);
+        ArrayList<Company> assignedCompanies = new ArrayList<>();
         Map<RemoteAgent, UpdatePlayer> playerUpdates = new HashMap<>();
         int nrPlayers = getNumberPlayers();
         int numberManagers = nrPlayers / 2;
         int numberInvestors = nrPlayers / 2   + nrPlayers % 2;
+
 
         // Assign companies to managers
         for(RemoteAgent targetPlayer : players){
@@ -303,6 +305,7 @@ public class Board extends GameAgent {
             for(int i = 0; i < 3; i++) {
                 undistributedCompanies.peek().setOwner(targetPlayer);
                 System.out.println("Assigned company " + undistributedCompanies.peek().getName() + " to player " + targetPlayer.getName());
+                assignedCompanies.add(undistributedCompanies.peek());
                 playerCompanies.add(undistributedCompanies.remove());
             }
             playerUpdates.put(targetPlayer, new UpdatePlayer(INITIAL_BALANCE, INITIAL_TOKENS, playerCompanies, numberInvestors, numberManagers, GameState.START_NEGOTIATION));
@@ -313,7 +316,7 @@ public class Board extends GameAgent {
             if (types.get(targetPlayer) != PlayerType.INVESTOR)
                 continue;
 
-            playerUpdates.put(targetPlayer, new UpdatePlayer(INITIAL_BALANCE, INITIAL_TOKENS, companies, numberInvestors, numberManagers, GameState.START_NEGOTIATION));
+            playerUpdates.put(targetPlayer, new UpdatePlayer(INITIAL_BALANCE, INITIAL_TOKENS, assignedCompanies, numberInvestors, numberManagers, GameState.START_NEGOTIATION));
         }
 
         return playerUpdates;

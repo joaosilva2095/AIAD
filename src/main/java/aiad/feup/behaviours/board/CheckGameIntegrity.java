@@ -65,7 +65,7 @@ public class CheckGameIntegrity extends TickerBehaviour{
 
         System.out.println(result.length-4 + " Active Players.");
 
-        if (result.length < board.getNumberPlayers()+4){ //TODO remover este "magical number". a pissa da AMS retorna todos os agentes, incluindo a board, rma, ams e df
+        if (result.length < board.getNumberPlayers()+4){ //TODO remover este "magical number".  AMS retorna todos os agentes, incluindo a board, rma, ams e df
             System.out.println("Ending the game due to integrity breach: A player has quit the game.");
 
             ACLMessage message = new ACLMessage(ACLMessage.INFORM);

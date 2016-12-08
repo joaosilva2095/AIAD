@@ -2,15 +2,14 @@ package aiad.feup.behaviours.player;
 
 import aiad.feup.agents.Player;
 import aiad.feup.behaviours.player.investor.MakeOffer;
-import aiad.feup.behaviours.player.manager.ReceiveOffer;
-import aiad.feup.messages.EndGame;
+import aiad.feup.behaviours.player.investor.ReceiveMessage;
+import aiad.feup.behaviours.player.manager.HandleOffer;
 import aiad.feup.messages.SetupPlayer;
 import aiad.feup.messages.UpdatePlayer;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.UnreadableException;
 
 /**
  * Waiting for join confirmation behaviour
@@ -33,25 +32,14 @@ public class WaitStartGame extends SimpleBehaviour {
         Player player = (Player)getAgent();
 
         //Extract content
-        Object content;
-        try {
-            content = message.getContentObject();
-        } catch (UnreadableException e) {
-            System.out.println("Could not retrieve message content object. " + e.getMessage());
-            return;
-        }
+        Object content = player.extractMessageContentObject(message);
 
         // Content-less messages
         if(content == null)
             return;
 
-        // Ending the game
-        if(content instanceof EndGame) {
-            EndGame endGame = (EndGame) content;
-            System.out.println("Ending the game. Reason: " + endGame.getMessage());
-            System.exit(0);
-            return;
-        }
+        // Check if end game
+        player.handleEndGame(content);
 
         // Setup the player
         if(content instanceof SetupPlayer) {
@@ -68,12 +56,16 @@ public class WaitStartGame extends SimpleBehaviour {
             player.setTokens(updatePlayer.getTokens());
             player.setBalance(updatePlayer.getBalance());
             player.setGameState(updatePlayer.getState());
-            System.out.println("My new company list has size: " + updatePlayer.getCompanyList().size());
+            player.generateCompanyBeliefs();
 
-            if(player.getType() == PlayerType.INVESTOR)
+            if(player.getType() == PlayerType.INVESTOR) {
+                player.addBehaviour(player.getFactory().wrap(ReceiveMessage.getInstance(player)));
                 player.addBehaviour(player.getFactory().wrap(MakeOffer.getInstance(player)));
+                MakeOffer.getInstance(player).setRoundBalance(updatePlayer.getBalance());
+            }
             else
-                player.addBehaviour(player.getFactory().wrap(ReceiveOffer.getInstance(player)));
+                player.addBehaviour(player.getFactory().wrap(ReceiveMessage.getInstance(player)));
+
         }
     }
 

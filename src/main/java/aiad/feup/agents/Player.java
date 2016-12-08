@@ -1,6 +1,8 @@
 package aiad.feup.agents;
 
 import aiad.feup.behaviours.player.WaitJoinConfirmation;
+import aiad.feup.beliefs.CompanyInformation;
+import aiad.feup.messages.EndGame;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
@@ -10,12 +12,16 @@ import jade.core.Runtime;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The player super class.
@@ -48,6 +54,12 @@ public class Player extends GameAgent {
      */
     private int numberTokens;
 
+
+    /**
+     * List with the beliefs of the company environment.
+     */
+    private Map<Company, CompanyInformation> companyBeliefs;
+
     /**
      * Constructor of Player
      */
@@ -56,6 +68,7 @@ public class Player extends GameAgent {
         this.balance = 0;
         this.companies = new ArrayList<>();
         this.numberTokens = 0;
+        this.companyBeliefs = new HashMap<>();
     }
 
     /**
@@ -189,24 +202,55 @@ public class Player extends GameAgent {
         this.numberTokens -= numberTokens;
     }
 
-    /**
-     * Add money to the player
-     * @param money quantity to be added
-     */
-    public void addMoney(final int money) {
-        if(money < 0)
-            throw new IllegalArgumentException("Money to be added must be positive");
-        this.balance += money;
+    public List<Company> getCompanies() {
+        return companies;
+    }
+
+    public Map<Company, CompanyInformation> getCompanyBeliefs(){
+        return companyBeliefs;
     }
 
     /**
-     * Remove money from the player
-     * @param money quantity to be removed
+     * Extracts the content of a message. Returns null if inexistant
+     * @param message the message with the content
+     * @return the content of the message
      */
-    public void removeMoney(final int money) {
-        if(money < 0)
-            throw new IllegalArgumentException("Money to be added must be positive");
-        this.balance -= money;
+    public Object extractMessageContentObject(ACLMessage message) {
+        Object content;
+        try {
+            content = message.getContentObject();
+            if(content == null)
+                return null;
+            return content;
+        } catch (Exception e) {
+            System.out.println("Could not retrieve message content object. " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Handles the end game if that was the content
+     */
+    public void handleEndGame(Object content) {
+        // Ending the game
+        if(content instanceof EndGame) {
+            EndGame endGame = (EndGame) content;
+            System.out.println("Ending the game. Reason: " + endGame.getMessage());
+            System.exit(0);
+            return;
+        }
+    }
+
+    /**
+     * Generates beliefs for the companies
+     */
+    public void generateCompanyBeliefs(){
+        for(Company company : companies){
+            if(companyBeliefs.get(company) != null)
+                continue;
+
+            companyBeliefs.put(company, new CompanyInformation(company));
+        }
     }
 }
 

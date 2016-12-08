@@ -76,6 +76,7 @@ public abstract class GameAgent extends Agent{
     public void sendMessage(final RemoteAgent targetAgent, ACLMessage message, Serializable content) {
         try {
             message.setContentObject(content);
+            System.out.println("Succesfully set message content object.");
         } catch (IOException e) {
             System.out.println("Could not set the message object! " + e.getMessage());
             return;

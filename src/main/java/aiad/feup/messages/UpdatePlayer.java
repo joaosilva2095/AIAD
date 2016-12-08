@@ -13,6 +13,11 @@ import java.util.List;
 public class UpdatePlayer implements Serializable {
 
     /**
+     * Serial Version UUID
+     */
+    private static final long serialVersionUID = -7590826565839178942L;
+
+    /**
      * The new balance of the player
      */
     private double balance;

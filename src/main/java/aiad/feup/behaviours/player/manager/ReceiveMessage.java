@@ -30,7 +30,7 @@ public class ReceiveMessage extends SimpleBehaviour {
 
         System.out.println("Received a message");
         Object content = player.extractMessageContentObject(message);
-        System.out.println("Not stuck at extracting");
+        System.out.println("HELLO?!??!?!?!?");
         player.handleEndGame(content);
         System.out.println("Not stuck at handle end game");
         System.out.println(content);

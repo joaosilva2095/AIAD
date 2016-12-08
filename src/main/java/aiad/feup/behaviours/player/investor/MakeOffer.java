@@ -48,6 +48,7 @@ public class MakeOffer extends TickerBehaviour {
         Offer offer = planOffer(player);
         RemoteAgent targetManager = offer.getCompany().getOwner();
         ACLMessage message = new ACLMessage(ACLMessage.PROPOSE);
+        System.out.println("Sending offer to: " + player.getName());
         player.sendMessage(targetManager, message, offer);
 
     }

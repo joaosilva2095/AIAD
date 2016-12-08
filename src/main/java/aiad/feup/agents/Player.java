@@ -217,15 +217,22 @@ public class Player extends GameAgent {
      */
     public Object extractMessageContentObject(ACLMessage message) {
         Object content;
+
         try {
+            System.out.println("Extracting content");
             content = message.getContentObject();
-            if(content == null)
-                return null;
-            return content;
+            System.out.println("Content extracted");
+            if(content == null) {
+                System.out.println("Content was null and void and useless");
+            }
+            System.out.println("Content was useful and not null");
         } catch (Exception e) {
             System.out.println("Could not retrieve message content object. " + e.getMessage());
             return null;
         }
+
+        System.out.println("Returning content");
+        return content;
     }
 
     /**

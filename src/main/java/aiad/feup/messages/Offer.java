@@ -11,6 +11,11 @@ import java.io.Serializable;
 public class Offer implements Serializable {
 
     /**
+     * Serial Version UUID
+     */
+    private static final long serialVersionUID = 6930657412037877676L;
+
+    /**
      * Company that this offer corresponds to
      */
     private Company company;

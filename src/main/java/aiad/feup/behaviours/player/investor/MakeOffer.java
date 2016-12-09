@@ -47,7 +47,6 @@ public class MakeOffer extends TickerBehaviour {
         Offer offer = planOffer(player);
         RemoteAgent targetManager = offer.getCompany().getOwner();
         ACLMessage message = new ACLMessage(ACLMessage.PROPOSE);
-        System.out.println("Making offer to: " + targetManager.getName());
         player.sendMessage(targetManager, message, offer);
 
     }
@@ -63,7 +62,7 @@ public class MakeOffer extends TickerBehaviour {
         List<Company> companies = player.getCompanies();
 
         Company targetCompany = companies.get(r.nextInt(companies.size()));
-        CompanyInformation companyBelief = player.getCompanyBeliefs().get(targetCompany);
+        CompanyInformation companyBelief = player.getCompanyBeliefs().get(targetCompany.getName());
 
         Offer theOffer = new Offer(targetCompany, companyBelief.getBelievedValue(), r.nextBoolean(), new RemoteAgent(player.getName()));
         return theOffer;

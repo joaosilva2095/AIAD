@@ -58,7 +58,7 @@ public class Player extends GameAgent {
     /**
      * List with the beliefs of the company environment.
      */
-    private Map<Company, CompanyInformation> companyBeliefs;
+    private Map<String, CompanyInformation> companyBeliefs;
 
     /**
      * Constructor of Player
@@ -206,24 +206,8 @@ public class Player extends GameAgent {
         return companies;
     }
 
-    public Map<Company, CompanyInformation> getCompanyBeliefs(){
+    public Map<String, CompanyInformation> getCompanyBeliefs(){
         return companyBeliefs;
-    }
-
-    /**
-     * Extracts the content of a message. Returns null if inexistant
-     * @param message the message with the content
-     * @return the content of the message
-     */
-    public Object extractMessageContentObject(ACLMessage message) {
-        Object content;
-        try {
-            content = message.getContentObject();
-        } catch (Exception e) {
-            System.out.println("Could not retrieve message content object. " + e.getMessage());
-            return null;
-        }
-        return content;
     }
 
     /**
@@ -244,10 +228,10 @@ public class Player extends GameAgent {
      */
     public void generateCompanyBeliefs(){
         for(Company company : companies){
-            if(companyBeliefs.get(company) != null)
+            if(companyBeliefs.containsKey(company.getName()))
                 continue;
 
-            companyBeliefs.put(company, new CompanyInformation(company));
+            companyBeliefs.put(company.getName(), new CompanyInformation(company));
         }
     }
 }

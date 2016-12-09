@@ -35,14 +35,13 @@ public class ReceiveMessageManager extends SimpleBehaviour {
         System.out.println(content);
 
         // Received an Offer
-        if(content instanceof Offer) {
-            System.out.println("Adding handle offer behaviour.");
+        if(content instanceof Offer)
             player.addBehaviour(player.getFactory().wrap(HandleOffer.getInstance(player, (Offer) content)));
-        }
+
     }
 
     @Override
     public boolean done() {
-        return ((Player)getAgent()).getGameState() != GameState.START_AUCTION;
+        return ((Player)getAgent()).getGameState() != GameState.START_NEGOTIATION;
     }
 }

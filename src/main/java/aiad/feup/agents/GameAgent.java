@@ -69,6 +69,22 @@ public abstract class GameAgent extends Agent{
     }
 
     /**
+     * Extracts the content of a message. Returns null if inexistant
+     * @param message the message with the content
+     * @return the content of the message
+     */
+    public Object extractMessageContentObject(ACLMessage message) {
+        Object content;
+        try {
+            content = message.getContentObject();
+        } catch (Exception e) {
+            System.out.println("Could not retrieve message content object. " + e.getMessage());
+            return null;
+        }
+        return content;
+    }
+
+    /**
      * Send a message
      * @param targetAgent target recipient for the message
      * @param message message to be sent
@@ -76,7 +92,6 @@ public abstract class GameAgent extends Agent{
     public void sendMessage(final RemoteAgent targetAgent, ACLMessage message, Serializable content) {
         try {
             message.setContentObject(content);
-            System.out.println("Succesfully set message content object.");
         } catch (IOException e) {
             System.out.println("Could not set the message object! " + e.getMessage());
             return;

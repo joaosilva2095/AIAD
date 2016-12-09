@@ -304,7 +304,6 @@ public class Board extends GameAgent {
             //Give 3 companies to each manager
             for(int i = 0; i < 3; i++) {
                 undistributedCompanies.peek().setOwner(targetPlayer);
-                System.out.println("Assigned company " + undistributedCompanies.peek().getName() + " to player " + targetPlayer.getName());
                 assignedCompanies.add(undistributedCompanies.peek());
                 playerCompanies.add(undistributedCompanies.remove());
             }

@@ -45,11 +45,10 @@ public class HandleOffer extends OneShotBehaviour {
 
     @Override
     public void action() {
-        System.out.println("Handling offer");
         Player player = (Player)getAgent();
         Company offeredCompany = offer.getCompany();
 
-        CompanyInformation companyBelief = player.getCompanyBeliefs().get(offeredCompany);
+        CompanyInformation companyBelief = player.getCompanyBeliefs().get(offeredCompany.getName());
         ACLMessage message;
         if(offeredCompany.getValue() > companyBelief.getBelievedValue()) {
             message = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);

@@ -36,7 +36,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
 
     @Override
     public boolean done() {
-        return ((Player)getAgent()).getGameState() != GameState.START_AUCTION;
+        return ((Player)getAgent()).getGameState() != GameState.START_NEGOTIATION;
     }
 }
 

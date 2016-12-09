@@ -74,7 +74,7 @@ public class ReadCommand extends SimpleBehaviour {
 
 
 
-                board.setGameState(GameState.START_AUCTION);
+                board.setGameState(GameState.START_NEGOTIATION);
                 break;
             case "end":
                 System.out.println("Ending the game!");

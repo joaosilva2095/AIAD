@@ -43,12 +43,11 @@ public class MakeOffer extends TickerBehaviour {
 
     @Override
     protected void onTick() {
-        System.out.println("Making offer");
         Player player = (Player) getAgent();
         Offer offer = planOffer(player);
         RemoteAgent targetManager = offer.getCompany().getOwner();
         ACLMessage message = new ACLMessage(ACLMessage.PROPOSE);
-        System.out.println("Sending offer to: " + player.getName());
+        System.out.println("Making offer to: " + targetManager.getName());
         player.sendMessage(targetManager, message, offer);
 
     }

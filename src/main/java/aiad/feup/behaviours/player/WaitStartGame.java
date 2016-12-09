@@ -2,8 +2,8 @@ package aiad.feup.behaviours.player;
 
 import aiad.feup.agents.Player;
 import aiad.feup.behaviours.player.investor.MakeOffer;
-import aiad.feup.behaviours.player.investor.ReceiveMessage;
-import aiad.feup.behaviours.player.manager.HandleOffer;
+import aiad.feup.behaviours.player.investor.ReceiveMessageInvestor;
+import aiad.feup.behaviours.player.manager.ReceiveMessageManager;
 import aiad.feup.messages.SetupPlayer;
 import aiad.feup.messages.UpdatePlayer;
 import aiad.feup.models.GameState;
@@ -59,12 +59,12 @@ public class WaitStartGame extends SimpleBehaviour {
             player.generateCompanyBeliefs();
 
             if(player.getType() == PlayerType.INVESTOR) {
-                player.addBehaviour(player.getFactory().wrap(ReceiveMessage.getInstance(player)));
+                player.addBehaviour(player.getFactory().wrap(ReceiveMessageInvestor.getInstance(player)));
                 player.addBehaviour(player.getFactory().wrap(MakeOffer.getInstance(player)));
                 MakeOffer.getInstance(player).setRoundBalance(updatePlayer.getBalance());
             }
             else
-                player.addBehaviour(player.getFactory().wrap(ReceiveMessage.getInstance(player)));
+                player.addBehaviour(player.getFactory().wrap(ReceiveMessageManager.getInstance(player)));
 
         }
     }

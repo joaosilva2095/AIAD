@@ -43,14 +43,13 @@ public class CheckGameIntegrity extends TickerBehaviour{
         if(board.getGameState() == GameState.NONE || board.getGameState() == GameState.WAITING_GAME_START)
             return;
 
-
         AMSAgentDescription[] result = null;
         try {
             SearchConstraints c = new SearchConstraints();
             c.setMaxResults((long) -1);
             result = AMSService.search(board, new AMSAgentDescription(), c);
         } catch (FIPAException e) {
-            e.printStackTrace();
+            System.out.println("Error while getting online players: " + e.getMessage());
         }
 
         if(result == null)
@@ -58,17 +57,13 @@ public class CheckGameIntegrity extends TickerBehaviour{
 
         int numberOnlinePlayers = result.length - 4;
 
-        System.out.println(numberOnlinePlayers + " Active Players.");
-
         if (numberOnlinePlayers < board.getNumberPlayers()){
-            System.out.println("Ending the game due to integrity breach: A player has quit the game.");
-
             EndGame endGame = new EndGame(" -- Game forcefully ended due to integrity breach.");
 
             for(RemoteAgent player : board.getPlayers()) {
                 board.sendMessage(player, new ACLMessage(ACLMessage.INFORM), endGame);
             }
-            System.exit(0);
+            board.killAgent("Ending the game due to integrity breach: A player has quit the game.", 0);
         }
     }
 }

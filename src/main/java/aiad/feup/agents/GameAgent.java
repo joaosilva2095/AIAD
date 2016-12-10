@@ -113,7 +113,7 @@ public abstract class GameAgent extends Agent{
     public void killAgent(String message, int errorStatus){
         System.out.println(message);
         try {
-            takeDown();
+            doDelete();
             getContainerController().kill();
             System.exit(errorStatus);
         } catch (StaleProxyException e) {

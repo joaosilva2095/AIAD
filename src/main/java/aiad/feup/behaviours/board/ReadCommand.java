@@ -55,6 +55,7 @@ public class ReadCommand extends SimpleBehaviour {
 
                 System.out.println("Starting the game!");
                 WaitForPlayers wfpInstance = WaitForPlayers.getInstance();
+                wfpInstance.cancel(board.getDefaultDF(), true);
                 board.removeBehaviour(wfpInstance);
                 System.out.println("No longer accepting new players.");
 
@@ -64,7 +65,6 @@ public class ReadCommand extends SimpleBehaviour {
                 //Broadcast messageObjects
                 for(RemoteAgent targetAgent : playerUpdates.keySet()){
                     board.sendMessage(targetAgent, new ACLMessage(ACLMessage.INFORM), playerUpdates.get(targetAgent));
-                    System.out.println("Sent message to: " + targetAgent.getName());
                 }
 
                 board.setGameState(GameState.START_NEGOTIATION);

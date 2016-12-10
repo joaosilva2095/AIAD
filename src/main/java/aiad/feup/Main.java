@@ -41,7 +41,7 @@ public class Main {
                 break;
             case "player":
                 if (args.length < 6) {
-                    throw new IllegalArgumentException("Please use java -jar game.jar <mainHost> <mainPort> <board|player|simulate> <nickname> <localHost> <localPort>");
+                    throw new IllegalArgumentException("Please use java -jar game.jar <mainHost> <mainPort> <board|player> <nickname> <localHost> <localPort>");
                 }
 
                 final String nickname = args[3],
@@ -55,23 +55,8 @@ public class Main {
 
                 setupPlayer(nickname, mainHost, mainPort, localHost, localPort);
                 break;
-            case "simulate":
-                if (args.length < 4) {
-                    throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> <numberPlayers>");
-                }
-
-                int numberPlayers;
-                try {
-                    numberPlayers = Integer.parseInt(args[3]);
-                    if(numberPlayers < 0)
-                        throw new IllegalArgumentException("The number of players must be a natural number");
-                } catch (final Exception e) {
-                    throw new IllegalArgumentException("The number of players must be a natural number");
-                }
-                simulate(mainHost, mainPort, numberPlayers);
-                break;
             default:
-                throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player|simulate> [numberPlayers]");
+                throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player> [numberPlayers]");
         }
     }
 
@@ -93,9 +78,5 @@ public class Main {
             System.out.println("That nickname is already in use. Please choose another one.");
             return;
         }
-    }
-
-    private static void simulate(final String host, final int port, final int numberPlayers) {
-
     }
 }

@@ -53,9 +53,11 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
             return;
 
         if(board.getCurrentRoundNumber() == board.NUMBER_ROUNDS){
+            System.out.println("Reached the maximum number of rounds.");
             //Calculate Winner and broadcast
         }
         else {
+            System.out.println("Received all the information of the managers!");
             //Calculate new update player and broadcast
             board.incrementCurrentRound();
         }

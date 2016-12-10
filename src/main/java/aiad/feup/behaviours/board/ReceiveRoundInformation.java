@@ -1,6 +1,8 @@
 package aiad.feup.behaviours.board;
 
 import aiad.feup.agents.Board;
+import aiad.feup.agents.RemoteAgent;
+import aiad.feup.messageObjects.RoundInformation;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -32,8 +34,13 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
 
         Object content = board.extractMessageContentObject(message);
 
-        if()
+        if(!(content instanceof RoundInformation))
+            return;
 
+        RoundInformation roundInformation = (RoundInformation) content;
+
+        System.out.println("Received round information from manager: " + message.getSender().getName());
+        System.out.println("The round information contemplates " + roundInformation.getManagerOffers().size() + " offers");
 
     }
 

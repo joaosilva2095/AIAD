@@ -1,4 +1,4 @@
-package aiad.feup.messages;
+package aiad.feup.messageObjects;
 
 import java.io.Serializable;
 

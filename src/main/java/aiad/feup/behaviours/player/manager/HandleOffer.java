@@ -1,13 +1,10 @@
 package aiad.feup.behaviours.player.manager;
 
 import aiad.feup.agents.Player;
-import aiad.feup.agents.RemoteAgent;
 import aiad.feup.beliefs.CompanyInformation;
-import aiad.feup.messages.Offer;
+import aiad.feup.messageObjects.Offer;
 import aiad.feup.models.Company;
-import aiad.feup.models.GameState;
 import jade.core.behaviours.OneShotBehaviour;
-import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
 /**
@@ -15,32 +12,14 @@ import jade.lang.acl.ACLMessage;
  */
 public class HandleOffer extends OneShotBehaviour {
 
-    private static HandleOffer instance;
     private double roundBalance;
     private Offer offer;
 
-
-    private HandleOffer(final Player player) {
+    public HandleOffer(final Player player, Offer offer) {
         super(player);
-        roundBalance = player.getBalance();
-    }
-
-    public static HandleOffer getInstance(final Player player, Offer offer) {
-        if(instance == null)
-            instance = new HandleOffer(player);
-
-        instance.setOffer(offer);
-        return instance;
-    }
-
-
-
-    public void setRoundBalance(double roundBalance) {
-        this.roundBalance = roundBalance;
-    }
-
-    public void setOffer(Offer offer){
         this.offer = offer;
+        this.roundBalance = player.getRoundBalance();
+
     }
 
     @Override
@@ -49,8 +28,10 @@ public class HandleOffer extends OneShotBehaviour {
         Company offeredCompany = offer.getCompany();
 
         CompanyInformation companyBelief = player.getCompanyBeliefs().get(offeredCompany.getName());
+        companyBelief.addOffer(offer);
         ACLMessage message;
         if(offeredCompany.getValue() > companyBelief.getBelievedValue()) {
+            companyBelief.setCurrentOffer(offer);
             message = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
             System.out.println("Accepting the offer");
         }
@@ -60,6 +41,6 @@ public class HandleOffer extends OneShotBehaviour {
         }
 
 
-        player.sendMessage(offer.getOfferer(), message, null);
+        player.sendMessage(offer.getInvestor(), message, offer);
     }
 }

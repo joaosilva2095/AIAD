@@ -4,8 +4,8 @@ import aiad.feup.agents.Player;
 import aiad.feup.behaviours.player.investor.MakeOffer;
 import aiad.feup.behaviours.player.investor.ReceiveMessageInvestor;
 import aiad.feup.behaviours.player.manager.ReceiveMessageManager;
-import aiad.feup.messages.SetupPlayer;
-import aiad.feup.messages.UpdatePlayer;
+import aiad.feup.messageObjects.SetupPlayer;
+import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
 import jade.core.behaviours.SimpleBehaviour;
@@ -34,7 +34,7 @@ public class WaitStartGame extends SimpleBehaviour {
         //Extract content
         Object content = player.extractMessageContentObject(message);
 
-        // Content-less messages
+        // Content-less messageObjects
         if(content == null)
             return;
 

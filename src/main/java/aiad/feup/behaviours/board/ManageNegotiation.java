@@ -2,10 +2,9 @@ package aiad.feup.behaviours.board;
 
 import aiad.feup.agents.Board;
 import aiad.feup.agents.RemoteAgent;
-import aiad.feup.messages.UpdatePlayer;
+import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.OneShotBehaviour;
-import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
 /**
@@ -66,6 +65,7 @@ public class ManageNegotiation extends OneShotBehaviour {
      * Broadcast to all players that the negotiation round has ended
      */
     private void endNegotiationRound(){
+        System.out.println("Ending the negotiation!");
         Board board = (Board) getAgent();
         UpdatePlayer updatePlayerMessage;
         ACLMessage message = new ACLMessage(ACLMessage.INFORM);

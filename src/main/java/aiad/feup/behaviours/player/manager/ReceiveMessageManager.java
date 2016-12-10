@@ -1,14 +1,14 @@
 package aiad.feup.behaviours.player.manager;
 
 import aiad.feup.agents.Player;
-import aiad.feup.messages.Offer;
-import aiad.feup.messages.UpdatePlayer;
+import aiad.feup.messageObjects.Offer;
+import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
 /**
- * Receive Message Behaviour. Continuously listens for messages from other agents
+ * Receive Message Behaviour. Continuously listens for messageObjects from other agents
  */
 public class ReceiveMessageManager extends SimpleBehaviour {
 
@@ -29,14 +29,18 @@ public class ReceiveMessageManager extends SimpleBehaviour {
 
         Object content = player.extractMessageContentObject(message);
         player.handleEndGame(content);
-        if(content instanceof UpdatePlayer)
-            return;
-
-        System.out.println(content);
 
         // Received an Offer
         if(content instanceof Offer)
-            player.addBehaviour(player.getFactory().wrap(HandleOffer.getInstance(player, (Offer) content)));
+            player.addBehaviour(player.getFactory().wrap(new HandleOffer(player, (Offer) content)));
+
+        // Received Update Player (round end)
+        if(content instanceof UpdatePlayer) {
+            UpdatePlayer updatePlayer = (UpdatePlayer) content;
+            System.out.println("Received update. " + updatePlayer.getState());
+            player.setGameState(updatePlayer.getState());
+            player.addBehaviour(player.getFactory().wrap(SendRoundInformation.getInstance()));
+        }
 
     }
 

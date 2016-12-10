@@ -1,7 +1,10 @@
 package aiad.feup.beliefs;
 
+import aiad.feup.messageObjects.Offer;
 import aiad.feup.models.Company;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -12,6 +15,8 @@ public class CompanyInformation extends Belief{
 
     private double believedFluctuation;
     private double believedValue;
+    private List<Offer> offers;
+    private Offer currentOffer;
 
 
     /**
@@ -21,6 +26,8 @@ public class CompanyInformation extends Belief{
      * @param company the company to form the belief for
      */
     public CompanyInformation(Company company){
+        this.offers = new ArrayList<>();
+
         Random r = new Random();
 
         int maxError = 30;
@@ -54,4 +61,23 @@ public class CompanyInformation extends Belief{
     public void setBelievedValue(double believedValue) {
         this.believedValue = believedValue;
     }
+
+    public void addOffer(Offer offer){
+        offers.add(offer);
+    }
+
+    public void setCurrentOffer(Offer currentOffer) {
+        this.currentOffer = currentOffer;
+    }
+
+    public void removeOffer(Offer offer){
+        offers.remove(offer);
+    }
+
+    public Offer getCurrentOffer() { return currentOffer; }
+
+    public List<Offer> getOffers() { return offers; }
+
+
+
 }

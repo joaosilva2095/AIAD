@@ -2,7 +2,7 @@ package aiad.feup.agents;
 
 import aiad.feup.behaviours.player.WaitJoinConfirmation;
 import aiad.feup.beliefs.CompanyInformation;
-import aiad.feup.messages.EndGame;
+import aiad.feup.messageObjects.EndGame;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
@@ -12,8 +12,6 @@ import jade.core.Runtime;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAException;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.UnreadableException;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
@@ -36,9 +34,19 @@ public class Player extends GameAgent {
     private static Player instance;
 
     /**
+     * The board remote agent to communicate with
+     */
+    private RemoteAgent board;
+
+    /**
      * Balance of the player
      */
     private double balance;
+
+    /**
+     * Balance for the current round
+     */
+    private double roundBalance;
 
     /**
      * Type of the player
@@ -77,6 +85,7 @@ public class Player extends GameAgent {
     private Player() {
         super();
         this.balance = 0;
+        this.roundBalance = 0;
         this.companies = new ArrayList<>();
         this.numberTokens = 0;
         this.companyBeliefs = new HashMap<>();
@@ -99,7 +108,7 @@ public class Player extends GameAgent {
     protected void setup() {
         super.setup();
 
-        // Create the behaviour for receiving messages
+        // Create the behaviour for receiving messageObjects
         addBehaviour(getFactory().wrap(WaitJoinConfirmation.getInstance(this)));
 
         // Register in the DF
@@ -179,11 +188,18 @@ public class Player extends GameAgent {
         return balance;
     }
 
+    public synchronized double getRoundBalance() {
+        return roundBalance;
+    }
+
     public PlayerType getType() {
         return type;
     }
 
-    public void setBalance(final double balance) { this.balance = balance; }
+    public void setBalance(final double balance) {
+        this.balance = balance;
+        this.roundBalance = balance;
+    }
 
     public void setType(final PlayerType type) {
         this.type = type;
@@ -213,6 +229,10 @@ public class Player extends GameAgent {
         this.numberTokens = numberTokens;
     }
 
+    public synchronized void setRoundBalance(double roundBalance) {
+        this.roundBalance = roundBalance;
+    }
+
     public void removeToken() {
         this.removeTokens(1);
     }
@@ -232,5 +252,8 @@ public class Player extends GameAgent {
     }
 
 
+    public RemoteAgent getBoard() { return board; }
+
+    public void setBoard(RemoteAgent board) { this.board = board; }
 }
 

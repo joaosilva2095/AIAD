@@ -1,20 +1,14 @@
 package aiad.feup.behaviours.board;
 
 import aiad.feup.agents.Board;
-import aiad.feup.agents.Player;
 import aiad.feup.agents.RemoteAgent;
-import aiad.feup.messages.EndGame;
+import aiad.feup.messageObjects.EndGame;
 import aiad.feup.models.GameState;
-import jade.core.AID;
-import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.AMSService;
-import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 
@@ -54,10 +48,11 @@ public class CheckGameIntegrity extends TickerBehaviour{
         if(board.getGameState() == GameState.NONE || board.getGameState() == GameState.WAITING_GAME_START)
             return;
 
+
         AMSAgentDescription[] result = new AMSAgentDescription[0];
         try {
             SearchConstraints c = new SearchConstraints();
-            c.setMaxResults(new Long(-1));
+            c.setMaxResults((long) -1);
             result = AMSService.search(board, new AMSAgentDescription(), c);
         } catch (FIPAException e) {
             e.printStackTrace();
@@ -71,8 +66,7 @@ public class CheckGameIntegrity extends TickerBehaviour{
             ACLMessage message = new ACLMessage(ACLMessage.INFORM);
             EndGame endGame = new EndGame(" -- Game forcefully ended due to integrity breach.");
 
-            for(int i = 0; i < result.length; i++) {
-                RemoteAgent player = new RemoteAgent(result[i].getName().getName());
+            for(RemoteAgent player : board.getPlayers()) {
                 board.sendMessage(player, message, endGame);
             }
             System.exit(0);

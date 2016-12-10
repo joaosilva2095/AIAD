@@ -4,8 +4,8 @@ import aiad.feup.behaviours.board.CheckGameIntegrity;
 import aiad.feup.behaviours.board.ReadCommand;
 import aiad.feup.behaviours.board.WaitForPlayers;
 import aiad.feup.exceptions.DuplicatedItemException;
-import aiad.feup.messages.SetupPlayer;
-import aiad.feup.messages.UpdatePlayer;
+import aiad.feup.messageObjects.SetupPlayer;
+import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
@@ -19,7 +19,6 @@ import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.*;
 
@@ -47,7 +46,7 @@ public class Board extends GameAgent {
     /**
      * The base duration of a round in seconds
      */
-    private static int ROUND_DURATION;
+    public static final int ROUND_DURATION = 10;
 
     /**
      * The factory for wrapping behaviours in new threads

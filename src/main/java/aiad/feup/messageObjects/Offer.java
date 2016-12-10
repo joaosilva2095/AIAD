@@ -1,4 +1,4 @@
-package aiad.feup.messages;
+package aiad.feup.messageObjects;
 
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.models.Company;
@@ -31,9 +31,9 @@ public class Offer implements Serializable {
     private boolean isClosed;
 
     /**
-     * The remote agent who is making the offer
+     * The remote agent who made the offer
      */
-    private RemoteAgent offerer;
+    private RemoteAgent investor;
 
     /**
      * Constructor of Offer
@@ -41,11 +41,11 @@ public class Offer implements Serializable {
      * @param offeredValue value offered for the company
      * @param isClosed true if it is a closed deal
      */
-    public Offer(Company company, double offeredValue, boolean isClosed, RemoteAgent offerer) {
+    public Offer(Company company, double offeredValue, boolean isClosed, RemoteAgent investor) {
         this.company = company;
         this.offeredValue = offeredValue;
         this.isClosed = isClosed;
-        this.offerer = offerer;
+        this.investor = investor;
     }
 
     /**
@@ -85,5 +85,5 @@ public class Offer implements Serializable {
         isClosed = closed;
     }
 
-    public RemoteAgent getOfferer() { return offerer; }
+    public RemoteAgent getInvestor() { return investor; }
 }

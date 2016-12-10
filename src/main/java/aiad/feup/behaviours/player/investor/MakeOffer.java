@@ -1,13 +1,11 @@
 package aiad.feup.behaviours.player.investor;
 
-import aiad.feup.agents.Board;
 import aiad.feup.agents.Player;
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.beliefs.CompanyInformation;
-import aiad.feup.messages.Offer;
+import aiad.feup.messageObjects.Offer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
-import jade.core.behaviours.SimpleBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -20,7 +18,7 @@ import java.util.Random;
 public class MakeOffer extends TickerBehaviour {
 
     private static MakeOffer instance;
-    private static long tickPeriod = 5000;
+    private static long tickPeriod = 2500;
 
     private double roundBalance;
 
@@ -44,11 +42,19 @@ public class MakeOffer extends TickerBehaviour {
     @Override
     protected void onTick() {
         Player player = (Player) getAgent();
+        if(player.getGameState() != GameState.START_NEGOTIATION) {
+            stop();
+            return;
+        }
+
         Offer offer = planOffer(player);
+
+        CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
+        companyBelief.addOffer(offer);
+
         RemoteAgent targetManager = offer.getCompany().getOwner();
         ACLMessage message = new ACLMessage(ACLMessage.PROPOSE);
         player.sendMessage(targetManager, message, offer);
-
     }
 
     /**

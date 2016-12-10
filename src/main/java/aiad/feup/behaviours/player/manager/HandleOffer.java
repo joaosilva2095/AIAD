@@ -33,13 +33,10 @@ public class HandleOffer extends OneShotBehaviour {
         if(offeredCompany.getValue() > companyBelief.getBelievedValue()) {
             companyBelief.setCurrentOffer(offer);
             message = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-            System.out.println("Accepting the offer");
         }
         else {
             message = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
-            System.out.println("Refusing the offer");
         }
-
 
         player.sendMessage(offer.getInvestor(), message, offer);
     }

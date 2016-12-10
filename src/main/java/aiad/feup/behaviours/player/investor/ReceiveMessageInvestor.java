@@ -36,18 +36,15 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                 // Received UpdatePlayer (end of round)
                 if(content instanceof UpdatePlayer) {
                     UpdatePlayer updatePlayer = (UpdatePlayer) content;
-                    System.out.println("Received update. " + updatePlayer.getState());
                     player.setGameState(updatePlayer.getState());
                 }
                 else if(content instanceof Offer) {
                     Offer offer = (Offer) content;
                     // Received standard ACL message
                     if(message.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
-                        System.out.println("Hooray, offer accepted");
                         CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
                         companyBelief.setCurrentOffer(offer);
                     } else if (message.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
-                        System.out.println("Damnit.");
                     }
                 }
                 break;

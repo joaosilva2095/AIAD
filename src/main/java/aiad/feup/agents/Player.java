@@ -188,7 +188,7 @@ public class Player extends GameAgent {
         this.balance = balance;
         this.roundBalance = balance;
         DecimalFormat df = new DecimalFormat("#0.00");
-        System.out.println("Balance: " + df.format(balance));
+        System.out.println("Wallet - " + df.format(balance) + "€");
     }
 
     public void setType(final PlayerType type) {

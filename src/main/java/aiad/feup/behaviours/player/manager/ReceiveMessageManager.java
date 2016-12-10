@@ -41,7 +41,6 @@ public class ReceiveMessageManager extends SimpleBehaviour {
                     if(updatePlayer.getState() != GameState.END_NEGOTIATION)
                         return;
 
-                    System.out.println("Received update. " + updatePlayer.getState());
                     player.setGameState(updatePlayer.getState());
                     player.addBehaviour(player.getFactory().wrap(SendRoundInformation.getInstance()));
                 }

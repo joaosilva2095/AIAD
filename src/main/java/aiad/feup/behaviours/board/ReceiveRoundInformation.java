@@ -63,36 +63,36 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
         if(numberAnswers != board.getNumberManagers())
             return;
 
+        System.out.println("Received all the information of the managers!");
+
+        Map<String, Double> currentCompaniesValue = new HashMap<>();
+        for(Company company : board.getCompanies())
+            currentCompaniesValue.put(company.getName(), company.getValue());
+
+        // Apply fluctuations
+        board.applyEndOfRoundFluctuation();
+
+        // Calculate new player balances
+        board.calculateBalances(acceptedOffers, currentCompaniesValue);
+
         if(board.getCurrentRoundNumber() == Board.NUMBER_ROUNDS){
             System.out.println("Reached the maximum number of rounds.");
             //Calculate Winner and broadcast
+            return;
         }
-        else {
-            System.out.println("Received all the information of the managers!");
+        board.incrementCurrentRound();
 
-            Map<String, Double> currentCompaniesValue = new HashMap<>();
-            for(Company company : board.getCompanies())
-                currentCompaniesValue.put(company.getName(), company.getValue());
+        // Assign new companies
+        board.assignCompanies();
 
-            // Apply fluctuations
-            board.applyEndOfRoundFluctuation();
-
-            // Calculate new player balances
-            board.calculateBalances(acceptedOffers, currentCompaniesValue);
-
-            // Assign new companies
-            board.assignCompanies();
-
-            //Broadcast updates
-            Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
-            for(RemoteAgent targetAgent : playerUpdates.keySet()){
-                board.sendMessage(targetAgent, new ACLMessage(ACLMessage.INFORM), playerUpdates.get(targetAgent));
-            }
-
-            board.setGameState(GameState.START_NEGOTIATION);
-            board.incrementCurrentRound();
-            board.addBehaviour(board.getFactory().wrap(ManageNegotiation.getInstance()));
+        //Broadcast updates
+        Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
+        for(RemoteAgent targetAgent : playerUpdates.keySet()){
+            board.sendMessage(targetAgent, new ACLMessage(ACLMessage.INFORM), playerUpdates.get(targetAgent));
         }
+
+        board.setGameState(GameState.START_NEGOTIATION);
+        board.addBehaviour(board.getFactory().wrap(ManageNegotiation.getInstance()));
     }
 
     @Override

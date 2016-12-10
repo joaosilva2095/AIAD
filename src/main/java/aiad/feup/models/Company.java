@@ -136,12 +136,14 @@ public class Company implements Serializable {
     public void applyFluctuation() {
         double currentRoundFluctuation = Math.random() * fluctuation / 100;
 
-        if(Math.random() > 0.5)
-            value *= (1-currentRoundFluctuation);
-        else
-            value *= (1+currentRoundFluctuation);
-
         DecimalFormat df = new DecimalFormat("#0.00");
-        System.out.println(getName() + " values now " + df.format(value));
+        System.out.print("Company " + getName() + " - B: " + df.format(value) + "€ | A: ");
+
+        if(Math.random() > 0.5)
+            value *= (1 - currentRoundFluctuation);
+        else
+            value *= (1 + currentRoundFluctuation);
+
+        System.out.println(df.format(value) + "€");
     }
 }

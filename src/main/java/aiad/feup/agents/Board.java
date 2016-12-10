@@ -41,7 +41,7 @@ public class Board extends GameAgent {
     /**
      * Initial balance for players
      */
-    private static final double INITIAL_BALANCE = 120000;
+    private static final double INITIAL_BALANCE = 120;
 
     /**
      * Initial tokens for investors
@@ -51,7 +51,7 @@ public class Board extends GameAgent {
     /**
      * The base value of a company to use for generating a company
      */
-    private static final double BASE_VALUE = 30000;
+    private static final double BASE_VALUE = 30;
 
     /**
      * The base duration of a round in seconds
@@ -332,10 +332,9 @@ public class Board extends GameAgent {
             newCompanies = generateRandomCompanies(getNumberManagers());
         }
         companies.addAll(newCompanies);
+
         Queue<Company> undistributedCompanies = new LinkedList<>(newCompanies);
-        ArrayList<Company> assignedCompanies = new ArrayList<>();
         Company company;
-        DecimalFormat df = new DecimalFormat("#0.00");
 
         // Assign companies to managers
         int companiesPerPlayer = undistributedCompanies.size() / getNumberManagers();
@@ -347,11 +346,9 @@ public class Board extends GameAgent {
             //Give 3 companies to each manager
             for(int i = 0; i < companiesPerPlayer; i++) {
                 undistributedCompanies.peek().setOwner(targetPlayer);
-                assignedCompanies.add(undistributedCompanies.peek());
 
                 company = undistributedCompanies.remove();
                 ownedCompanies.add(company);
-                System.out.println(company.getName() + " values " + df.format(company.getValue()));
             }
 
             playerCompanies.put(targetPlayer.getName(), ownedCompanies);
@@ -361,7 +358,7 @@ public class Board extends GameAgent {
             if(types.get(targetPlayer.getName()) != PlayerType.INVESTOR)
                 continue;
 
-            playerCompanies.put(targetPlayer.getName(), assignedCompanies);
+            playerCompanies.put(targetPlayer.getName(), companies);
         }
     }
 

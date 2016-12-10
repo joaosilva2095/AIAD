@@ -18,6 +18,11 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
      */
     private static ReceiveRoundInformation instance;
 
+    /**
+     * The number of answers that have been received this round.
+     */
+    private int numberAnswers;
+
     private ReceiveRoundInformation(){
     }
 
@@ -42,6 +47,12 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
         System.out.println("Received round information from manager: " + message.getSender().getName());
         System.out.println("The round information contemplates " + roundInformation.getManagerOffers().size() + " offers");
 
+        //Increment the number of received answers
+        numberAnswers++;
+        if(numberAnswers != board.getNumberManagers())
+            return;
+
+        //Broadcast update player
     }
 
     @Override
@@ -49,6 +60,8 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
         return (((Board)getAgent()).getGameState() != GameState.END_NEGOTIATION);
     }
 
-
+    public void setNumberAnswers(int numberAnswers){
+        this.numberAnswers = numberAnswers;
+    }
 
 }

@@ -7,6 +7,7 @@ import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.GameState;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.StaleProxyException;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -76,6 +77,11 @@ public class ReadCommand extends SimpleBehaviour {
                 for(RemoteAgent agent : board.getPlayers()) {
                     board.sendMessage(agent, new ACLMessage(ACLMessage.INFORM), endGame);
                 }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ignore) {
+                }
+                board.killAgent("Players have been informed. Game ending.", 0);
                 break;
             default:
                 System.out.println("Unknown command.");

@@ -34,7 +34,12 @@ public class SendRoundInformation extends OneShotBehaviour{
     @Override
     public void action() {
         Player player = (Player)getAgent();
-        List<Offer> finalOffers = player.getCompanyBeliefs().values().stream().map(CompanyInformation::getCurrentOffer).collect(Collectors.toList());
+        List<Offer> finalOffers = new ArrayList<>();
+        for(CompanyInformation companyInformation : player.getCompanyBeliefs().values()) {
+            if (companyInformation.getCurrentOffer() == null)
+                continue;
+            finalOffers.add(companyInformation.getCurrentOffer());
+        }
 
         RoundInformation info = new RoundInformation(finalOffers);
         RemoteAgent board = player.getBoard();

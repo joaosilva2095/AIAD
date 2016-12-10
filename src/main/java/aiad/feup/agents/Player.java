@@ -123,18 +123,6 @@ public class Player extends GameAgent {
         }
     }
 
-
-    /**
-     * Take down method, takes down the agent
-     */
-    public void takeDown(){
-        try {
-            DFService.deregister(this);
-        } catch (FIPAException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Initialize the player agent
      * @param nickname nickname of the player
@@ -166,8 +154,7 @@ public class Player extends GameAgent {
         // Ending the game
         if(content instanceof EndGame) {
             EndGame endGame = (EndGame) content;
-            System.out.println("Ending the game. Reason: " + endGame.getMessage());
-            System.exit(0);
+            killAgent("Ending the game. Reason: " + endGame.getMessage(), 0);
             return;
         }
     }

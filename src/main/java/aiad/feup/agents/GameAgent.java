@@ -4,7 +4,11 @@ import aiad.feup.models.GameState;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import jade.domain.AMSService;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import jade.wrapper.StaleProxyException;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -98,5 +102,24 @@ public abstract class GameAgent extends Agent{
         }
         message.addReceiver(new AID(targetAgent.getName(), AID.ISGUID));
         send(message);
+    }
+
+    /**
+     * Kill agent method. Attempts to kill the agent.
+     * If agent could not be killed, exits with status -1
+     * @param message Message to convey to user.
+     * @param errorStatus Error status for the program to exit with.
+     */
+    public void killAgent(String message, int errorStatus){
+        System.out.println(message);
+        try {
+            takeDown();
+            getContainerController().kill();
+            System.exit(errorStatus);
+        } catch (StaleProxyException e) {
+            System.out.println("Failed to kill container. Force Aborting. Start praying...");
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 }

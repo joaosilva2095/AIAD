@@ -28,33 +28,46 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
     public void action() {
         ACLMessage message = getAgent().blockingReceive();
         Player player = (Player)getAgent();
-
         Object content = player.extractMessageContentObject(message);
         player.handleEndGame(content);
 
-        if(content instanceof Offer) {
-            Offer offer = (Offer) content;
-            // Received standard ACL message
-            if(message.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
-                System.out.println("Hooray, offer accepted");
-                CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
-                companyBelief.setCurrentOffer(offer);
-            } else if (message.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
-                System.out.println("Damnit.");
-            }
-        }
-
-        // Received UpdatePlayer (end of round)
-        if(content instanceof UpdatePlayer) {
-            UpdatePlayer updatePlayer = (UpdatePlayer) content;
-            System.out.println("Received update. " + updatePlayer.getState());
-            player.setGameState(updatePlayer.getState());
+        switch (player.getGameState()){
+            case START_NEGOTIATION:
+                // Received UpdatePlayer (end of round)
+                if(content instanceof UpdatePlayer) {
+                    UpdatePlayer updatePlayer = (UpdatePlayer) content;
+                    System.out.println("Received update. " + updatePlayer.getState());
+                    player.setGameState(updatePlayer.getState());
+                }
+                else if(content instanceof Offer) {
+                    Offer offer = (Offer) content;
+                    // Received standard ACL message
+                    if(message.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
+                        System.out.println("Hooray, offer accepted");
+                        CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
+                        companyBelief.setCurrentOffer(offer);
+                    } else if (message.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
+                        System.out.println("Damnit.");
+                    }
+                }
+                break;
+            case END_NEGOTIATION:
+                // Received UpdatePlayer
+                if(content instanceof UpdatePlayer) {
+                    UpdatePlayer updatePlayer = (UpdatePlayer) content;
+                    System.out.println("Received update. " + updatePlayer.getState());
+                    player.setGameState(updatePlayer.getState());
+                }
+                break;
+            default:
+                break;
         }
     }
 
     @Override
     public boolean done() {
-        return ((Player)getAgent()).getGameState() != GameState.START_NEGOTIATION;
+        GameState state = ((Player)getAgent()).getGameState();
+        return state != GameState.START_NEGOTIATION && state != GameState.END_NEGOTIATION;
     }
 }
 

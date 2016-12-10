@@ -21,35 +21,30 @@ public class CheckGameIntegrity extends TickerBehaviour{
     private static final long tickPeriod = 5000;
     private static CheckGameIntegrity instance;
 
-    private final DFAgentDescription dfd;
-    private final SearchConstraints sc;
-
     /**
      * Constructor of CheckGameIntegrity
      * @param board board to maintain integrity for
      *
      */
-    private CheckGameIntegrity(final Board board, final DFAgentDescription dfd, final SearchConstraints sc){
+    private CheckGameIntegrity(final Board board){
         super(board, tickPeriod);
-        this.dfd = dfd;
-        this.sc = sc;
     }
 
-    public static CheckGameIntegrity getInstance(final Board board, final DFAgentDescription dfd, final SearchConstraints sc) {
+    public static CheckGameIntegrity getInstance(final Board board) {
         if(instance == null)
-            instance = new CheckGameIntegrity(board, dfd, sc);
+            instance = new CheckGameIntegrity(board);
         return instance;
     }
 
     @Override
     protected void onTick() {
-        Board board = Board.getInstance();
+        Board board = (Board) getAgent();
 
         if(board.getGameState() == GameState.NONE || board.getGameState() == GameState.WAITING_GAME_START)
             return;
 
 
-        AMSAgentDescription[] result = new AMSAgentDescription[0];
+        AMSAgentDescription[] result = null;
         try {
             SearchConstraints c = new SearchConstraints();
             c.setMaxResults((long) -1);
@@ -58,16 +53,20 @@ public class CheckGameIntegrity extends TickerBehaviour{
             e.printStackTrace();
         }
 
-        System.out.println(result.length-4 + " Active Players.");
+        if(result == null)
+            return;
 
-        if (result.length < board.getNumberPlayers()+4){ //TODO remover este "magical number".  AMS retorna todos os agentes, incluindo a board, rma, ams e df
+        int numberOnlinePlayers = result.length - 4;
+
+        System.out.println(numberOnlinePlayers + " Active Players.");
+
+        if (numberOnlinePlayers < board.getNumberPlayers()){
             System.out.println("Ending the game due to integrity breach: A player has quit the game.");
 
-            ACLMessage message = new ACLMessage(ACLMessage.INFORM);
             EndGame endGame = new EndGame(" -- Game forcefully ended due to integrity breach.");
 
             for(RemoteAgent player : board.getPlayers()) {
-                board.sendMessage(player, message, endGame);
+                board.sendMessage(player, new ACLMessage(ACLMessage.INFORM), endGame);
             }
             System.exit(0);
         }

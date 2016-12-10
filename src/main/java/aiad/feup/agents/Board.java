@@ -119,7 +119,7 @@ public class Board extends GameAgent {
         SearchConstraints sc = new SearchConstraints();
         sc.setMaxResults(10L);
         DFAgentDescription dfd = new DFAgentDescription();
-        addBehaviour(factory.wrap(CheckGameIntegrity.getInstance(this, dfd, sc)));
+        addBehaviour(factory.wrap(CheckGameIntegrity.getInstance(this)));
         addBehaviour(factory.wrap(WaitForPlayers.getInstance(this, dfd, sc)));
         addBehaviour(factory.wrap(ReadCommand.getInstance(this)));
 
@@ -327,6 +327,14 @@ public class Board extends GameAgent {
         }
 
         return playerUpdates;
+    }
+
+    public int getNumberManagers(){
+        return getNumberPlayers() / 2;
+    }
+
+    public int getNumberInvestors() {
+        return getNumberPlayers() / 2 + getNumberPlayers() % 2;
     }
 
 

@@ -56,9 +56,10 @@ public class ManageNegotiation extends OneShotBehaviour {
 
         Board board = (Board)getAgent();
         board.setGameState(GameState.END_NEGOTIATION);
-        board.addBehaviour(board.getFactory().wrap(ReceiveRoundInformation.getInstance()));
+        ReceiveRoundInformation rriInstance = ReceiveRoundInformation.getInstance();
+        rriInstance.setNumberAnswers(0);
+        board.addBehaviour(board.getFactory().wrap(rriInstance));
         endNegotiationRound();
-
     }
 
     /**
@@ -68,10 +69,9 @@ public class ManageNegotiation extends OneShotBehaviour {
         System.out.println("Ending the negotiation!");
         Board board = (Board) getAgent();
         UpdatePlayer updatePlayerMessage;
-        ACLMessage message = new ACLMessage(ACLMessage.INFORM);
         for(RemoteAgent targetAgent : board.getPlayers()){
             updatePlayerMessage = new UpdatePlayer(0, 0, null, 0, 0, GameState.END_NEGOTIATION);
-            board.sendMessage(targetAgent, message, updatePlayerMessage);
+            board.sendMessage(targetAgent, new ACLMessage(ACLMessage.INFORM), updatePlayerMessage);
         }
 
     }

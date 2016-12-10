@@ -27,6 +27,7 @@ import java.util.Map;
  * The player super class.
  * Holds information common to all players
  */
+
 public class Player extends GameAgent {
 
     /**
@@ -53,6 +54,16 @@ public class Player extends GameAgent {
      * Number of tokens of the player
      */
     private int numberTokens;
+
+    /**
+     * The total duration of the current round
+     */
+    private int roundDuration;
+
+    /**
+     * The moment in time where the round started
+     */
+    private long roundStartTime;
 
 
     /**
@@ -140,77 +151,6 @@ public class Player extends GameAgent {
     }
 
     /**
-     * Get the current balance of the player
-     * @return current balance of the player
-     */
-    public double getBalance() {
-        return balance;
-    }
-
-    /**
-     * Get the player type
-     * @return player type
-     */
-    public PlayerType getType() {
-        return type;
-    }
-
-    /**
-     * Set the balance of the player
-     * @param balance balance of the player
-     */
-    public void setBalance(final double balance) { this.balance = balance; }
-
-    /**
-     * Set the type of the player
-     * @param type type of the player
-     */
-    public void setType(final PlayerType type) {
-        this.type = type;
-    }
-
-    /**
-     * Set the companies of the player
-     * @param companies companies of the player
-     */
-    public void setCompanies(final List<Company> companies) {
-        this.companies = companies;
-    }
-
-    /**
-     * Add tokens to the player
-     * @param numberTokens number of tokens to be added
-     */
-    public void setTokens(int numberTokens) {
-        this.numberTokens = numberTokens;
-    }
-
-    /**
-     * Remove a token from the player
-     */
-    public void removeToken() {
-        this.removeTokens(1);
-    }
-
-    /**
-     * Remove tokens to the player
-     * @param numberTokens number of tokens to be removed
-     */
-    public void removeTokens(int numberTokens) {
-        if(numberTokens < 0)
-            throw new IllegalArgumentException("Number of tokens to be added must be positive");
-        this.numberTokens -= numberTokens;
-    }
-
-    public List<Company> getCompanies() {
-        return companies;
-    }
-
-    public Map<String, CompanyInformation> getCompanyBeliefs(){
-        return companyBeliefs;
-    }
-
-    /**
      * Handles the end game if that was the content
      */
     public void handleEndGame(Object content) {
@@ -234,5 +174,63 @@ public class Player extends GameAgent {
             companyBeliefs.put(company.getName(), new CompanyInformation(company));
         }
     }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public PlayerType getType() {
+        return type;
+    }
+
+    public void setBalance(final double balance) { this.balance = balance; }
+
+    public void setType(final PlayerType type) {
+        this.type = type;
+    }
+
+    public void setCompanies(final List<Company> companies) {
+        this.companies = companies;
+    }
+
+    public int getRoundDuration() {
+        return roundDuration;
+    }
+
+    public void setRoundDuration(int roundDuration) {
+        this.roundDuration = roundDuration;
+    }
+
+    public long getRoundStartTime() {
+        return roundStartTime;
+    }
+
+    public void setRoundStartTime(long roundStartTime) {
+        this.roundStartTime = roundStartTime;
+    }
+
+    public void setTokens(int numberTokens) {
+        this.numberTokens = numberTokens;
+    }
+
+    public void removeToken() {
+        this.removeTokens(1);
+    }
+
+    public void removeTokens(int numberTokens) {
+        if(numberTokens < 0)
+            throw new IllegalArgumentException("Number of tokens to be added must be positive");
+        this.numberTokens -= numberTokens;
+    }
+
+    public List<Company> getCompanies() {
+        return companies;
+    }
+
+    public Map<String, CompanyInformation> getCompanyBeliefs(){
+        return companyBeliefs;
+    }
+
+
 }
 

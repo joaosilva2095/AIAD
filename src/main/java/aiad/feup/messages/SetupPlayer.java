@@ -15,6 +15,11 @@ public class SetupPlayer implements Serializable {
     private static final long serialVersionUID = -8854382165581053448L;
 
     /**
+     * The duration of a round in seconds
+     */
+    private int roundDuration;
+
+    /**
      * The requested player type
      */
     private PlayerType playerType;
@@ -23,7 +28,8 @@ public class SetupPlayer implements Serializable {
      * Constructor for the SetupPlayer ontology
      * @param playerType the requested player type
      */
-    public SetupPlayer(PlayerType playerType) {
+    public SetupPlayer(PlayerType playerType, int roundDuration) {
+        this.roundDuration = roundDuration;
         this.playerType = playerType;
     }
 
@@ -33,5 +39,9 @@ public class SetupPlayer implements Serializable {
      */
     public PlayerType getPlayerType() {
         return playerType;
+    }
+
+    public int getRoundDuration() {
+        return roundDuration;
     }
 }

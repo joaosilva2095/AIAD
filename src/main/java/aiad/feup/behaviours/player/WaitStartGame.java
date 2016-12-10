@@ -45,6 +45,7 @@ public class WaitStartGame extends SimpleBehaviour {
         if(content instanceof SetupPlayer) {
             SetupPlayer setupPlayer = (SetupPlayer) content;
             player.setType(setupPlayer.getPlayerType());
+            player.setRoundDuration(setupPlayer.getRoundDuration());
             System.out.println("I have been assigned as " + player.getType());
             return;
         }
@@ -66,6 +67,8 @@ public class WaitStartGame extends SimpleBehaviour {
             else {
                 player.addBehaviour(player.getFactory().wrap(ReceiveMessageManager.getInstance(player)));
             }
+
+            player.setRoundStartTime(System.currentTimeMillis());
         }
     }
 

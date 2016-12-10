@@ -63,7 +63,7 @@ public class ReadCommand extends SimpleBehaviour {
                 board.removeBehaviour(wfpInstance);
                 System.out.println("No longer accepting new players.");
 
-                board.assignRoles();
+                board.setupPlayers();
                 Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
 
                 //Broadcast messages
@@ -72,9 +72,8 @@ public class ReadCommand extends SimpleBehaviour {
                     System.out.println("Sent message to: " + targetAgent.getName());
                 }
 
-
-
                 board.setGameState(GameState.START_NEGOTIATION);
+                board.addBehaviour(board.getFactory().wrap(ManageNegotiation.getInstance()));
                 break;
             case "end":
                 System.out.println("Ending the game!");

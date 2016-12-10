@@ -45,6 +45,16 @@ public class Board extends GameAgent {
     private static final double BASE_VALUE = 30000;
 
     /**
+     * The base duration of a round in seconds
+     */
+    private static int ROUND_DURATION;
+
+    /**
+     * The factory for wrapping behaviours in new threads
+     */
+    private ThreadedBehaviourFactory factory;
+
+    /**
      * Instance of the board
      */
     private static Board instance;
@@ -81,6 +91,7 @@ public class Board extends GameAgent {
         super();
         this.players = new ArrayList<>();
         this.companies = new ArrayList<>();
+        this.factory = new ThreadedBehaviourFactory();
 
         this.balances = new HashMap<>();
         this.tokens = new HashMap<>();
@@ -105,8 +116,6 @@ public class Board extends GameAgent {
     @Override
     protected void setup() {
         super.setup();
-
-        final ThreadedBehaviourFactory factory = new ThreadedBehaviourFactory();
 
         SearchConstraints sc = new SearchConstraints();
         sc.setMaxResults(10L);
@@ -227,15 +236,15 @@ public class Board extends GameAgent {
     /**
      * Assign roles and send to the agents
      */
-    public void assignRoles() {
+    public void setupPlayers() {
         int index = 0;
         Collections.shuffle(players);
         for(RemoteAgent agent : players) {
             if(index % 2 == 0) { // Investor
-                sendMessage(agent, new ACLMessage(ACLMessage.INFORM), new SetupPlayer(PlayerType.INVESTOR));
+                sendMessage(agent, new ACLMessage(ACLMessage.INFORM), new SetupPlayer(PlayerType.INVESTOR, ROUND_DURATION));
                 types.put(agent, PlayerType.INVESTOR);
             } else { // Manager
-                sendMessage(agent, new ACLMessage(ACLMessage.INFORM), new SetupPlayer(PlayerType.MANAGER));
+                sendMessage(agent, new ACLMessage(ACLMessage.INFORM), new SetupPlayer(PlayerType.MANAGER, ROUND_DURATION));
                 types.put(agent, PlayerType.MANAGER);
             }
             index++;

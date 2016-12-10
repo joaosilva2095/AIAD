@@ -269,6 +269,14 @@ public class Board extends GameAgent {
         return null;
     }
 
+    public double getBalance(String name) {
+        return balances.get(name);
+    }
+
+    public PlayerType getType(String name) {
+        return types.get(name);
+    }
+
     /**
      * Assign roles and send to the agents
      */

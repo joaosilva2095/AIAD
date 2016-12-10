@@ -2,14 +2,16 @@ package aiad.feup.behaviours.board;
 
 import aiad.feup.agents.Board;
 import aiad.feup.agents.RemoteAgent;
+import aiad.feup.messageObjects.EndGame;
 import aiad.feup.messageObjects.Offer;
 import aiad.feup.messageObjects.RoundInformation;
 import aiad.feup.messageObjects.UpdatePlayer;
-import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
+import aiad.feup.models.PlayerType;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,8 +74,39 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
         board.calculateBalances(acceptedOffers);
 
         if(board.getCurrentRoundNumber() == Board.NUMBER_ROUNDS){
+            //Broadcast updates
+            Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
+            for(RemoteAgent targetAgent : playerUpdates.keySet()){
+                board.sendMessage(targetAgent, new ACLMessage(ACLMessage.INFORM), playerUpdates.get(targetAgent));
+            }
+
             System.out.println("Reached the maximum number of rounds.");
-            //Calculate Winner and broadcast
+            RemoteAgent winnerManager = null, winnerInvestor = null;
+            double maxManagerBalance = Integer.MIN_VALUE, maxInvestorBalance = Integer.MIN_VALUE, balance;
+            for(RemoteAgent agent : board.getPlayers()) {
+                balance = board.getBalance(agent.getName());
+                System.out.println("Agent: " + agent.getName() + " | " + balance);
+                if(board.getType(agent.getName()) == PlayerType.INVESTOR) {
+                    if(balance < maxInvestorBalance)
+                        continue;
+                    System.out.println("Found new winner investor with " + balance);
+                    maxInvestorBalance = balance;
+                    winnerInvestor = agent;
+                } else {
+                    if(balance < maxManagerBalance)
+                        continue;
+                    System.out.println("Found new winner manager with " + balance);
+                    maxManagerBalance = balance;
+                    winnerManager = agent;
+                }
+            }
+            if(winnerInvestor == null || winnerManager == null)
+                throw new IllegalStateException("Winners are null");
+            DecimalFormat df = new DecimalFormat("#0.00");
+            EndGame endGame = new EndGame("The game has ended. The investor winner is " + winnerInvestor.getName() + " (" + df.format(maxInvestorBalance) + "€) and the manager winner is " + winnerManager.getName() + " (" + df.format(maxManagerBalance) + "€)");
+            for(RemoteAgent agent : board.getPlayers()) {
+                board.sendMessage(agent, new ACLMessage(ACLMessage.INFORM), endGame);
+            }
             return;
         }
         board.incrementCurrentRound();

@@ -30,7 +30,7 @@ public class HandleOffer extends OneShotBehaviour {
         CompanyInformation companyBelief = player.getCompanyBeliefs().get(offeredCompany.getName());
         companyBelief.addOffer(offer);
         ACLMessage message;
-        if(offeredCompany.getValue() > companyBelief.getBelievedValue()) {
+        if(offeredCompany.getValue() > companyBelief.getBelievedValue() / 2) {
             companyBelief.setCurrentOffer(offer);
             message = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
         }

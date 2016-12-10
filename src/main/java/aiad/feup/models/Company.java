@@ -4,6 +4,7 @@ import aiad.feup.agents.RemoteAgent;
 import aiad.feup.exceptions.MalformedObjectException;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 /**
  * A company.
@@ -140,5 +141,7 @@ public class Company implements Serializable {
         else
             value *= (1+currentRoundFluctuation);
 
+        DecimalFormat df = new DecimalFormat("#0.00");
+        System.out.println(getName() + " values now " + df.format(value));
     }
 }

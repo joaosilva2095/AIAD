@@ -1,9 +1,12 @@
 package aiad.feup.behaviours.player.manager;
 
 import aiad.feup.agents.Player;
+import aiad.feup.behaviours.player.investor.MakeOffer;
+import aiad.feup.behaviours.player.investor.ReceiveMessageInvestor;
 import aiad.feup.messageObjects.Offer;
 import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.GameState;
+import aiad.feup.models.PlayerType;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -35,10 +38,14 @@ public class ReceiveMessageManager extends SimpleBehaviour {
                 // Received Update Player (round end)
                 if(content instanceof UpdatePlayer) {
                     UpdatePlayer updatePlayer = (UpdatePlayer) content;
+                    if(updatePlayer.getState() != GameState.END_NEGOTIATION)
+                        return;
+
                     System.out.println("Received update. " + updatePlayer.getState());
                     player.setGameState(updatePlayer.getState());
                     player.addBehaviour(player.getFactory().wrap(SendRoundInformation.getInstance()));
                 }
+
                 // Received an Offer
                 if(content instanceof Offer)
                     player.addBehaviour(player.getFactory().wrap(new HandleOffer(player, (Offer) content)));
@@ -49,8 +56,16 @@ public class ReceiveMessageManager extends SimpleBehaviour {
                 // Received Update Player (new negotiation about to start)
                 if(content instanceof UpdatePlayer) {
                     UpdatePlayer updatePlayer = (UpdatePlayer) content;
-                    System.out.println("Received update. " + updatePlayer.getState());
+                    if(updatePlayer.getState() != GameState.START_NEGOTIATION)
+                        return;
+
+                    player.setCompanies(updatePlayer.getCompanyList());
+                    player.setTokens(updatePlayer.getTokens());
+                    player.setBalance(updatePlayer.getBalance());
                     player.setGameState(updatePlayer.getState());
+                    player.generateCompanyBeliefs();
+
+                    player.setRoundStartTime(System.currentTimeMillis());
                 }
 
                 break;

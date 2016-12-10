@@ -55,8 +55,19 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                 // Received UpdatePlayer
                 if(content instanceof UpdatePlayer) {
                     UpdatePlayer updatePlayer = (UpdatePlayer) content;
-                    System.out.println("Received update. " + updatePlayer.getState());
+                    if(updatePlayer.getState() != GameState.START_NEGOTIATION)
+                        return;
+
+                    player.setCompanies(updatePlayer.getCompanyList());
+                    player.setTokens(updatePlayer.getTokens());
+                    player.setBalance(updatePlayer.getBalance());
                     player.setGameState(updatePlayer.getState());
+                    player.generateCompanyBeliefs();
+
+                    player.addBehaviour(player.getFactory().wrap(MakeOffer.getInstance(player)));
+                    MakeOffer.getInstance(player).setRoundBalance(updatePlayer.getBalance());
+
+                    player.setRoundStartTime(System.currentTimeMillis());
                 }
                 break;
             default:

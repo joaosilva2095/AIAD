@@ -58,6 +58,7 @@ public class ManageNegotiation extends OneShotBehaviour {
         board.setGameState(GameState.END_NEGOTIATION);
         ReceiveRoundInformation rriInstance = ReceiveRoundInformation.getInstance();
         rriInstance.setNumberAnswers(0);
+        System.out.println("Waiting for the accepted offers made to managers.");
         board.addBehaviour(board.getFactory().wrap(rriInstance));
         endNegotiationRound();
     }

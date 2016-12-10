@@ -16,6 +16,7 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,6 +187,8 @@ public class Player extends GameAgent {
     public void setBalance(final double balance) {
         this.balance = balance;
         this.roundBalance = balance;
+        DecimalFormat df = new DecimalFormat("#0.00");
+        System.out.println("Balance: " + df.format(balance));
     }
 
     public void setType(final PlayerType type) {
@@ -194,6 +197,7 @@ public class Player extends GameAgent {
 
     public void setCompanies(final List<Company> companies) {
         this.companies = companies;
+        System.out.println("Number companies: " + companies.size());
     }
 
     public int getRoundDuration() {
@@ -214,6 +218,7 @@ public class Player extends GameAgent {
 
     public void setTokens(int numberTokens) {
         this.numberTokens = numberTokens;
+        System.out.println("Tokens: " + numberTokens);
     }
 
     public synchronized void setRoundBalance(double roundBalance) {

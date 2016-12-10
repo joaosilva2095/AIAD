@@ -3,7 +3,10 @@ package aiad.feup.agents;
 import aiad.feup.behaviours.board.CheckGameIntegrity;
 import aiad.feup.behaviours.board.ReadCommand;
 import aiad.feup.behaviours.board.WaitForPlayers;
+import aiad.feup.beliefs.CompanyInformation;
 import aiad.feup.exceptions.DuplicatedItemException;
+import aiad.feup.messageObjects.Offer;
+import aiad.feup.messageObjects.RoundInformation;
 import aiad.feup.messageObjects.SetupPlayer;
 import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.Company;
@@ -20,6 +23,8 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
+import java.rmi.Remote;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -36,7 +41,7 @@ public class Board extends GameAgent {
     /**
      * Initial balance for players
      */
-    private static final int INITIAL_BALANCE = 120000;
+    private static final double INITIAL_BALANCE = 120000;
 
     /**
      * Initial tokens for investors
@@ -74,19 +79,24 @@ public class Board extends GameAgent {
     private List<Company> companies;
 
     /**
+     * List with all the player companies
+     */
+    private Map<String, List<Company>> playerCompanies;
+
+    /**
      * Balances of the remote agents
      */
-    private Map<RemoteAgent, Integer> balances;
+    private Map<String, Double> balances;
 
     /**
      * Tokens of the remote agents
      */
-    private Map<RemoteAgent, Integer> tokens;
+    private Map<String, Integer> tokens;
 
     /**
      * Type of the players
      */
-    private Map<RemoteAgent, PlayerType> types;
+    private Map<String, PlayerType> types;
 
     /**
      * The number of the current round
@@ -103,6 +113,7 @@ public class Board extends GameAgent {
         this.companies = new ArrayList<>();
         this.factory = new ThreadedBehaviourFactory();
 
+        this.playerCompanies = new HashMap<>();
         this.balances = new HashMap<>();
         this.tokens = new HashMap<>();
         this.types = new HashMap<>();
@@ -185,15 +196,13 @@ public class Board extends GameAgent {
     /**
      * Applies the end of round fluctuation for all companies, bringing drastic change to the market
      */
-    private void applyEndOfRoundFluctuation() {
+    public void applyEndOfRoundFluctuation() {
         for (Company company : companies) {
             if (company.getValue() <= 0) {
                 continue;
             }
 
-            System.out.println("Company " + company.getName() + " value before fluctuation: " + company.getValue());
             company.applyFluctuation();
-            System.out.println("Company " + company.getName() + " value after fluctuation: " + company.getValue());
         }
     }
 
@@ -234,8 +243,9 @@ public class Board extends GameAgent {
      */
     public void addPlayer(RemoteAgent player) {
         this.players.add(player);
-        this.balances.put(player, INITIAL_BALANCE);
-        this.tokens.put(player, INITIAL_TOKENS);
+        this.playerCompanies.put(player.getName(), new ArrayList<>());
+        this.balances.put(player.getName(), INITIAL_BALANCE);
+        this.tokens.put(player.getName(), INITIAL_TOKENS);
     }
 
     /**
@@ -247,6 +257,13 @@ public class Board extends GameAgent {
         return companies;
     }
 
+    public Company getCompany(String name) {
+        for(Company company : companies)
+            if(company.getName().equalsIgnoreCase(name))
+                return company;
+        return null;
+    }
+
     /**
      * Assign roles and send to the agents
      */
@@ -256,10 +273,10 @@ public class Board extends GameAgent {
         for(RemoteAgent agent : players) {
             if(index % 2 == 0) { // Investor
                 sendMessage(agent, new ACLMessage(ACLMessage.INFORM), new SetupPlayer(PlayerType.INVESTOR, ROUND_DURATION));
-                types.put(agent, PlayerType.INVESTOR);
+                types.put(agent.getName(), PlayerType.INVESTOR);
             } else { // Manager
                 sendMessage(agent, new ACLMessage(ACLMessage.INFORM), new SetupPlayer(PlayerType.MANAGER, ROUND_DURATION));
-                types.put(agent, PlayerType.MANAGER);
+                types.put(agent.getName(), PlayerType.MANAGER);
             }
             index++;
         }
@@ -278,6 +295,7 @@ public class Board extends GameAgent {
 
         return returnList;
     }
+
     /**
      * Generate a company
      */
@@ -304,48 +322,90 @@ public class Board extends GameAgent {
     }
 
     /**
-     * Calculates and creates a Map with the correct UpdatePlayer to send to each RemoteAgent for the initial distribution
-     * @return the map with the RemoteAgent - UpdatePlayer relation
+     * Assign companies to players
      */
-    public Map<RemoteAgent, UpdatePlayer> calculatePlayerUpdates(){
-        Queue<Company> undistributedCompanies;
+    public void assignCompanies() {
+        List<Company> newCompanies;
         if(currentRoundNumber == 1) {
-            companies = generateRandomCompanies(getNumberManagers() * 3); //We multiply by 3 because every manager must have 3 companies at the start. there will be surplus companies
+            newCompanies = generateRandomCompanies(getNumberManagers() * 3); //We multiply by 3 because every manager must have 3 companies at the start. there will be surplus companies
         } else {
-            companies = generateRandomCompanies(getNumberManagers());
+            newCompanies = generateRandomCompanies(getNumberManagers());
         }
-        undistributedCompanies = new LinkedList<>(companies);
-
+        companies.addAll(newCompanies);
+        Queue<Company> undistributedCompanies = new LinkedList<>(newCompanies);
         ArrayList<Company> assignedCompanies = new ArrayList<>();
-        Map<RemoteAgent, UpdatePlayer> playerUpdates = new HashMap<>();
-        int numberManagers = getNumberManagers();
-        int numberInvestors = getNumberInvestors();
+        Company company;
+        DecimalFormat df = new DecimalFormat("#0.00");
 
         // Assign companies to managers
         int companiesPerPlayer = undistributedCompanies.size() / getNumberManagers();
         for(RemoteAgent targetPlayer : players){
-            if(types.get(targetPlayer) != PlayerType.MANAGER)
+            if(types.get(targetPlayer.getName()) != PlayerType.MANAGER)
                 continue;
 
-            List<Company> playerCompanies = new ArrayList<>();
+            List<Company> ownedCompanies = playerCompanies.get(targetPlayer.getName());
             //Give 3 companies to each manager
             for(int i = 0; i < companiesPerPlayer; i++) {
                 undistributedCompanies.peek().setOwner(targetPlayer);
                 assignedCompanies.add(undistributedCompanies.peek());
-                playerCompanies.add(undistributedCompanies.remove());
+
+                company = undistributedCompanies.remove();
+                ownedCompanies.add(company);
+                System.out.println(company.getName() + " values " + df.format(company.getValue()));
             }
-            playerUpdates.put(targetPlayer, new UpdatePlayer(balances.get(targetPlayer), tokens.get(targetPlayer), playerCompanies, numberInvestors, numberManagers, GameState.START_NEGOTIATION));
+
+            playerCompanies.put(targetPlayer.getName(), ownedCompanies);
         }
 
-        // Assign companies to investors
-        for(RemoteAgent targetPlayer : players) {
-            if (types.get(targetPlayer) != PlayerType.INVESTOR)
+        for(RemoteAgent targetPlayer : players){
+            if(types.get(targetPlayer.getName()) != PlayerType.INVESTOR)
                 continue;
 
-            playerUpdates.put(targetPlayer, new UpdatePlayer(balances.get(targetPlayer), tokens.get(targetPlayer), assignedCompanies, numberInvestors, numberManagers, GameState.START_NEGOTIATION));
+            playerCompanies.put(targetPlayer.getName(), assignedCompanies);
         }
+    }
+
+    /**
+     * Calculates and creates a Map with the correct UpdatePlayer to send to each RemoteAgent for the initial distribution
+     * @return the map with the RemoteAgent - UpdatePlayer relation
+     */
+    public Map<RemoteAgent, UpdatePlayer> calculatePlayerUpdates(){
+        Map<RemoteAgent, UpdatePlayer> playerUpdates = new HashMap<>();
+
+        // Assign companies to investors
+        for(RemoteAgent targetPlayer : players)
+            playerUpdates.put(targetPlayer, new UpdatePlayer(balances.get(targetPlayer.getName()), tokens.get(targetPlayer.getName()), playerCompanies.get(targetPlayer.getName()), getNumberInvestors(), getNumberManagers(), GameState.START_NEGOTIATION));
 
         return playerUpdates;
+    }
+
+    /**
+     * Calculate the balances given a map with offers
+     * @param offers map with managers and their received offers
+     */
+    public void calculateBalances(final Map<RemoteAgent, List<Offer>> offers, final Map<String, Double> previousValues) {
+        RemoteAgent investor;
+        Company company;
+        double managerBalance, investorBalance, fluctuation;
+        for(RemoteAgent manager : offers.keySet()) {
+            managerBalance = balances.get(manager.getName());
+            for(Offer offer : offers.get(manager)) {
+                company = getCompany(offer.getCompany().getName());
+                if(company == null)
+                    throw new IllegalStateException("Unknown company " + offer.getCompany().getName());
+
+                investor = offer.getInvestor();
+                investorBalance = balances.get(investor.getName());
+
+                fluctuation = company.getValue() - previousValues.get(company.getName());
+
+                investorBalance += fluctuation;
+                managerBalance += offer.getOfferedValue();
+
+                balances.put(investor.getName(), investorBalance);
+            }
+            balances.put(manager.getName(), managerBalance);
+        }
     }
 
     public int getNumberManagers(){
@@ -362,10 +422,11 @@ public class Board extends GameAgent {
 
     public void setCurrentRoundNumber(int currentRoundNumber) {
         this.currentRoundNumber = currentRoundNumber;
+        System.out.println("Round #" + currentRoundNumber);
     }
 
     public void incrementCurrentRound(){
-        this.currentRoundNumber++;
+        setCurrentRoundNumber(++currentRoundNumber);
     }
 
 

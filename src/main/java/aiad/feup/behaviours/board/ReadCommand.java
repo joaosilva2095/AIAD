@@ -60,6 +60,7 @@ public class ReadCommand extends SimpleBehaviour {
                 System.out.println("No longer accepting new players.");
 
                 board.setupPlayers();
+                board.assignCompanies();
                 Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
 
                 //Broadcast messageObjects

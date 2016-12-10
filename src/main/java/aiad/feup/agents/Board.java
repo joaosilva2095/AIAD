@@ -29,6 +29,11 @@ import java.util.*;
 public class Board extends GameAgent {
 
     /**
+     * The number of rounds for the game
+     */
+    public static final int NUMBER_ROUNDS = 3;
+
+    /**
      * Initial balance for players
      */
     private static final double INITIAL_BALANCE = 120000;
@@ -84,6 +89,12 @@ public class Board extends GameAgent {
     private Map<RemoteAgent, PlayerType> types;
 
     /**
+     * The number of the current round
+     */
+    private int currentRoundNumber;
+
+
+    /**
      * Constructor of Board
      */
     private Board() {
@@ -95,6 +106,8 @@ public class Board extends GameAgent {
         this.balances = new HashMap<>();
         this.tokens = new HashMap<>();
         this.types = new HashMap<>();
+        this.currentRoundNumber = 0;
+
 
         setGameState(GameState.WAITING_GAME_START);
     }
@@ -293,14 +306,18 @@ public class Board extends GameAgent {
      * @return the map with the RemoteAgent - UpdatePlayer relation
      */
     public Map<RemoteAgent, UpdatePlayer> calculatePlayerUpdates(){
-            companies = generateRandomCompanies(getNumberPlayers() * 3); //We multiply by 3 because every manager must have 3 companies at the start. there will be surplus companies
+        Queue<Company> undistributedCompanies;
+        if(currentRoundNumber == 1) {
+            companies = generateRandomCompanies(getNumberManagers() * 3); //We multiply by 3 because every manager must have 3 companies at the start. there will be surplus companies
+             undistributedCompanies = new LinkedList<>(companies);
+        } else {
+            undistributedCompanies = new LinkedList<>(generateRandomCompanies(getNumberManagers()));
+        }
 
-        Queue<Company> undistributedCompanies = new LinkedList<>(companies);
         ArrayList<Company> assignedCompanies = new ArrayList<>();
         Map<RemoteAgent, UpdatePlayer> playerUpdates = new HashMap<>();
-        int nrPlayers = getNumberPlayers();
-        int numberManagers = nrPlayers / 2;
-        int numberInvestors = nrPlayers / 2   + nrPlayers % 2;
+        int numberManagers = getNumberManagers();
+        int numberInvestors = getNumberInvestors();
 
 
         // Assign companies to managers
@@ -335,6 +352,18 @@ public class Board extends GameAgent {
 
     public int getNumberInvestors() {
         return getNumberPlayers() / 2 + getNumberPlayers() % 2;
+    }
+
+    public int getCurrentRoundNumber() {
+        return currentRoundNumber;
+    }
+
+    public void setCurrentRoundNumber(int currentRoundNumber) {
+        this.currentRoundNumber = currentRoundNumber;
+    }
+
+    public void incrementCurrentRound(){
+        this.currentRoundNumber++;
     }
 
 

@@ -52,7 +52,13 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
         if(numberAnswers != board.getNumberManagers())
             return;
 
-        //Broadcast update player
+        if(board.getCurrentRoundNumber() == board.NUMBER_ROUNDS){
+            //Calculate Winner and broadcast
+        }
+        else {
+            //Calculate new update player and broadcast
+            board.incrementCurrentRound();
+        }
     }
 
     @Override

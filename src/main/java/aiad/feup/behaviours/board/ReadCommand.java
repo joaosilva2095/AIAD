@@ -68,6 +68,7 @@ public class ReadCommand extends SimpleBehaviour {
                 }
 
                 board.setGameState(GameState.START_NEGOTIATION);
+                board.setCurrentRoundNumber(1);
                 ManageNegotiation.getInstance().setRoundDuration(Board.ROUND_DURATION);
                 board.addBehaviour(board.getFactory().wrap(ManageNegotiation.getInstance()));
                 break;

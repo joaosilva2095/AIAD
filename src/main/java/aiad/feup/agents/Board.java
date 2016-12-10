@@ -54,6 +54,11 @@ public class Board extends GameAgent {
     private static final double BASE_VALUE = 30;
 
     /**
+     * Fee that a manager has to pay for a company at the end of the round
+     */
+    private static final double COMPANY_FEE = 10;
+
+    /**
      * The base duration of a round in seconds
      */
     public static final int ROUND_DURATION = 10;
@@ -380,10 +385,12 @@ public class Board extends GameAgent {
      * Calculate the balances given a map with offers
      * @param offers map with managers and their received offers
      */
-    public void calculateBalances(final Map<RemoteAgent, List<Offer>> offers, final Map<String, Double> previousValues) {
+    public void calculateBalances(final Map<RemoteAgent, List<Offer>> offers) {
         RemoteAgent investor;
         Company company;
-        double managerBalance, investorBalance, fluctuation;
+        double managerBalance, investorBalance;
+
+        // Apply revenues
         for(RemoteAgent manager : offers.keySet()) {
             managerBalance = balances.get(manager.getName());
             for(Offer offer : offers.get(manager)) {
@@ -394,14 +401,23 @@ public class Board extends GameAgent {
                 investor = offer.getInvestor();
                 investorBalance = balances.get(investor.getName());
 
-                fluctuation = company.getValue() - previousValues.get(company.getName());
-
-                investorBalance += fluctuation;
+                investorBalance += company.isDoubleRevenue() ? 2 * company.getValue() : company.getValue();
+                investorBalance -= offer.getOfferedValue();
                 managerBalance += offer.getOfferedValue();
 
+                System.out.println(investor.getName() + " invested " + offer.getOfferedValue() + "!");
                 balances.put(investor.getName(), investorBalance);
             }
             balances.put(manager.getName(), managerBalance);
+        }
+
+        // Apply fees
+        for(RemoteAgent targetAgent : players) {
+            if(types.get(targetAgent.getName()) != PlayerType.MANAGER)
+                continue;
+            managerBalance = balances.get(targetAgent.getName());
+            managerBalance -= playerCompanies.get(targetAgent.getName()).size() * COMPANY_FEE;
+            balances.put(targetAgent.getName(), managerBalance);
         }
     }
 

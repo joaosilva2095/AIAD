@@ -31,16 +31,6 @@ public enum GameState {
     END_NEGOTIATION,
 
     /**
-     * Started auctioning
-     */
-    START_AUCTION,
-
-    /**
-     * Ended auctioning
-     */
-    END_AUCTION,
-
-    /**
      * Kicked
      */
     KICKED,

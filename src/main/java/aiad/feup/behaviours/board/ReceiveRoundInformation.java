@@ -65,15 +65,11 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
 
         System.out.println("Received all the information of the managers!");
 
-        Map<String, Double> currentCompaniesValue = new HashMap<>();
-        for(Company company : board.getCompanies())
-            currentCompaniesValue.put(company.getName(), company.getValue());
-
         // Apply fluctuations
         board.applyEndOfRoundFluctuation();
 
         // Calculate new player balances
-        board.calculateBalances(acceptedOffers, currentCompaniesValue);
+        board.calculateBalances(acceptedOffers);
 
         if(board.getCurrentRoundNumber() == Board.NUMBER_ROUNDS){
             System.out.println("Reached the maximum number of rounds.");

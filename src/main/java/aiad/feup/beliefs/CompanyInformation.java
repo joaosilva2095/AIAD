@@ -33,6 +33,7 @@ public class CompanyInformation extends Belief{
         int maxError = 30;
         int minError = 5;
         int error = r.nextInt(maxError - minError) + minError;
+        error /= 100;
         if(r.nextBoolean())
             this.believedValue = company.getValue()* (1+error);
         else

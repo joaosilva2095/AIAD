@@ -5,10 +5,7 @@ import aiad.feup.behaviours.board.ReadCommand;
 import aiad.feup.behaviours.board.WaitForPlayers;
 import aiad.feup.beliefs.CompanyInformation;
 import aiad.feup.exceptions.DuplicatedItemException;
-import aiad.feup.messageObjects.Offer;
-import aiad.feup.messageObjects.RoundInformation;
-import aiad.feup.messageObjects.SetupPlayer;
-import aiad.feup.messageObjects.UpdatePlayer;
+import aiad.feup.messageObjects.*;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
@@ -41,7 +38,7 @@ public class Board extends GameAgent {
     /**
      * Initial balance for players
      */
-    private static final double INITIAL_BALANCE = 120;
+    private static final double INITIAL_BALANCE = 10;
 
     /**
      * Initial tokens for investors
@@ -56,7 +53,12 @@ public class Board extends GameAgent {
     /**
      * Fee that a manager has to pay for a company at the end of the round
      */
-    private static final double COMPANY_FEE = 10;
+    private static final double COMPANY_FEE = 25;
+
+    /**
+     * Value of a company when manager gets bankrupted
+     */
+    private static final double COMPANY_SELL_VALUE = 5;
 
     /**
      * The base duration of a round in seconds
@@ -103,6 +105,8 @@ public class Board extends GameAgent {
      */
     private Map<String, PlayerType> types;
 
+    private List<String> kickedManagers;
+
     /**
      * The number of the current round
      */
@@ -122,6 +126,7 @@ public class Board extends GameAgent {
         this.balances = new HashMap<>();
         this.tokens = new HashMap<>();
         this.types = new HashMap<>();
+        this.kickedManagers = new ArrayList<>();
         this.currentRoundNumber = 1;
 
 
@@ -342,7 +347,7 @@ public class Board extends GameAgent {
         if(currentRoundNumber == 1) {
             newCompanies = generateRandomCompanies(getNumberManagers() * 3); //We multiply by 3 because every manager must have 3 companies at the start. there will be surplus companies
         } else {
-            newCompanies = generateRandomCompanies(getNumberManagers());
+            newCompanies = generateRandomCompanies(getNumberManagers() - kickedManagers.size());
         }
         companies.addAll(newCompanies);
 
@@ -353,6 +358,8 @@ public class Board extends GameAgent {
         int companiesPerPlayer = undistributedCompanies.size() / getNumberManagers();
         for(RemoteAgent targetPlayer : players){
             if(types.get(targetPlayer.getName()) != PlayerType.MANAGER)
+                continue;
+            if(kickedManagers.contains(targetPlayer.getName()))
                 continue;
 
             List<Company> ownedCompanies = playerCompanies.get(targetPlayer.getName());
@@ -422,9 +429,41 @@ public class Board extends GameAgent {
         for(RemoteAgent targetAgent : players) {
             if(types.get(targetAgent.getName()) != PlayerType.MANAGER)
                 continue;
+            if(kickedManagers.contains(targetAgent.getName()))
+                continue;
+
             managerBalance = balances.get(targetAgent.getName());
             managerBalance -= playerCompanies.get(targetAgent.getName()).size() * COMPANY_FEE;
+
+            if(managerBalance < 0) {
+                List<Company> managerCompanies = playerCompanies.get(targetAgent.getName());
+                for(Company managerCompany : managerCompanies) {
+                    companies.remove(managerCompany);
+                    managerBalance += COMPANY_SELL_VALUE;
+                    if(managerBalance > 0)
+                        break;
+                }
+            }
+
             balances.put(targetAgent.getName(), managerBalance);
+        }
+    }
+
+    /**
+     * Apply the kicks if that is the case
+     */
+    public void applyKicks() {
+        double balance;
+        for(RemoteAgent player : players) {
+            balance = balances.get(player.getName());
+            if(balance > 0)
+                continue;
+
+            DecimalFormat df = new DecimalFormat("#0.00");
+            sendMessage(player, new ACLMessage(ACLMessage.INFORM), new KickPlayer("Balance is lower than zero (" + df.format(balance) + "€)"));
+
+            if(types.get(player.getName()) == PlayerType.MANAGER)
+                kickedManagers.add(player.getName());
         }
     }
 
@@ -448,7 +487,4 @@ public class Board extends GameAgent {
     public void incrementCurrentRound(){
         setCurrentRoundNumber(++currentRoundNumber);
     }
-
-
-
 }

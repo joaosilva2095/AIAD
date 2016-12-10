@@ -3,6 +3,7 @@ package aiad.feup.agents;
 import aiad.feup.behaviours.player.WaitJoinConfirmation;
 import aiad.feup.beliefs.CompanyInformation;
 import aiad.feup.messageObjects.EndGame;
+import aiad.feup.messageObjects.KickPlayer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
@@ -161,13 +162,24 @@ public class Player extends GameAgent {
     }
 
     /**
+     * Handles the end game if that was the content
+     */
+    public void handleKick(Object content) {
+        // Ending the game
+        if(content instanceof KickPlayer) {
+            KickPlayer kickPlayer = (KickPlayer) content;
+            setGameState(GameState.KICKED);
+            System.out.println("I have been kicked. Reason: " + kickPlayer.getMessage());
+            System.out.println("Waiting for winners.");
+            return;
+        }
+    }
+
+    /**
      * Generates beliefs for the companies
      */
     public void generateCompanyBeliefs(){
         for(Company company : companies){
-            if(companyBeliefs.containsKey(company.getName()))
-                continue;
-
             companyBeliefs.put(company.getName(), new CompanyInformation(company));
         }
     }

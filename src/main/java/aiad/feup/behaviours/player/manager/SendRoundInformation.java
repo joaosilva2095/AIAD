@@ -39,6 +39,7 @@ public class SendRoundInformation extends OneShotBehaviour{
             if (companyInformation.getCurrentOffer() == null)
                 continue;
             finalOffers.add(companyInformation.getCurrentOffer());
+            companyInformation.reset();
         }
 
         RoundInformation info = new RoundInformation(finalOffers);

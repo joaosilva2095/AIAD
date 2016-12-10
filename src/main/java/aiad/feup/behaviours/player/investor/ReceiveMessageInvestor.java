@@ -30,6 +30,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
         Player player = (Player)getAgent();
         Object content = player.extractMessageContentObject(message);
         player.handleEndGame(content);
+        player.handleKick(content);
 
         switch (player.getGameState()){
             case START_NEGOTIATION:
@@ -67,6 +68,8 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                     player.setRoundStartTime(System.currentTimeMillis());
                 }
                 break;
+            case KICKED:
+                break;
             default:
                 break;
         }
@@ -75,7 +78,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
     @Override
     public boolean done() {
         GameState state = ((Player)getAgent()).getGameState();
-        return state != GameState.START_NEGOTIATION && state != GameState.END_NEGOTIATION;
+        return state != GameState.START_NEGOTIATION && state != GameState.END_NEGOTIATION && state != GameState.KICKED;
     }
 }
 

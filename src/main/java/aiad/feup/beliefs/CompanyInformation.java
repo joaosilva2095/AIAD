@@ -79,6 +79,9 @@ public class CompanyInformation extends Belief{
 
     public List<Offer> getOffers() { return offers; }
 
-
+    public void reset() {
+        offers = new ArrayList<>();
+        currentOffer = null;
+    }
 
 }

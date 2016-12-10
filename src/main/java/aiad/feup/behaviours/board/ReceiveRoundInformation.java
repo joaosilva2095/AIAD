@@ -71,6 +71,9 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
         // Calculate new player balances
         board.calculateBalances(acceptedOffers);
 
+        // Apply kicks
+        board.applyKicks();
+
         if(board.getCurrentRoundNumber() == Board.NUMBER_ROUNDS){
             //Broadcast updates
             Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();

@@ -38,7 +38,7 @@ public class Board extends GameAgent {
     /**
      * Initial balance for players
      */
-    private static final double INITIAL_BALANCE = 10;
+    private static final double INITIAL_BALANCE = 120;
 
     /**
      * Initial tokens for investors
@@ -53,7 +53,7 @@ public class Board extends GameAgent {
     /**
      * Fee that a manager has to pay for a company at the end of the round
      */
-    private static final double COMPANY_FEE = 25;
+    private static final double COMPANY_FEE = 10;
 
     /**
      * Value of a company when manager gets bankrupted
@@ -347,7 +347,7 @@ public class Board extends GameAgent {
         if(currentRoundNumber == 1) {
             newCompanies = generateRandomCompanies(getNumberManagers() * 3); //We multiply by 3 because every manager must have 3 companies at the start. there will be surplus companies
         } else {
-            newCompanies = generateRandomCompanies(getNumberManagers() - kickedManagers.size());
+            newCompanies = generateRandomCompanies(getNumberManagers());
         }
         companies.addAll(newCompanies);
 
@@ -468,7 +468,7 @@ public class Board extends GameAgent {
     }
 
     public int getNumberManagers(){
-        return getNumberPlayers() / 2;
+        return getNumberPlayers() / 2 - kickedManagers.size();
     }
 
     public int getNumberInvestors() {

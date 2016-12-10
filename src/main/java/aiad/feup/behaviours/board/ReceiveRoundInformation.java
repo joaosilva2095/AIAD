@@ -65,8 +65,6 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
         if(numberAnswers != board.getNumberManagers())
             return;
 
-        System.out.println("Received all the information of the managers!");
-
         // Apply fluctuations
         board.applyEndOfRoundFluctuation();
 
@@ -80,33 +78,41 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
                 board.sendMessage(targetAgent, new ACLMessage(ACLMessage.INFORM), playerUpdates.get(targetAgent));
             }
 
-            System.out.println("Reached the maximum number of rounds.");
+            System.out.println("Reached the end of the game.");
             RemoteAgent winnerManager = null, winnerInvestor = null;
             double maxManagerBalance = Integer.MIN_VALUE, maxInvestorBalance = Integer.MIN_VALUE, balance;
             for(RemoteAgent agent : board.getPlayers()) {
                 balance = board.getBalance(agent.getName());
-                System.out.println("Agent: " + agent.getName() + " | " + balance);
                 if(board.getType(agent.getName()) == PlayerType.INVESTOR) {
                     if(balance < maxInvestorBalance)
                         continue;
-                    System.out.println("Found new winner investor with " + balance);
                     maxInvestorBalance = balance;
                     winnerInvestor = agent;
                 } else {
                     if(balance < maxManagerBalance)
                         continue;
-                    System.out.println("Found new winner manager with " + balance);
                     maxManagerBalance = balance;
                     winnerManager = agent;
                 }
             }
             if(winnerInvestor == null || winnerManager == null)
                 throw new IllegalStateException("Winners are null");
+
+            // Disable integrity check
+            CheckGameIntegrity.getInstance(board).stop();
+
+            // Send winners
             DecimalFormat df = new DecimalFormat("#0.00");
             EndGame endGame = new EndGame("The game has ended. The investor winner is " + winnerInvestor.getName() + " (" + df.format(maxInvestorBalance) + "€) and the manager winner is " + winnerManager.getName() + " (" + df.format(maxManagerBalance) + "€)");
             for(RemoteAgent agent : board.getPlayers()) {
                 board.sendMessage(agent, new ACLMessage(ACLMessage.INFORM), endGame);
             }
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ignore) {
+            }
+            board.killAgent("The game has ended. The investor winner is " + winnerInvestor.getName() + " (" + df.format(maxInvestorBalance) + "€) and the manager winner is " + winnerManager.getName() + " (" + df.format(maxManagerBalance) + "€)", 0);
             return;
         }
         board.incrementCurrentRound();

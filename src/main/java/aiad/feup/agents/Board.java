@@ -413,7 +413,6 @@ public class Board extends GameAgent {
                 investorBalance -= offer.getOfferedValue();
                 managerBalance += offer.getOfferedValue();
 
-                System.out.println(investor.getName() + " invested " + offer.getOfferedValue() + "!");
                 balances.put(investor.getName(), investorBalance);
             }
             balances.put(manager.getName(), managerBalance);

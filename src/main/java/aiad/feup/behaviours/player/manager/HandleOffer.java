@@ -41,24 +41,30 @@ public class HandleOffer extends OneShotBehaviour {
 
         ACLMessage message;
         if(offer.getType() == OfferType.WITHDRAW) {
+            companyBelief.removeOffers(offer.getInvestor().getName());
+
             if(companyBelief.getCurrentOffer().getInvestor().getName().equalsIgnoreCase(offer.getInvestor().getName())) {
                 roundBalance -= offer.getOfferedValue();
+                companyBelief.setCurrentOffer(companyBelief.getOffers().peek());
             }
-
             message = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
         } else {
-            companyBelief.addOffer(offer);
             intention.calculateWeight();
             double weight = intention.getWeight();
 
             if(weight >= 0.5) {
-                companyBelief.setCurrentOffer(offer);
+                if(companyBelief.getCurrentOffer() != null)
+                    roundBalance -= companyBelief.getCurrentOffer().getOfferedValue();
                 roundBalance += offer.getOfferedValue();
+
+                companyBelief.addOffer(offer);
+                companyBelief.setCurrentOffer(offer);
                 if(offer.isClosed()) {
                     player.getCompany(offer.getCompany().getName()).close();
                 } else {
                     companyBelief.updateBeliefAsManager(offer, true);
                 }
+
                 message = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
             } else {
                 message = new ACLMessage(ACLMessage.REJECT_PROPOSAL);

@@ -6,9 +6,7 @@ import aiad.feup.models.Company;
 import aiad.feup.models.PlayerStyle;
 import aiad.feup.models.PlayerType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Company Information belief.
@@ -20,7 +18,7 @@ public class CompanyInformation extends Belief{
     private double believedValue;
     private double maximumBelievedValue;
     private double minimumBelievedValue;
-    private List<Offer> offers;
+    private Deque<Offer> offers;
     private Offer currentOffer;
 
 
@@ -29,7 +27,7 @@ public class CompanyInformation extends Belief{
      * @param company the company to form the belief for
      */
     public CompanyInformation(Company company){
-        this.offers = new ArrayList<>();
+        this.offers = new ArrayDeque<>();
 
         Player player = Player.getInstance();
 
@@ -62,7 +60,7 @@ public class CompanyInformation extends Belief{
     }
 
     public void addOffer(Offer offer){
-        offers.add(offer);
+        offers.push(offer);
     }
 
     public void setCurrentOffer(Offer currentOffer) {
@@ -73,12 +71,19 @@ public class CompanyInformation extends Belief{
         offers.remove(offer);
     }
 
+    public void removeOffers(String investor) {
+        for(Offer offer : offers) {
+            if(offer.getInvestor().getName().equalsIgnoreCase(investor))
+                removeOffer(offer);
+        }
+    }
+
     public Offer getCurrentOffer() { return currentOffer; }
 
-    public List<Offer> getOffers() { return offers; }
+    public Deque<Offer> getOffers() { return offers; }
 
     public void reset() {
-        offers = new ArrayList<>();
+        offers = new ArrayDeque<>();
         currentOffer = null;
     }
 

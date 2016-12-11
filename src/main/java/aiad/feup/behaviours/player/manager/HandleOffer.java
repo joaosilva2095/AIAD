@@ -50,9 +50,8 @@ public class HandleOffer extends OneShotBehaviour {
             message = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
         } else {
             intention.calculateWeight();
-            double weight = intention.getWeight();
 
-            if(weight >= 0.5) {
+            if(intention.getWeight() >= 0.5) {
                 if(companyBelief.getCurrentOffer() != null)
                     roundBalance -= companyBelief.getCurrentOffer().getOfferedValue();
                 roundBalance += offer.getOfferedValue();

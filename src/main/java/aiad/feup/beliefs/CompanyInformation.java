@@ -106,7 +106,7 @@ public class CompanyInformation extends Belief{
             if(player.getStyle() == PlayerStyle.RANDOM) {
                 believedValue = maximumBelievedValue - Math.random() * (maximumBelievedValue - minimumBelievedValue);
             } else {
-                double removeValue = 0;
+                double removeValue;
                 double offeredValue = offer.getOfferedValue();
                 removeValue = (maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5);
 

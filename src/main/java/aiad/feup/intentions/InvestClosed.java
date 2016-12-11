@@ -33,7 +33,7 @@ public class InvestClosed extends Intention {
 
         Player player = Player.getInstance();
 
-        double timeElapsedRatio = ((System.currentTimeMillis() - player.getRoundStartTime()) / 1000) / player.getRoundDuration();
+        double timeElapsedRatio = ((System.currentTimeMillis() - player.getRoundStartTime()) / 1000.0) / player.getRoundDuration();
 
         Company currCompany;
         double currWeight = 0, finalMoneyRatio, investmentMoneyRatio;
@@ -57,9 +57,9 @@ public class InvestClosed extends Intention {
                     if(finalMoneyRatio < 0.15)
                         continue;
                     FLUCTUATION_WEIGHT = 0.135;
-                    INVESTMENT_VOLUME_WEIGHT = 0.1125;
+                    INVESTMENT_VOLUME_WEIGHT = 0.425;
                     TIME_ELAPSED_WEIGHT = 0.135;
-                    ALREADY_INVESTED_WEIGHT = 0.0675;
+                    ALREADY_INVESTED_WEIGHT = 0.1375;
                     currWeight = FLUCTUATION_WEIGHT * (1 - currCompanyInfo.getBelievedFluctuation());
                     currWeight += INVESTMENT_VOLUME_WEIGHT * (1 - investmentMoneyRatio);
                     if(currCompanyInfo.getCurrentOffer() != null)

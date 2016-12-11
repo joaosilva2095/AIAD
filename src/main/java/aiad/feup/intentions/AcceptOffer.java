@@ -12,7 +12,7 @@ public class AcceptOffer extends Intention {
 
     private static double INVESTMENT_WEIGHT;
     private static double TIME_ELAPSED_WEIGHT;
-    private static double CLOSED_WEIGHT;
+    private static double NON_CLOSED_WEIGHT;
 
     /**
      * Offer for being accepted or not
@@ -44,24 +44,25 @@ public class AcceptOffer extends Intention {
             return;
         }
 
-        double timeElapsedRatio = ((System.currentTimeMillis() - player.getRoundStartTime()) / 1000) / player.getRoundDuration();
+        double timeElapsedRatio = ((System.currentTimeMillis() - player.getRoundStartTime()) / 1000.0) / player.getRoundDuration();
         switch(player.getStyle()) {
-            case HIGH_RISK:
-                INVESTMENT_WEIGHT = 0.7;
-                TIME_ELAPSED_WEIGHT = 0.2;
-                CLOSED_WEIGHT = 0.1;
+            case LOW_RISK:
+                INVESTMENT_WEIGHT = 0.8;
+                TIME_ELAPSED_WEIGHT = 0.15;
+                NON_CLOSED_WEIGHT = 0.05;
                 weight = INVESTMENT_WEIGHT * calculateInvestmentWeight(companyInformation.getBelievedValue(), offer.getOfferedValue());
                 weight += TIME_ELAPSED_WEIGHT * timeElapsedRatio;
                 if(!offer.isClosed())
-                    weight += CLOSED_WEIGHT;
+                    weight += NON_CLOSED_WEIGHT;
                 break;
-            case LOW_RISK:
-                INVESTMENT_WEIGHT = 0.65;
-                TIME_ELAPSED_WEIGHT = 0.3;
-                CLOSED_WEIGHT = 0.05;
+            case HIGH_RISK:
+                INVESTMENT_WEIGHT = 0.50;
+                TIME_ELAPSED_WEIGHT = 0.30;
+                NON_CLOSED_WEIGHT = 0.20;
+                weight = INVESTMENT_WEIGHT * calculateInvestmentWeight(companyInformation.getBelievedValue(), offer.getOfferedValue());
                 weight += TIME_ELAPSED_WEIGHT * timeElapsedRatio;
                 if(!offer.isClosed())
-                    weight += CLOSED_WEIGHT;
+                    weight += NON_CLOSED_WEIGHT;
                 break;
             case RANDOM:
                 weight = Math.random();

@@ -13,9 +13,10 @@ import java.util.Map;
 public class InvestOpen extends Intention {
     private static InvestOpen instance;
 
-    private static final double FLUCTUATION_WEIGHT = 0.30;
-    private static final double INVESTMENT_VOLUME_WEIGHT = 0.15;
-    private static final double INVESTMENT_WEIGHT = 0.55;
+    private static double FLUCTUATION_WEIGHT;
+    private static double INVESTMENT_VOLUME_WEIGHT;
+    private static double INVESTMENT_WEIGHT;
+    private static double TIME_ELAPSED_WEIGHT;
 
     public static InvestOpen getInstance() {
         if(instance == null)
@@ -50,13 +51,22 @@ public class InvestOpen extends Intention {
             // Check ratio
             switch (player.getStyle()){
                 case LOW_RISK:
+                    FLUCTUATION_WEIGHT = 0.24;
+                    INVESTMENT_VOLUME_WEIGHT = 0.12;
+                    INVESTMENT_WEIGHT = 0.44;
+                    TIME_ELAPSED_WEIGHT = 0.2;
+                    double timeElapsedRatio = ((System.currentTimeMillis() - player.getRoundStartTime()) / 1000.0) / player.getRoundDuration();
                     if(finalMoneyRatio < 0.15)
                         continue;
                     currWeight = FLUCTUATION_WEIGHT * (1 - currCompanyInfo.getBelievedFluctuation());
                     currWeight += INVESTMENT_VOLUME_WEIGHT * (1 - investmentMoneyRatio);
                     currWeight += INVESTMENT_WEIGHT * calculateInvestmentWeight(currCompanyInfo);
+                    currWeight += TIME_ELAPSED_WEIGHT * (1 - timeElapsedRatio);
                     break;
                 case HIGH_RISK:
+                    FLUCTUATION_WEIGHT = 0.30;
+                    INVESTMENT_VOLUME_WEIGHT = 0.15;
+                    INVESTMENT_WEIGHT = 0.55;
                     if(finalMoneyRatio < 0.05)
                         continue;
                     currWeight = FLUCTUATION_WEIGHT * currCompanyInfo.getBelievedFluctuation();

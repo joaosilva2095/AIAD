@@ -284,6 +284,10 @@ public class Player extends GameAgent {
         return null;
     }
 
+    public CompanyInformation getCompanyInformation(String name) {
+        return companyBeliefs.get(name);
+    }
+
     public Map<String, CompanyInformation> getCompanyBeliefs(){
         return companyBeliefs;
     }

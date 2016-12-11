@@ -11,7 +11,7 @@ public enum OfferType {
     WITHDRAW,
 
     /**
-     * A player wants buy company
+     * A player wants invest company
      */
-    BUY,
+    INVEST,
 }

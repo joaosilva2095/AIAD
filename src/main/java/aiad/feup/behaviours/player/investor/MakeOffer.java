@@ -3,16 +3,16 @@ package aiad.feup.behaviours.player.investor;
 import aiad.feup.agents.Player;
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.beliefs.CompanyInformation;
-import aiad.feup.desires.Desire;
-import aiad.feup.desires.Invest;
-import aiad.feup.desires.Withdraw;
+import aiad.feup.intentions.Intention;
+import aiad.feup.intentions.InvestClosed;
+import aiad.feup.intentions.InvestOpen;
+import aiad.feup.intentions.Withdraw;
 import aiad.feup.messageObjects.Offer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import aiad.feup.models.OfferType;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
-import org.omg.PortableInterceptor.INACTIVE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +26,8 @@ public class MakeOffer extends TickerBehaviour {
     private static MakeOffer instance;
     private static long tickPeriod = 2500;
 
-    // Desire
-    private List<Desire> desires;
+    // Intention
+    private List<Intention> intentions;
 
     /**
      * Current round balance belief
@@ -38,9 +38,10 @@ public class MakeOffer extends TickerBehaviour {
     private MakeOffer(final Player player) {
         super(player, tickPeriod);
         roundBalance = player.getBalance();
-        desires = new ArrayList<>();
-        desires.add(Invest.getInstance());
-        desires.add(Withdraw.getInstance());
+        intentions = new ArrayList<>();
+        intentions.add(InvestOpen.getInstance());
+        intentions.add(InvestClosed.getInstance());
+        intentions.add(Withdraw.getInstance());
     }
 
     public static MakeOffer getInstance(final Player player) {
@@ -66,8 +67,10 @@ public class MakeOffer extends TickerBehaviour {
         }
 
         Offer offer = planOffer(player);
+        if(offer == null)
+            return;
 
-        CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
+        CompanyInformation companyBelief = player.getCompanyInformation(offer.getCompany().getName());
         companyBelief.addOffer(offer);
 
         RemoteAgent targetManager = offer.getCompany().getOwner();
@@ -83,16 +86,35 @@ public class MakeOffer extends TickerBehaviour {
     private Offer planOffer(Player player){
         Random r = new Random();
 
-        List<Company> companies = player.getCompanies();
+        double maxWeight = Integer.MIN_VALUE;
+        Intention bestIntention = null;
+        for(Intention intention : intentions) {
+            intention.calculateWeight();
+            if(intention.getWeight() > maxWeight) {
+                maxWeight = intention.getWeight();
+                bestIntention = intention;
+            }
+        }
 
-        Invest invest = Invest.getInstance();
-        invest.calculateDesire();
+        if(bestIntention == null || maxWeight == 0)
+            return null;
 
-        Company targetCompany = companies.get(r.nextInt(companies.size()));
-        CompanyInformation companyBelief = player.getCompanyBeliefs().get(targetCompany.getName());
+        // InvestOpen or withdraw
+        Company company = bestIntention.getCompany();
+        CompanyInformation companyInformation = player.getCompanyInformation(company.getName());
+        OfferType type;
+        if(bestIntention instanceof InvestOpen || bestIntention instanceof InvestClosed) {
+            type = OfferType.INVEST;
+        } else {
+            type = OfferType.WITHDRAW;
+        }
 
-        Offer theOffer = new Offer(targetCompany, companyBelief.getBelievedValue(), r.nextBoolean(), OfferType.BUY, new RemoteAgent(player.getName()));
-        return theOffer;
+        // Closed deal or not
+        boolean closed = false;
+        if(bestIntention instanceof InvestClosed)
+            closed = true;
+
+        return new Offer(company, companyInformation.getBelievedValue(), closed, type, new RemoteAgent(player.getName()));
     }
 
 

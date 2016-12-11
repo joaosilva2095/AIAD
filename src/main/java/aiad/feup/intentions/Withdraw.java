@@ -38,6 +38,8 @@ public class Withdraw extends Intention {
         double roundBalance = MakeOffer.getInstance(player).getRoundBalance();
         for(Map.Entry<String, CompanyInformation> entry : player.getCompanyBeliefs().entrySet()) {
             currCompany = player.getCompany(entry.getKey());
+            if(currCompany.isClosed())
+                continue;
             currCompanyInfo = entry.getValue();
             if(currCompanyInfo.getCurrentOffer() == null)
                 continue;

@@ -3,6 +3,7 @@ package aiad.feup.beliefs;
 import aiad.feup.agents.Player;
 import aiad.feup.messageObjects.Offer;
 import aiad.feup.models.Company;
+import aiad.feup.models.PlayerStyle;
 import aiad.feup.models.PlayerType;
 
 import java.util.ArrayList;
@@ -85,7 +86,20 @@ public class CompanyInformation extends Belief{
      * Update a belief based on an offer
      * @param offer offer that was received
      */
-    public void updateBelief(Offer offer) {
+    public void updateBeliefAsManager(Offer offer, boolean accepted) {
+        if(accepted)
+            return;
+
+        Player player = Player.getInstance();
+        if(player.getStyle() == PlayerStyle.RANDOM) {
+            believedValue = maximumBelievedValue - Math.random() * (maximumBelievedValue - minimumBelievedValue);
+        } else {
+            double offeredValue = offer.getOfferedValue();
+            believedValue = offeredValue + ((maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5));
+            double maxOfferValue = (minimumBelievedValue + ((maximumBelievedValue - minimumBelievedValue) / 2) * 1.2);
+            if(believedValue >= maxOfferValue)
+                believedValue = offeredValue;
+        }
     }
 
     /**
@@ -93,15 +107,20 @@ public class CompanyInformation extends Belief{
      * @param offer offer that was made
      * @param accepted accepted or not
      */
-    public void updateBelief(Offer offer, boolean accepted) {
+    public void updateBeliefAsInvestor(Offer offer, boolean accepted) {
         if(accepted)
             return;
 
-        double offeredValue = offer.getOfferedValue();
-        believedValue = offeredValue + ((maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5));
-        double maxOfferValue = (minimumBelievedValue + ((maximumBelievedValue - minimumBelievedValue) / 2) * 1.2);
-        if(believedValue >= maxOfferValue)
-            believedValue = offeredValue;
+        Player player = Player.getInstance();
+        if(player.getStyle() == PlayerStyle.RANDOM) {
+            believedValue = minimumBelievedValue + Math.random() * (maximumBelievedValue - minimumBelievedValue);
+        } else {
+            double offeredValue = offer.getOfferedValue();
+            believedValue = offeredValue + ((maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5));
+            double maxOfferValue = (minimumBelievedValue + ((maximumBelievedValue - minimumBelievedValue) / 2) * 1.2);
+            if(believedValue >= maxOfferValue)
+                believedValue = offeredValue;
+        }
     }
 
     /**

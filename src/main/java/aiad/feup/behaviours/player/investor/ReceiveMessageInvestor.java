@@ -5,6 +5,7 @@ import aiad.feup.messageObjects.Offer;
 import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
+import aiad.feup.models.OfferType;
 import com.oracle.deploy.update.Updater;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -42,19 +43,22 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                 }
                 else if(content instanceof Offer) {
                     Offer offer = (Offer) content;
+                    if(offer.getType() == OfferType.WITHDRAW)
+                        return;
+
                     CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
 
                     // Received standard ACL message
                     if(message.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
                         companyBelief.setCurrentOffer(offer);
+                        makeOfferInstance.setRoundBalance(makeOfferInstance.getRoundBalance() - offer.getOfferedValue());
                         if(offer.isClosed()) {
-                            makeOfferInstance.setRoundBalance(makeOfferInstance.getRoundBalance() - offer.getOfferedValue());
                             player.getCompany(offer.getCompany().getName()).close();
                         } else {
-                            companyBelief.updateBelief(offer, true);
+                            companyBelief.updateBeliefAsInvestor(offer, true);
                         }
                     } else if (message.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
-                        companyBelief.updateBelief(offer, false);
+                        companyBelief.updateBeliefAsInvestor(offer, false);
                     }
                 }
                 break;

@@ -71,7 +71,13 @@ public class MakeOffer extends TickerBehaviour {
             return;
 
         CompanyInformation companyBelief = player.getCompanyInformation(offer.getCompany().getName());
-        companyBelief.addOffer(offer);
+
+        if(offer.getType() == OfferType.WITHDRAW) {
+            companyBelief.setCurrentOffer(null);
+            setRoundBalance(getRoundBalance() + offer.getOfferedValue());
+        } else {
+            companyBelief.addOffer(offer);
+        }
 
         RemoteAgent targetManager = offer.getCompany().getOwner();
         ACLMessage message = new ACLMessage(ACLMessage.PROPOSE);

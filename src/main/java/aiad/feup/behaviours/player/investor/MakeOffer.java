@@ -69,8 +69,10 @@ public class MakeOffer extends TickerBehaviour {
         }
 
         Offer offer = planOffer(player);
-        if(offer == null)
+        if(offer == null){
+            System.out.println("Could not find a suitable offer");
             return;
+        }
 
         CompanyInformation companyBelief = player.getCompanyInformation(offer.getCompany().getName());
 

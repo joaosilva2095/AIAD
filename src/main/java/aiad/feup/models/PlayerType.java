@@ -5,7 +5,6 @@ package aiad.feup.models;
  */
 public enum PlayerType {
     NONE,
-    BOARD,
     MANAGER,
     INVESTOR
 }

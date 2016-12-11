@@ -6,6 +6,7 @@ import aiad.feup.beliefs.CompanyInformation;
 import aiad.feup.messageObjects.Offer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
+import aiad.feup.models.OfferType;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -70,7 +71,7 @@ public class MakeOffer extends TickerBehaviour {
         Company targetCompany = companies.get(r.nextInt(companies.size()));
         CompanyInformation companyBelief = player.getCompanyBeliefs().get(targetCompany.getName());
 
-        Offer theOffer = new Offer(targetCompany, companyBelief.getBelievedValue(), r.nextBoolean(), new RemoteAgent(player.getName()));
+        Offer theOffer = new Offer(targetCompany, companyBelief.getBelievedValue(), r.nextBoolean(), OfferType.BUY, new RemoteAgent(player.getName()));
         return theOffer;
     }
 }

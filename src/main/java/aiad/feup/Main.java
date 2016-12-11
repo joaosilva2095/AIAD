@@ -3,6 +3,7 @@ package aiad.feup;
 import aiad.feup.agents.Board;
 import aiad.feup.agents.GameAgent;
 import aiad.feup.agents.Player;
+import aiad.feup.models.PlayerStyle;
 import jade.wrapper.StaleProxyException;
 
 /**
@@ -40,20 +41,21 @@ public class Main {
                 setupBoard(mainHost, mainPort);
                 break;
             case "player":
-                if (args.length < 6) {
-                    throw new IllegalArgumentException("Please use java -jar game.jar <mainHost> <mainPort> <board|player> <nickname> <localHost> <localPort>");
+                if (args.length < 7) {
+                    throw new IllegalArgumentException("Please use java -jar game.jar <mainHost> <mainPort> <board|player> <nickname> <high|low|random> <localHost> <localPort>");
                 }
 
                 final String nickname = args[3],
-                        localHost = args[4];
+                        playerStyle = args[4],
+                        localHost = args[5];
                 final int localPort;
                 try {
-                    localPort = Integer.parseInt(args[5]);
+                    localPort = Integer.parseInt(args[6]);
                 } catch (final Exception e) {
                     throw new IllegalArgumentException("The port must be a natural number");
                 }
 
-                setupPlayer(nickname, mainHost, mainPort, localHost, localPort);
+                setupPlayer(nickname, playerStyle, mainHost, mainPort, localHost, localPort);
                 break;
             default:
                 throw new IllegalArgumentException("Please use java -jar game.jar <host> <port> <board|player> [numberPlayers]");
@@ -70,10 +72,24 @@ public class Main {
         }
     }
 
-    private static void setupPlayer(final String nickname, final String mainHost, final int mainPort, final String localHost, final int localPort) {
+    private static void setupPlayer(final String nickname, final String playerStyle, final String mainHost, final int mainPort, final String localHost, final int localPort) {
         agent = Player.getInstance();
         try {
-            ((Player) agent).init(nickname, mainHost, mainPort, localHost, localPort);
+            Player player = (Player) agent;
+            player.init(nickname, mainHost, mainPort, localHost, localPort);
+            switch(playerStyle.toLowerCase()) {
+                case "high":
+                    player.setStyle(PlayerStyle.HIGH_RISK);
+                    break;
+                case "low":
+                    player.setStyle(PlayerStyle.LOW_RISK);
+                    break;
+                case "random":
+                    player.setStyle(PlayerStyle.RANDOM);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown player style: " + playerStyle);
+            }
         } catch (StaleProxyException e) {
             System.out.println("That nickname is already in use. Please choose another one.");
             return;

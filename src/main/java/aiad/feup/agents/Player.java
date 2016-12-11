@@ -6,6 +6,7 @@ import aiad.feup.messageObjects.EndGame;
 import aiad.feup.messageObjects.KickPlayer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
+import aiad.feup.models.PlayerStyle;
 import aiad.feup.models.PlayerType;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
@@ -54,6 +55,11 @@ public class Player extends GameAgent {
      * Type of the player
      */
     private PlayerType type = PlayerType.NONE;
+
+    /**
+     * Style of the player
+     */
+    private PlayerStyle style;
 
     /**
      * List with all companies
@@ -196,6 +202,10 @@ public class Player extends GameAgent {
         return type;
     }
 
+    public PlayerStyle getStyle() {
+        return style;
+    }
+
     public void setBalance(final double balance) {
         this.balance = balance;
         this.roundBalance = balance;
@@ -205,6 +215,10 @@ public class Player extends GameAgent {
 
     public void setType(final PlayerType type) {
         this.type = type;
+    }
+
+    public void setStyle(PlayerStyle style) {
+        this.style = style;
     }
 
     public void setCompanies(final List<Company> companies) {

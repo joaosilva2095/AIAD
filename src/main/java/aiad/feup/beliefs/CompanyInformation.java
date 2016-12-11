@@ -17,6 +17,8 @@ public class CompanyInformation extends Belief{
 
     private double believedFluctuation;
     private double believedValue;
+    private double maximumBelievedValue;
+    private double minimumBelievedValue;
     private List<Offer> offers;
     private Offer currentOffer;
 
@@ -46,6 +48,14 @@ public class CompanyInformation extends Belief{
         return believedValue;
     }
 
+    public double getMaximumBelievedValue() {
+        return maximumBelievedValue;
+    }
+
+    public double getMinimumBelievedValue() {
+        return minimumBelievedValue;
+    }
+
     public void setBelievedValue(double believedValue) {
         this.believedValue = believedValue;
     }
@@ -71,8 +81,27 @@ public class CompanyInformation extends Belief{
         currentOffer = null;
     }
 
-    public void updateBelief(Offer offer, boolean accepted) {
+    /**
+     * Update a belief based on an offer
+     * @param offer offer that was received
+     */
+    public void updateBelief(Offer offer) {
+    }
 
+    /**
+     * Update the believed value in the company
+     * @param offer offer that was made
+     * @param accepted accepted or not
+     */
+    public void updateBelief(Offer offer, boolean accepted) {
+        if(accepted)
+            return;
+
+        double offeredValue = offer.getOfferedValue();
+        believedValue = offeredValue + ((maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5));
+        double maxOfferValue = (minimumBelievedValue + ((maximumBelievedValue - minimumBelievedValue) / 2) * 1.2);
+        if(believedValue >= maxOfferValue)
+            believedValue = offeredValue;
     }
 
     /**
@@ -94,8 +123,12 @@ public class CompanyInformation extends Belief{
 
         if(player.getType() == PlayerType.INVESTOR) {
             this.believedValue =  company.getValue() * (1 - believedFluctuation);
+            this.maximumBelievedValue = company.getValue() * (1 + believedFluctuation);
+            this.minimumBelievedValue = this.believedValue;
         } else {
-            this.believedValue = company.getValue() * (1 + believedFluctuation);
+            this.believedValue =  company.getValue() * (1 + believedFluctuation);
+            this.minimumBelievedValue = company.getValue() * (1 - believedFluctuation);
+            this.maximumBelievedValue = this.believedValue;
         }
     }
 

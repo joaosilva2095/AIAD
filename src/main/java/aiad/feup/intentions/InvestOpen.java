@@ -13,8 +13,9 @@ import java.util.Map;
 public class InvestOpen extends Intention {
     private static InvestOpen instance;
 
-    private static final double FLUCTUATION_WEIGHT = 0.6;
-    private static final double INVESTMENT_WEIGHT = 0.4;
+    private static final double FLUCTUATION_WEIGHT = 0.30;
+    private static final double INVESTMENT_VOLUME_WEIGHT = 0.15;
+    private static final double INVESTMENT_WEIGHT = 0.55;
 
     public static InvestOpen getInstance() {
         if(instance == null)
@@ -36,6 +37,9 @@ public class InvestOpen extends Intention {
         double roundBalance = MakeOffer.getInstance(player).getRoundBalance();
         for(Map.Entry<String, CompanyInformation> entry : player.getCompanyBeliefs().entrySet()) {
             currCompany = player.getCompany(entry.getKey());
+            if(currCompany.isClosed())
+                continue;
+
             currCompanyInfo = entry.getValue();
 
             finalMoneyRatio = (roundBalance - currCompanyInfo.getBelievedValue()) / player.getBalance();
@@ -49,13 +53,15 @@ public class InvestOpen extends Intention {
                     if(finalMoneyRatio < 0.15)
                         continue;
                     currWeight = FLUCTUATION_WEIGHT * (1 - currCompanyInfo.getBelievedFluctuation());
-                    currWeight += INVESTMENT_WEIGHT * (1 - investmentMoneyRatio);
+                    currWeight += INVESTMENT_VOLUME_WEIGHT * (1 - investmentMoneyRatio);
+                    currWeight += INVESTMENT_WEIGHT * calculateInvestmentWeight(currCompanyInfo);
                     break;
                 case HIGH_RISK:
                     if(finalMoneyRatio < 0.05)
                         continue;
                     currWeight = FLUCTUATION_WEIGHT * currCompanyInfo.getBelievedFluctuation();
-                    currWeight += INVESTMENT_WEIGHT * investmentMoneyRatio;
+                    currWeight += INVESTMENT_VOLUME_WEIGHT * investmentMoneyRatio;
+                    currWeight += INVESTMENT_WEIGHT * calculateInvestmentWeight(currCompanyInfo);
                     break;
                 case RANDOM:
                     currWeight = Math.random();
@@ -67,5 +73,17 @@ public class InvestOpen extends Intention {
                 company = currCompany;
             }
         }
+    }
+
+    /**
+     * Calculate the weight of an investment. As the believed value approaches the maximum believed value for a company after fluctuation
+     * the investment weight is reduced quadratically.
+     * @param companyInformation company information
+     * @return investment weight
+     */
+    private double calculateInvestmentWeight(CompanyInformation companyInformation){
+        double distance = companyInformation.getMaximumBelievedValue() - companyInformation.getMinimumBelievedValue();
+        double ratio = (companyInformation.getMaximumBelievedValue() - companyInformation.getBelievedValue()) / distance;
+        return Math.pow(ratio, 2);
     }
 }

@@ -40,6 +40,9 @@ public class InvestClosed extends Intention {
         double roundBalance = MakeOffer.getInstance(player).getRoundBalance();
         for(Map.Entry<String, CompanyInformation> entry : player.getCompanyBeliefs().entrySet()) {
             currCompany = player.getCompany(entry.getKey());
+            if(currCompany.isClosed())
+                continue;
+
             currCompanyInfo = entry.getValue();
 
             finalMoneyRatio = (roundBalance - currCompanyInfo.getBelievedValue()) / player.getBalance();

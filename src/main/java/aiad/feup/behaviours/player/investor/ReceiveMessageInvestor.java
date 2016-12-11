@@ -10,6 +10,8 @@ import com.oracle.deploy.update.Updater;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.text.DecimalFormat;
+
 /**
  * Receive Message Behaviour. Continuously listens for messageObjects from other agents
  */
@@ -48,8 +50,11 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
 
                     CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
 
+                    DecimalFormat df = new DecimalFormat("#0.00");
+
                     // Received standard ACL message
                     if(message.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
+                        System.out.println("[ACCEPT] " + offer.getCompany().getName() + " for " + df.format(offer.getOfferedValue()) + "€ (closed: " + offer.isClosed() + ")");
                         companyBelief.setCurrentOffer(offer);
                         makeOfferInstance.setRoundBalance(makeOfferInstance.getRoundBalance() - offer.getOfferedValue());
                         if(offer.isClosed()) {
@@ -58,6 +63,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                             companyBelief.updateBeliefAsInvestor(offer, true);
                         }
                     } else if (message.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
+                        System.out.println("[REJECT] " + offer.getCompany().getName() + " for " + df.format(offer.getOfferedValue()) + "€ (closed: " + offer.isClosed() + ")");
                         companyBelief.updateBeliefAsInvestor(offer, false);
                     }
                 }

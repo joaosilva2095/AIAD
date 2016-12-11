@@ -72,7 +72,7 @@ public class CompanyInformation extends Belief{
     }
 
     public void removeOffers(String investor) {
-        for(Offer offer : offers) {
+        for(Offer offer : new ArrayDeque<>(offers)) {
             if(offer.getInvestor().getName().equalsIgnoreCase(investor))
                 removeOffer(offer);
         }
@@ -154,9 +154,9 @@ public class CompanyInformation extends Belief{
         int error = r.nextInt(maxError - minError) + minError;
         error /= 100;
         if(r.nextBoolean())
-            this.believedFluctuation = company.getFluctuation() * (1+error);
+            this.believedFluctuation = (company.getFluctuation() / 100.0) * (1+error);
         else
-            this.believedFluctuation =  company.getFluctuation()  * (1-error);
+            this.believedFluctuation =  (company.getFluctuation() / 100.0)  * (1-error);
 
         if(player.getType() == PlayerType.INVESTOR) {
             this.believedValue =  company.getValue() * (1 - believedFluctuation);

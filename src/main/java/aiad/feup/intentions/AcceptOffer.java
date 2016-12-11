@@ -38,7 +38,8 @@ public class AcceptOffer extends Intention {
         company = offer.getCompany();
         Player player = Player.getInstance();
 
-        Offer currentOffer = player.getCompanyInformation(company.getName()).getCurrentOffer();
+        CompanyInformation companyInformation = player.getCompanyInformation(company.getName());
+        Offer currentOffer = companyInformation.getCurrentOffer();
         if(currentOffer != null && offer.getOfferedValue() < currentOffer.getOfferedValue()) {
             return;
         }
@@ -49,7 +50,7 @@ public class AcceptOffer extends Intention {
                 INVESTMENT_WEIGHT = 0.7;
                 TIME_ELAPSED_WEIGHT = 0.2;
                 CLOSED_WEIGHT = 0.1;
-
+                weight = INVESTMENT_WEIGHT * calculateInvestmentWeight(companyInformation.getBelievedValue(), offer.getOfferedValue());
                 weight += TIME_ELAPSED_WEIGHT * timeElapsedRatio;
                 if(!offer.isClosed())
                     weight += CLOSED_WEIGHT;
@@ -71,12 +72,11 @@ public class AcceptOffer extends Intention {
     /**
      * Calculate the weight of an investment. As the believed value approaches the maximum believed value for a company after fluctuation
      * the investment weight is reduced quadratically.
-     * @param companyInformation company information
+     * @param believedValue believed value
      * @param offeredValue value that was offered
      * @return investment weight
      */
-    private double calculateInvestmentWeight(CompanyInformation companyInformation, double offeredValue){
-        double ratio = offeredValue / companyInformation.getBelievedValue();
-        return Math.pow(ratio, 2);
+    private double calculateInvestmentWeight(double believedValue, double offeredValue){
+        return offeredValue / believedValue;
     }
 }

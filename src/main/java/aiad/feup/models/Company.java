@@ -56,7 +56,7 @@ public class Company implements Serializable {
      * @param fluctuation fluctuation of the company
      */
     public Company(final String name, final double value, final boolean isDoubleRevenue, final double fluctuation) {
-        if(fluctuation > 100 || fluctuation < 0)
+        if(fluctuation > 70 || fluctuation < 0)
             throw new MalformedObjectException("Company " + name + " fluctuation must be a value between 0 and 100.");
 
         this.owner = null;

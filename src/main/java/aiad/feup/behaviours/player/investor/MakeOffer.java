@@ -14,6 +14,7 @@ import aiad.feup.models.OfferType;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,7 +25,8 @@ import java.util.Random;
 public class MakeOffer extends TickerBehaviour {
 
     private static MakeOffer instance;
-    private static long tickPeriod = 2500;
+
+    private static long tickPeriod = 1500;
 
     // Intention
     private List<Intention> intentions;
@@ -78,6 +80,9 @@ public class MakeOffer extends TickerBehaviour {
         } else {
             companyBelief.addOffer(offer);
         }
+
+        DecimalFormat df = new DecimalFormat("#0.00");
+        System.out.println("[" + offer.getType() + "] " + offer.getCompany().getName() + " for " + df.format(offer.getOfferedValue()) + "€ (closed: " + offer.isClosed() + ")");
 
         RemoteAgent targetManager = offer.getCompany().getOwner();
         ACLMessage message = new ACLMessage(ACLMessage.PROPOSE);

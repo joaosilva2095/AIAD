@@ -49,6 +49,7 @@ public class HandleOffer extends OneShotBehaviour {
             }
             message = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
         } else {
+            intention.setOffer(offer);
             intention.calculateWeight();
 
             if(intention.getWeight() >= 0.5) {

@@ -332,7 +332,7 @@ public class Board extends GameAgent {
 
         boolean doubleRevenue = random.nextDouble() > 0.75;
         int minFluctuation = 10;
-        int maxFluctuation = 80;
+        int maxFluctuation = 70;
         int fluctuation = random.nextInt(maxFluctuation-minFluctuation) + minFluctuation;
 
 

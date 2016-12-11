@@ -3,13 +3,18 @@ package aiad.feup.behaviours.player.investor;
 import aiad.feup.agents.Player;
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.beliefs.CompanyInformation;
+import aiad.feup.desires.Desire;
+import aiad.feup.desires.Invest;
+import aiad.feup.desires.Withdraw;
 import aiad.feup.messageObjects.Offer;
 import aiad.feup.models.Company;
 import aiad.feup.models.GameState;
 import aiad.feup.models.OfferType;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
+import org.omg.PortableInterceptor.INACTIVE;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,12 +26,21 @@ public class MakeOffer extends TickerBehaviour {
     private static MakeOffer instance;
     private static long tickPeriod = 2500;
 
+    // Desire
+    private List<Desire> desires;
+
+    /**
+     * Current round balance belief
+     */
     private double roundBalance;
 
 
     private MakeOffer(final Player player) {
         super(player, tickPeriod);
         roundBalance = player.getBalance();
+        desires = new ArrayList<>();
+        desires.add(Invest.getInstance());
+        desires.add(Withdraw.getInstance());
     }
 
     public static MakeOffer getInstance(final Player player) {
@@ -35,6 +49,9 @@ public class MakeOffer extends TickerBehaviour {
         return instance;
     }
 
+    public double getRoundBalance() {
+        return roundBalance;
+    }
 
     public void setRoundBalance(double roundBalance) {
         this.roundBalance = roundBalance;
@@ -68,10 +85,15 @@ public class MakeOffer extends TickerBehaviour {
 
         List<Company> companies = player.getCompanies();
 
+        Invest invest = Invest.getInstance();
+        invest.calculateDesire();
+
         Company targetCompany = companies.get(r.nextInt(companies.size()));
         CompanyInformation companyBelief = player.getCompanyBeliefs().get(targetCompany.getName());
 
         Offer theOffer = new Offer(targetCompany, companyBelief.getBelievedValue(), r.nextBoolean(), OfferType.BUY, new RemoteAgent(player.getName()));
         return theOffer;
     }
+
+
 }

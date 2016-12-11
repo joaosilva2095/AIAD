@@ -38,7 +38,17 @@ public class Main {
 
         switch(type) {
             case "board":
-                setupBoard(mainHost, mainPort);
+                if (args.length < 4) {
+                    throw new IllegalArgumentException("Please use java -jar game.jar <mainHost> <mainPort> <board|player> <roundDuration>");
+                }
+                final int roundDuration;
+                try {
+                    roundDuration = Integer.parseInt(args[3]);
+                } catch (final Exception e) {
+                    throw new IllegalArgumentException("The round duration must be a natural number");
+                }
+
+                setupBoard(mainHost, mainPort, roundDuration);
                 break;
             case "player":
                 if (args.length < 7) {
@@ -62,10 +72,12 @@ public class Main {
         }
     }
 
-    private static void setupBoard(final String host, final int port) {
+    private static void setupBoard(final String host, final int port, final int roundDuration) {
         agent = Board.getInstance();
         try {
-            ((Board) agent).init(host, port);
+            Board board = (Board) agent;
+            board.init(host, port);
+            Board.ROUND_DURATION = roundDuration;
         } catch (StaleProxyException e) {
             System.out.println("Error! " + e.getMessage());
             return;

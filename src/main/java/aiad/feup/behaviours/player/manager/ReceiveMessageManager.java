@@ -56,7 +56,8 @@ public class ReceiveMessageManager extends SimpleBehaviour {
                 // Received Update Player (new negotiation about to start)
                 if(content instanceof UpdatePlayer) {
                     UpdatePlayer updatePlayer = (UpdatePlayer) content;
-                    if(updatePlayer.getState() != GameState.START_NEGOTIATION)
+                    if(updatePlayer.getState() != GameState.START_NEGOTIATION
+                            && updatePlayer.getState() != GameState.WAIT_WINNERS)
                         return;
 
                     player.setCompanies(updatePlayer.getCompanyList());
@@ -66,6 +67,8 @@ public class ReceiveMessageManager extends SimpleBehaviour {
                     player.generateCompanyBeliefs();
 
                     player.setRoundStartTime(System.currentTimeMillis());
+                    if(updatePlayer.getState() == GameState.START_NEGOTIATION)
+                        player.incrementRoundNumber();
                 }
 
                 break;
@@ -81,6 +84,6 @@ public class ReceiveMessageManager extends SimpleBehaviour {
     @Override
     public boolean done() {
         GameState state = ((Player)getAgent()).getGameState();
-        return state != GameState.START_NEGOTIATION && state != GameState.END_NEGOTIATION && state != GameState.KICKED;
+        return state != GameState.START_NEGOTIATION && state != GameState.END_NEGOTIATION && state != GameState.KICKED && state != GameState.WAIT_WINNERS;
     }
 }

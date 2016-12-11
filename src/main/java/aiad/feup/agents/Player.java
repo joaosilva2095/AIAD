@@ -81,6 +81,10 @@ public class Player extends GameAgent {
      */
     private long roundStartTime;
 
+    /**
+     * The current round number
+     */
+    private int roundNumber = 0;
 
     /**
      * List with the beliefs of the company environment.
@@ -242,6 +246,15 @@ public class Player extends GameAgent {
         this.roundStartTime = roundStartTime;
     }
 
+    public int getRoundNumber() {
+        return roundNumber;
+    }
+
+    public void incrementRoundNumber() {
+        this.roundNumber++;
+        System.out.println("Round #" + roundNumber);
+    }
+
     public void setTokens(int numberTokens) {
         this.numberTokens = numberTokens;
     }
@@ -264,10 +277,16 @@ public class Player extends GameAgent {
         return companies;
     }
 
+    public Company getCompany(String name) {
+        for(Company company : companies)
+            if(company.getName().equalsIgnoreCase(name))
+                return company;
+        return null;
+    }
+
     public Map<String, CompanyInformation> getCompanyBeliefs(){
         return companyBeliefs;
     }
-
 
     public RemoteAgent getBoard() { return board; }
 

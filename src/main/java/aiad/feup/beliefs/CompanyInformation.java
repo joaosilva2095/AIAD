@@ -1,7 +1,9 @@
 package aiad.feup.beliefs;
 
+import aiad.feup.agents.Player;
 import aiad.feup.messageObjects.Offer;
 import aiad.feup.models.Company;
+import aiad.feup.models.PlayerType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,31 +23,16 @@ public class CompanyInformation extends Belief{
 
     /**
      * Constructor for CompanyInformation belief
-     * Automatically generates some noise for the values to assign for the beliefs so that there's an error.
-     * Minimum and max error is configurable
      * @param company the company to form the belief for
      */
     public CompanyInformation(Company company){
         this.offers = new ArrayList<>();
 
-        Random r = new Random();
+        Player player = Player.getInstance();
 
-        int maxError = 30;
-        int minError = 5;
-        int error = r.nextInt(maxError - minError) + minError;
-        error /= 100;
-        if(r.nextBoolean())
-            this.believedValue = company.getValue()* (1+error);
-        else
-            this.believedValue =  company.getValue()* (1-error);
+        initBalances(company);
 
-        error = r.nextInt(maxError-minError) + minError;
-        if(r.nextBoolean())
-            this.believedFluctuation = company.getFluctuation() * (1+error);
-        else
-            this.believedFluctuation =  company.getFluctuation()  * (1-error);
     }
-
 
     public double getBelievedFluctuation() {
         return believedFluctuation;
@@ -83,5 +70,34 @@ public class CompanyInformation extends Belief{
         offers = new ArrayList<>();
         currentOffer = null;
     }
+
+    public void updateBelief(Offer offer, boolean accepted) {
+
+    }
+
+    /**
+     * Automatically generates some noise for the values to assign for the beliefs so that there's an error.
+     * Minimum and max error is configurable
+     * @param company the company to initialize balances for
+     */
+    private void initBalances(Company company){
+        Random r = new Random();
+        Player player = Player.getInstance();
+        int maxError = 40;
+        int minError = 15;
+        int error = r.nextInt(maxError - minError) + minError;
+        error /= 100;
+        if(r.nextBoolean())
+            this.believedFluctuation = company.getFluctuation() * (1+error);
+        else
+            this.believedFluctuation =  company.getFluctuation()  * (1-error);
+
+        if(player.getType() == PlayerType.INVESTOR) {
+            this.believedValue =  company.getValue() * (1 - believedFluctuation);
+        } else {
+            this.believedValue = company.getValue() * (1 + believedFluctuation);
+        }
+    }
+
 
 }

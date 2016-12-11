@@ -57,6 +57,7 @@ public class WaitStartGame extends SimpleBehaviour {
             player.setTokens(updatePlayer.getTokens());
             player.setBalance(updatePlayer.getBalance());
             player.setGameState(updatePlayer.getState());
+            player.incrementRoundNumber();
             player.generateCompanyBeliefs();
 
             if(player.getType() == PlayerType.INVESTOR) {

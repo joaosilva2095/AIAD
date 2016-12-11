@@ -28,6 +28,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
     public void action() {
         ACLMessage message = getAgent().blockingReceive();
         Player player = (Player)getAgent();
+        MakeOffer makeOfferInstance = MakeOffer.getInstance(player);
         Object content = player.extractMessageContentObject(message);
         player.handleEndGame(content);
         player.handleKick(content);
@@ -41,11 +42,19 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                 }
                 else if(content instanceof Offer) {
                     Offer offer = (Offer) content;
+                    CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
+
                     // Received standard ACL message
                     if(message.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
-                        CompanyInformation companyBelief = player.getCompanyBeliefs().get(offer.getCompany().getName());
                         companyBelief.setCurrentOffer(offer);
+                        if(offer.isClosed()) {
+                            makeOfferInstance.setRoundBalance(makeOfferInstance.getRoundBalance() - offer.getOfferedValue());
+                            player.getCompany(offer.getCompany().getName()).close();
+                        } else {
+                            companyBelief.updateBelief(offer, true);
+                        }
                     } else if (message.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
+                        companyBelief.updateBelief(offer, false);
                     }
                 }
                 break;
@@ -53,7 +62,8 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                 // Received UpdatePlayer
                 if(content instanceof UpdatePlayer) {
                     UpdatePlayer updatePlayer = (UpdatePlayer) content;
-                    if(updatePlayer.getState() != GameState.START_NEGOTIATION)
+                    if(updatePlayer.getState() != GameState.START_NEGOTIATION
+                            && updatePlayer.getState() != GameState.WAIT_WINNERS)
                         return;
 
                     player.setCompanies(updatePlayer.getCompanyList());
@@ -62,10 +72,12 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                     player.setGameState(updatePlayer.getState());
                     player.generateCompanyBeliefs();
 
-                    player.addBehaviour(player.getFactory().wrap(MakeOffer.getInstance(player)));
-                    MakeOffer.getInstance(player).setRoundBalance(updatePlayer.getBalance());
+                    player.addBehaviour(player.getFactory().wrap(makeOfferInstance));
+                    makeOfferInstance.setRoundBalance(updatePlayer.getBalance());
 
                     player.setRoundStartTime(System.currentTimeMillis());
+                    if(updatePlayer.getState() == GameState.START_NEGOTIATION)
+                        player.incrementRoundNumber();
                 }
                 break;
             case KICKED:
@@ -78,7 +90,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
     @Override
     public boolean done() {
         GameState state = ((Player)getAgent()).getGameState();
-        return state != GameState.START_NEGOTIATION && state != GameState.END_NEGOTIATION && state != GameState.KICKED;
+        return state != GameState.START_NEGOTIATION && state != GameState.END_NEGOTIATION && state != GameState.KICKED && state != GameState.WAIT_WINNERS;
     }
 }
 

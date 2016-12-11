@@ -63,7 +63,7 @@ public class Board extends GameAgent {
     /**
      * The base duration of a round in seconds
      */
-    public static final int ROUND_DURATION = 10;
+    public static int ROUND_DURATION;
 
     /**
      * The factory for wrapping behaviours in new threads
@@ -386,12 +386,12 @@ public class Board extends GameAgent {
      * Calculates and creates a Map with the correct UpdatePlayer to send to each RemoteAgent for the initial distribution
      * @return the map with the RemoteAgent - UpdatePlayer relation
      */
-    public Map<RemoteAgent, UpdatePlayer> calculatePlayerUpdates(){
+    public Map<RemoteAgent, UpdatePlayer> calculatePlayerUpdates(GameState state){
         Map<RemoteAgent, UpdatePlayer> playerUpdates = new HashMap<>();
 
         // Assign companies to investors
         for(RemoteAgent targetPlayer : players)
-            playerUpdates.put(targetPlayer, new UpdatePlayer(balances.get(targetPlayer.getName()), tokens.get(targetPlayer.getName()), playerCompanies.get(targetPlayer.getName()), getNumberInvestors(), getNumberManagers(), GameState.START_NEGOTIATION));
+            playerUpdates.put(targetPlayer, new UpdatePlayer(balances.get(targetPlayer.getName()), tokens.get(targetPlayer.getName()), playerCompanies.get(targetPlayer.getName()), getNumberInvestors(), getNumberManagers(), state));
 
         return playerUpdates;
     }

@@ -76,7 +76,7 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
 
         if(board.getCurrentRoundNumber() == Board.NUMBER_ROUNDS){
             //Broadcast updates
-            Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
+            Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates(GameState.WAIT_WINNERS);
             for(RemoteAgent targetAgent : playerUpdates.keySet()){
                 board.sendMessage(targetAgent, new ACLMessage(ACLMessage.INFORM), playerUpdates.get(targetAgent));
             }
@@ -124,7 +124,7 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
         board.assignCompanies();
 
         //Broadcast updates
-        Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
+        Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates(GameState.START_NEGOTIATION);
         for(RemoteAgent targetAgent : playerUpdates.keySet()){
             board.sendMessage(targetAgent, new ACLMessage(ACLMessage.INFORM), playerUpdates.get(targetAgent));
         }

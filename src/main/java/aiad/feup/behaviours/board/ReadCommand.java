@@ -61,7 +61,7 @@ public class ReadCommand extends SimpleBehaviour {
 
                 board.setupPlayers();
                 board.assignCompanies();
-                Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates();
+                Map<RemoteAgent, UpdatePlayer> playerUpdates = board.calculatePlayerUpdates(GameState.START_NEGOTIATION);
 
                 //Broadcast messageObjects
                 for(RemoteAgent targetAgent : playerUpdates.keySet()){

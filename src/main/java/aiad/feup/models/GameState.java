@@ -31,6 +31,11 @@ public enum GameState {
     END_NEGOTIATION,
 
     /**
+     * Waiting for the winners
+     */
+    WAIT_WINNERS,
+
+    /**
      * Kicked
      */
     KICKED,

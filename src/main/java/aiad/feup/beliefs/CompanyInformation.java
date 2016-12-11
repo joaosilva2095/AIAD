@@ -92,18 +92,31 @@ public class CompanyInformation extends Belief{
      * @param offer offer that was received
      */
     public void updateBeliefAsManager(Offer offer, boolean accepted) {
-        if(accepted)
-            return;
-
         Player player = Player.getInstance();
-        if(player.getStyle() == PlayerStyle.RANDOM) {
-            believedValue = maximumBelievedValue - Math.random() * (maximumBelievedValue - minimumBelievedValue);
+        if(accepted) {
+            if(player.getStyle() == PlayerStyle.RANDOM) {
+                believedValue = minimumBelievedValue + Math.random() * (maximumBelievedValue - minimumBelievedValue);
+            } else {
+                if(offer.getOfferedValue() > maximumBelievedValue)
+                    maximumBelievedValue = offer.getOfferedValue();
+                double addValue = (maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5);
+                believedValue += addValue;
+            }
         } else {
-            double offeredValue = offer.getOfferedValue();
-            believedValue = offeredValue + ((maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5));
-            double maxOfferValue = (minimumBelievedValue + ((maximumBelievedValue - minimumBelievedValue) / 2) * 1.2);
-            if(believedValue >= maxOfferValue)
-                believedValue = offeredValue;
+            if(player.getStyle() == PlayerStyle.RANDOM) {
+                believedValue = maximumBelievedValue - Math.random() * (maximumBelievedValue - minimumBelievedValue);
+            } else {
+                double removeValue = 0;
+                double offeredValue = offer.getOfferedValue();
+                removeValue = (maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5);
+
+                if(offer.isClosed())
+                    removeValue *= 0.5;
+
+                believedValue -= removeValue;
+                if(believedValue < minimumBelievedValue || believedValue < offeredValue)
+                    believedValue = Math.max(minimumBelievedValue, offeredValue);
+            }
         }
     }
 

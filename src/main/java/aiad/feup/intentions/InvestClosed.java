@@ -57,7 +57,7 @@ public class InvestClosed extends Intention {
                     if(finalMoneyRatio < 0.15)
                         continue;
                     FLUCTUATION_WEIGHT = 0.135;
-                    INVESTMENT_VOLUME_WEIGHT = 0.425;
+                    INVESTMENT_VOLUME_WEIGHT = 0.0425;
                     TIME_ELAPSED_WEIGHT = 0.135;
                     ALREADY_INVESTED_WEIGHT = 0.1375;
                     currWeight = FLUCTUATION_WEIGHT * (1 - currCompanyInfo.getBelievedFluctuation());

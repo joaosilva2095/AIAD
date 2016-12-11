@@ -33,7 +33,7 @@ public class Board extends GameAgent {
     /**
      * The number of rounds for the game
      */
-    public static final int NUMBER_ROUNDS = 3;
+    public static final int NUMBER_ROUNDS = 5;
 
     /**
      * Initial balance for players

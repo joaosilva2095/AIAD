@@ -99,7 +99,7 @@ public class CompanyInformation extends Belief{
             } else {
                 if(offer.getOfferedValue() > maximumBelievedValue)
                     maximumBelievedValue = offer.getOfferedValue();
-                double addValue = (maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5);
+                double addValue = (maximumBelievedValue - minimumBelievedValue) / (Math.random() * 15 + 5);
                 believedValue += addValue;
             }
         } else {
@@ -108,7 +108,7 @@ public class CompanyInformation extends Belief{
             } else {
                 double removeValue;
                 double offeredValue = offer.getOfferedValue();
-                removeValue = (maximumBelievedValue - minimumBelievedValue) / (int) (Math.random() * 15 + 5);
+                removeValue = (maximumBelievedValue - minimumBelievedValue) / (Math.random() * 30 + 15);
 
                 if(offer.isClosed())
                     removeValue *= 0.5;

@@ -33,7 +33,7 @@ public class Board extends GameAgent {
     /**
      * The number of rounds for the game
      */
-    public static final int NUMBER_ROUNDS = 5;
+    public static final int NUMBER_ROUNDS = 1;
 
     /**
      * Initial balance for players
@@ -128,7 +128,6 @@ public class Board extends GameAgent {
         this.types = new HashMap<>();
         this.kickedManagers = new ArrayList<>();
         this.currentRoundNumber = 1;
-
 
         setGameState(GameState.WAITING_GAME_START);
     }

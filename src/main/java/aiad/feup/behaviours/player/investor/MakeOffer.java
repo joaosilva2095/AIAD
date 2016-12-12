@@ -26,7 +26,7 @@ public class MakeOffer extends TickerBehaviour {
 
     private static MakeOffer instance;
 
-    private static long tickPeriod = 1500;
+    public static long TICK_PERIOD = 1500;
 
     // Intention
     private List<Intention> intentions;
@@ -38,7 +38,7 @@ public class MakeOffer extends TickerBehaviour {
 
 
     private MakeOffer(final Player player) {
-        super(player, tickPeriod);
+        super(player, TICK_PERIOD);
         roundBalance = player.getBalance();
         intentions = new ArrayList<>();
         intentions.add(InvestOpen.getInstance());

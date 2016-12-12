@@ -8,9 +8,11 @@ import aiad.feup.messageObjects.RoundInformation;
 import aiad.feup.messageObjects.UpdatePlayer;
 import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
+import aiad.feup.statistics.Statistics;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +116,13 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException ignore) {
+            }
+
+            // Generate statistics
+            try {
+                Statistics.generateStatistics();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             board.killAgent("The game has ended. The investor winner is " + winnerInvestor.getName() + " (" + df.format(maxInvestorBalance) + "€) and the manager winner is " + winnerManager.getName() + " (" + df.format(maxManagerBalance) + "€)", 0);
             return;

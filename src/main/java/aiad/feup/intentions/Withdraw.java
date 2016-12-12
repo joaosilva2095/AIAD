@@ -35,7 +35,7 @@ public class Withdraw extends Intention {
         Company currCompany;
         double currWeight = 0, finalMoneyRatio, investmentMoneyRatio, currMoneyRatio;
         CompanyInformation currCompanyInfo;
-        double roundBalance = MakeOffer.getInstance(player).getRoundBalance();
+        double roundBalance = MakeOffer.getInstance(player, false).getRoundBalance();
         for(Map.Entry<String, CompanyInformation> entry : player.getCompanyBeliefs().entrySet()) {
             currCompany = player.getCompany(entry.getKey());
             if(currCompany.isClosed())

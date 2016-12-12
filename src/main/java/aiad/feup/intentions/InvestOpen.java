@@ -35,13 +35,14 @@ public class InvestOpen extends Intention {
         Company currCompany;
         double currWeight = 0, finalMoneyRatio, investmentMoneyRatio;
         CompanyInformation currCompanyInfo;
-        double roundBalance = MakeOffer.getInstance(player).getRoundBalance();
+        double roundBalance = MakeOffer.getInstance(player, false).getRoundBalance();
         for(Map.Entry<String, CompanyInformation> entry : player.getCompanyBeliefs().entrySet()) {
             currCompany = player.getCompany(entry.getKey());
+            currCompanyInfo = entry.getValue();
             if(currCompany.isClosed())
                 continue;
-
-            currCompanyInfo = entry.getValue();
+            if(currCompanyInfo.getCurrentOffer() != null)
+                continue;
 
             finalMoneyRatio = (roundBalance - currCompanyInfo.getBelievedValue()) / player.getBalance();
             if(finalMoneyRatio < 0)

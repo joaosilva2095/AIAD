@@ -120,7 +120,7 @@ public class ReceiveRoundInformation extends SimpleBehaviour{
 
             // Generate statistics
             try {
-                Statistics.generateStatistics();
+                Statistics.saveStatistics();
             } catch (IOException e) {
                 e.printStackTrace();
             }

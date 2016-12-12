@@ -3,10 +3,10 @@ package aiad.feup.statistics;
 import aiad.feup.agents.Board;
 import aiad.feup.agents.RemoteAgent;
 import aiad.feup.behaviours.player.investor.MakeOffer;
-import aiad.feup.models.GameState;
 import aiad.feup.models.PlayerType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -20,28 +20,25 @@ import java.util.List;
 public class Statistics {
 
     /**
-     * Create statistics for the game
+     * Save statistics for the test environment
      */
-    public static void generateStatistics() throws IOException {
-        FileOutputStream out = new FileOutputStream(new File("statistics.xlsx"));
+    public static void saveStatistics() throws IOException {
+        FileOutputStream out = new FileOutputStream(new File("statistics.xlsx"), true);
 
         //Blank workbook
         XSSFWorkbook workbook = new XSSFWorkbook();
 
-        List<List<Object>> statistics = new ArrayList<>();
+        List<Object> statistics = new ArrayList<>();
 
         Board board = Board.getInstance();
 
-        List<Object> currentGame = new ArrayList<>();
-
-        currentGame.add(board.getNumberManagers());
-        currentGame.add(board.getNumberInvestors());
-        currentGame.add(Board.NUMBER_ROUNDS);
-        currentGame.add(Board.ROUND_DURATION);
-        currentGame.add(MakeOffer.TICK_PERIOD);
-        addWinners(currentGame);
-
-        statistics.add(currentGame);
+        // Fill in statistics
+        statistics.add(board.getNumberManagers());
+        statistics.add(board.getNumberInvestors());
+        statistics.add(Board.NUMBER_ROUNDS);
+        statistics.add(Board.ROUND_DURATION);
+        statistics.add(MakeOffer.TICK_PERIOD);
+        addWinners(statistics);
 
         makeGameStatistics(workbook, statistics);
 
@@ -87,34 +84,31 @@ public class Statistics {
      * @param workbook   workbook to save the statistics
      * @param statistics information about each game number
      */
-    private static void makeGameStatistics(XSSFWorkbook workbook, List<List<Object>> statistics) {
-        //Create a blank sheet
-        XSSFSheet sheet = workbook.createSheet("Game");
+    private static void makeGameStatistics(XSSFWorkbook workbook, List<Object> statistics) {
+        XSSFSheet sheet = workbook.getSheet("Game");
+        if(sheet == null) {
+            sheet = workbook.createSheet("Game");
+            makeGameFirstLine(sheet);
+        }
 
-        makeGameFirstLine(sheet);
+        int lastColumn = sheet.getLastRowNum();
 
-        int i;
+        Row row = sheet.createRow(lastColumn + 1);
 
-        for (i = 0; i < statistics.size(); i++) {
-            Row row = sheet.createRow(i + 1);
+        Cell cell = row.createCell(0); //Game number
+        cell.setCellValue(lastColumn + 1);
+        for (int i = 0; i < statistics.size(); i++) {
+            cell = row.createCell(i + 1);
 
-            Cell cell = row.createCell(0); //Game number
-            cell.setCellValue(i + 1);
-
-            List<Object> gameStats = statistics.get(i);
-            for (int j = 0; j < gameStats.size(); j++) {
-                cell = row.createCell(j + 1);
-
-                Object stat = gameStats.get(j);
-                if (stat instanceof String)
-                    cell.setCellValue((String) stat);
-                else if (stat instanceof Double)
-                    cell.setCellValue((Double) stat);
-                else if (stat instanceof Integer)
-                    cell.setCellValue((Integer) stat);
-                else if (stat instanceof Long)
-                    cell.setCellValue((Long) stat);
-            }
+            Object stat = statistics.get(i);
+            if (stat instanceof String)
+                cell.setCellValue((String) stat);
+            else if (stat instanceof Double)
+                cell.setCellValue((Double) stat);
+            else if (stat instanceof Integer)
+                cell.setCellValue((Integer) stat);
+            else if (stat instanceof Long)
+                cell.setCellValue((Long) stat);
         }
     }
 

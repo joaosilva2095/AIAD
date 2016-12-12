@@ -46,8 +46,8 @@ public class MakeOffer extends TickerBehaviour {
         intentions.add(Withdraw.getInstance());
     }
 
-    public static MakeOffer getInstance(final Player player) {
-        if(instance == null)
+    public static MakeOffer getInstance(final Player player, boolean newInstance) {
+        if(instance == null || newInstance)
             instance = new MakeOffer(player);
         return instance;
     }
@@ -97,8 +97,6 @@ public class MakeOffer extends TickerBehaviour {
      * @return the prepared offer
      */
     private Offer planOffer(Player player){
-        Random r = new Random();
-
         double maxWeight = Integer.MIN_VALUE;
         Intention bestIntention = null;
         for(Intention intention : intentions) {

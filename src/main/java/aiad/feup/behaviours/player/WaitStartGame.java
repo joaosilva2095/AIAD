@@ -62,8 +62,9 @@ public class WaitStartGame extends SimpleBehaviour {
 
             if(player.getType() == PlayerType.INVESTOR) {
                 player.addBehaviour(player.getFactory().wrap(ReceiveMessageInvestor.getInstance(player)));
-                player.addBehaviour(player.getFactory().wrap(MakeOffer.getInstance(player)));
-                MakeOffer.getInstance(player).setRoundBalance(updatePlayer.getBalance());
+                MakeOffer makeOfferInstance = MakeOffer.getInstance(player, true);
+                player.addBehaviour(player.getFactory().wrap(makeOfferInstance));
+                makeOfferInstance.setRoundBalance(updatePlayer.getBalance());
             }
             else {
                 player.addBehaviour(player.getFactory().wrap(ReceiveMessageManager.getInstance(player)));

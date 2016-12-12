@@ -31,7 +31,6 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
     public void action() {
         ACLMessage message = getAgent().blockingReceive();
         Player player = (Player)getAgent();
-        MakeOffer makeOfferInstance = MakeOffer.getInstance(player);
         Object content = player.extractMessageContentObject(message);
         player.handleEndGame(content);
         player.handleKick(content);
@@ -41,6 +40,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                 // Received UpdatePlayer (end of round)
                 if(content instanceof UpdatePlayer) {
                     UpdatePlayer updatePlayer = (UpdatePlayer) content;
+                    System.out.println("Received update player " + updatePlayer.getState() + " | " + player.getGameState());
                     player.setGameState(updatePlayer.getState());
                 }
                 else if(content instanceof Offer) {
@@ -56,6 +56,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                     if(message.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
                         System.out.println("[ACCEPT] " + offer.getCompany().getName() + " for " + df.format(offer.getOfferedValue()) + "€ (closed: " + offer.isClosed() + ")");
                         companyBelief.setCurrentOffer(offer);
+                        MakeOffer makeOfferInstance = MakeOffer.getInstance(player, false);
                         makeOfferInstance.setRoundBalance(makeOfferInstance.getRoundBalance() - offer.getOfferedValue());
                         if(offer.isClosed()) {
                             player.getCompany(offer.getCompany().getName()).close();
@@ -82,6 +83,7 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                     player.setGameState(updatePlayer.getState());
                     player.generateCompanyBeliefs();
 
+                    MakeOffer makeOfferInstance = MakeOffer.getInstance(player, true);
                     player.addBehaviour(player.getFactory().wrap(makeOfferInstance));
                     makeOfferInstance.setRoundBalance(updatePlayer.getBalance());
 

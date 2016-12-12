@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -23,10 +24,13 @@ public class Statistics {
      * Save statistics for the test environment
      */
     public static void saveStatistics() throws IOException {
-        FileOutputStream out = new FileOutputStream(new File("statistics.xlsx"), true);
-
-        //Blank workbook
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        File statsFile = new File("statistics.xlsx");
+        XSSFWorkbook workbook;
+        if(statsFile.exists()) {
+            workbook = new XSSFWorkbook(new FileInputStream(statsFile));
+        } else {
+            workbook = new XSSFWorkbook();
+        }
 
         List<Object> statistics = new ArrayList<>();
 
@@ -42,8 +46,9 @@ public class Statistics {
 
         makeGameStatistics(workbook, statistics);
 
-        workbook.write(out);
-        out.close();
+        FileOutputStream outFile = new FileOutputStream(statsFile);
+        workbook.write(outFile);
+        outFile.close();
     }
 
     /**

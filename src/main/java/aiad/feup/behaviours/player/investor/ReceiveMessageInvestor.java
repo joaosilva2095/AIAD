@@ -40,7 +40,6 @@ public class ReceiveMessageInvestor extends SimpleBehaviour {
                 // Received UpdatePlayer (end of round)
                 if(content instanceof UpdatePlayer) {
                     UpdatePlayer updatePlayer = (UpdatePlayer) content;
-                    System.out.println("Received update player " + updatePlayer.getState() + " | " + player.getGameState());
                     player.setGameState(updatePlayer.getState());
                 }
                 else if(content instanceof Offer) {

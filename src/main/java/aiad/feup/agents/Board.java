@@ -33,7 +33,7 @@ public class Board extends GameAgent {
     /**
      * The number of rounds for the game
      */
-    public static final int NUMBER_ROUNDS = 1;
+    public static final int NUMBER_ROUNDS = 5;
 
     /**
      * Initial balance for players
@@ -271,6 +271,10 @@ public class Board extends GameAgent {
             if(company.getName().equalsIgnoreCase(name))
                 return company;
         return null;
+    }
+
+    public Map<String, Double> getBalances() {
+        return balances;
     }
 
     public double getBalance(String name) {

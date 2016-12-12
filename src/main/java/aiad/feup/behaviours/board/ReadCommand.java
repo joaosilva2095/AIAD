@@ -9,8 +9,14 @@ import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.StaleProxyException;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Read command from the user
@@ -38,8 +44,20 @@ public class ReadCommand extends SimpleBehaviour {
      */
     @Override
     public void action() {
-        final Scanner in = new Scanner(System.in);
-        String command = in.nextLine();
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader(System.in));
+        String command = "";
+        try {
+            Thread.sleep(10000);
+
+            if(br.ready())
+                command = br.readLine();
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+
+        if(command.trim().isEmpty() && Board.getInstance().getGameState() == GameState.WAITING_GAME_START)
+            command = "start";
         Board board = (Board)getAgent();
         switch(command.toLowerCase()) {
             case "start":
@@ -85,6 +103,8 @@ public class ReadCommand extends SimpleBehaviour {
                 }
                 board.killAgent("Players have been informed. Game ending.", 0);
                 break;
+            case "":
+                return;
             default:
                 System.out.println("Unknown command.");
                 break;

@@ -15,8 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Statistics {
 
@@ -44,7 +43,15 @@ public class Statistics {
         statistics.add(MakeOffer.TICK_PERIOD);
         addWinners(statistics);
 
+        // General statistics
         makeGameStatistics(workbook, statistics);
+
+        // Balances statistics
+        Map<String, Double> balancesTemp = board.getBalances();
+        Map<String, Double> balances = new HashMap<>();
+        for(Map.Entry<String, Double> entry : balancesTemp.entrySet())
+            balances.put(entry.getKey().split("@")[0], entry.getValue());
+        makeBalancesStatistics(workbook, balances);
 
         FileOutputStream outFile = new FileOutputStream(statsFile);
         workbook.write(outFile);
@@ -84,15 +91,14 @@ public class Statistics {
     }
 
     /**
-     * Prints the statistics to an Excel file.
-     *
+     * Prints the game statistics to an Excel file.
      * @param workbook   workbook to save the statistics
      * @param statistics information about each game number
      */
     private static void makeGameStatistics(XSSFWorkbook workbook, List<Object> statistics) {
-        XSSFSheet sheet = workbook.getSheet("Game");
+        XSSFSheet sheet = workbook.getSheet("General");
         if(sheet == null) {
-            sheet = workbook.createSheet("Game");
+            sheet = workbook.createSheet("General");
             makeGameFirstLine(sheet);
         }
 
@@ -118,8 +124,37 @@ public class Statistics {
     }
 
     /**
+     * Prints the balances statistics to an Excel file
+     * @param workbook workbook to save the statistics
+     * @param balances balances of the players
+     */
+    private static void makeBalancesStatistics(XSSFWorkbook workbook, Map<String, Double> balances) {
+        XSSFSheet sheet = workbook.getSheet("Balances");
+        if(sheet == null) {
+            sheet = workbook.createSheet("Balances");
+            makeBalancesFirstLine(sheet, balances.keySet());
+        }
+
+        int lastColumn = sheet.getLastRowNum();
+
+        Row row = sheet.createRow(lastColumn + 1);
+
+        Cell cell = row.createCell(0); //Game number
+        cell.setCellValue(lastColumn + 1);
+
+        // Fill in balances
+        Row headerRow = sheet.getRow(0);
+        String playerName;
+        DecimalFormat df = new DecimalFormat("#0.00");
+        for(int i = 1; i < headerRow.getLastCellNum() - 1; i++) {
+            cell = row.createCell(i);
+            playerName = headerRow.getCell(i).getStringCellValue();
+            cell.setCellValue(df.format(balances.get(playerName)) + "€");
+        }
+    }
+
+    /**
      * Write first line of Excel file.
-     *
      * @param sheet sheet of Excel
      */
     private static void makeGameFirstLine(XSSFSheet sheet) {
@@ -166,5 +201,28 @@ public class Statistics {
         nextCell = row.createCell(i++);
 
         nextCell.setCellValue("Best Manager (Type)");
+    }
+
+    /**
+     * Write first line of balances of Excel file.
+     * @param sheet sheet of Excel
+     * @param players players to add at header
+     */
+    private static void makeBalancesFirstLine(XSSFSheet sheet, Set<String> players) {
+        Row row = sheet.createRow(0);
+
+        int i = 0;
+
+        Cell nextCell = row.createCell(i++);
+
+        nextCell.setCellValue("Game Number");
+
+        nextCell = row.createCell(i++);
+
+        for(String player : players) {
+            nextCell.setCellValue(player);
+
+            nextCell = row.createCell(i++);
+        }
     }
 }

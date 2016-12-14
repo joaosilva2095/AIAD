@@ -26,7 +26,7 @@ public class MakeOffer extends TickerBehaviour {
 
     private static MakeOffer instance;
 
-    public static long TICK_PERIOD = 1500;
+    public static long TICK_PERIOD = 100;
 
     // Intention
     private List<Intention> intentions;

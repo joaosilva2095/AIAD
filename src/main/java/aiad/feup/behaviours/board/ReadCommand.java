@@ -48,7 +48,7 @@ public class ReadCommand extends SimpleBehaviour {
                 new InputStreamReader(System.in));
         String command = "";
         try {
-            Thread.sleep(10000);
+            Thread.sleep(20000);
 
             if(br.ready())
                 command = br.readLine();
